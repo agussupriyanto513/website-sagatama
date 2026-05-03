@@ -11,6 +11,7 @@
     <meta property="og:description" content="Ekosistem digital pesantren modern — Spiritual, Teknologi AI, dan Ekonomi Mandiri dalam satu platform Firebase.">
     <meta property="og:type" content="website">
     <meta name="theme-color" content="#070d1a">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%230f3460'/><text y='.9em' font-size='70' x='50%' text-anchor='middle' fill='%23d4a017' font-family='serif' font-weight='bold'>S</text></svg>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500;600;700&family=Amiri:wght@400;700&family=Cinzel:wght@700;900&display=swap" rel="stylesheet">
 
@@ -1303,7 +1304,26 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
-    <script src="auth.js"></script>
+    <script>
+    // Firebase untuk website publik — portal-sagatama
+    try {
+      if (!firebase.apps.length) {
+        firebase.initializeApp({
+          apiKey:            "AIzaSyDNWOochfAyHjBYUNyq2IAYhA9p7Ie834M",
+          authDomain:        "portal-sagatama.firebaseapp.com",
+          projectId:         "portal-sagatama",
+          storageBucket:     "portal-sagatama.firebasestorage.app",
+          messagingSenderId: "372845954028",
+          appId:             "1:372845954028:web:189f2a3127ea8189b9f6c9"
+        });
+      }
+      // Stub HA agar tidak error jika auth.js tidak ada
+      window.HA = window.HA || {
+        toast: function(m,t){ console.log('[HA]',m); },
+        fmt:   { rupiah: function(n){ return 'Rp '+parseInt(n||0).toLocaleString('id-ID'); } }
+      };
+    } catch(e) { console.warn('[Firebase]', e.message); }
+    </script>
 </head>
 <body>
 
@@ -1777,7 +1797,7 @@
             </div>
             <div class="pengantar-box">
                 <div style="text-align: center; flex-shrink: 0;">
-                    <img src="pimpinan.jpg" alt="Foto Pimpinan" class="pengantar-img"
+                    <img src="https://ui-avatars.com/api/?name=Pimpinan+Sagatama&background=0f3460&color=d4a017&size=300&bold=true&font-size=0.35" alt="Foto Pimpinan" class="pengantar-img"
                          onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
                     <div style="display:none; width:200px; height:200px; border-radius:50%; background: linear-gradient(135deg,var(--primary),var(--secondary)); color:white; font-size:3em; align-items:center; justify-content:center; border:5px solid var(--accent); flex-shrink:0; box-shadow:var(--shadow-md);">
                         <i class="fas fa-user-tie"></i>
@@ -3329,9 +3349,9 @@ function showToast(msg) {
     setTimeout(() => t.classList.remove('show'), 3000);
 }
 
-
-        document.getElementById('main-nav').classList.toggle('scrolled', window.scrollY > 50);
-    });
+window.addEventListener('scroll', () => {
+    document.getElementById('main-nav').classList.toggle('scrolled', window.scrollY > 50);
+});
 
     // MOBILE MENU
     function toggleMobileMenu() {
