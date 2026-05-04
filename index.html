@@ -4673,32 +4673,34 @@ function swtUpdatePiPreview() {
 }
 
 async function swtRequestPi() {
-    if (!_swtUser) return;
-    const amt = parseInt(document.getElementById('swm-pi-sgt-amt')?.value)||0;
+    if (!_swtUser) return alert('Silakan login ke Wallet terlebih dahulu.');
+    const amt = parseInt(document.getElementById('swm-pi-sgt-amt')?.value) || 0;
     const wallet = document.getElementById('swm-pi-wallet-addr')?.value?.trim();
     const bal = _swtData?.balance || 0;
     if (amt < 500 || amt % 500 !== 0) return alert('Minimal 500 SGT, kelipatan 500.');
     if (!wallet) return alert('Masukkan alamat Pi Wallet.');
-    if (amt > bal) return alert('Saldo SGT tidak cukup!');
+    if (amt > bal) return alert('Saldo SGT tidak cukup! Saldo kamu: ' + bal + ' SGT');
     const btn = document.getElementById('swm-pi-submit-btn');
-    if (btn) { btn.disabled=true; btn.innerHTML='<i class="fas fa-spinner fa-spin"></i> Memproses...'; }
+    if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Memproses...'; }
     try {
         await window.db.collection('sgt_exchange_requests').add({
-            uid: _swtUser.uid, email: _swtUser.email,
-            type: 'SGT_TO_PI', sgtAmount: amt, piAmount: amt/500,
+            uid: _swtUser.uid, email: _swtUser.email || '',
+            type: 'SGT_TO_PI', sgtAmount: amt, piAmount: amt / 500,
             piWallet: wallet, status: 'pending',
             createdAt: firebase.firestore.FieldValue.serverTimestamp()
         });
-        const newBal = bal - amt;
-        await _swtSave({ ..._swtData, balance: newBal });
-        _swtData.balance = newBal;
+        // Mutasi _swtData langsung, lalu panggil _swtSave(uid)
+        _swtData.balance = bal - amt;
+        _swtData.totalRedeemed = (_swtData.totalRedeemed || 0) + amt;
+        _swtData.history = [{ key: 'exchange_pi', pts: -amt, ts: Date.now(), label: 'Tukar ' + amt + ' SGT → ' + (amt/500).toFixed(2) + ' Pi' }, ...(_swtData.history || [])].slice(0, 60);
+        await _swtSave(_swtUser.uid);
         _swtUpdateUI();
         document.getElementById('swm-pi-sgt-amt').value = '';
         document.getElementById('swm-pi-wallet-addr').value = '';
         swtUpdatePiPreview();
-        alert('✅ Permintaan penukaran Pi berhasil diajukan! Admin akan transfer dalam 1×24 jam.');
-    } catch(e) { alert('Gagal: ' + e.message); }
-    if (btn) { btn.disabled=false; btn.innerHTML='<i class="fas fa-circle-nodes"></i> Ajukan Penukaran Pi'; }
+        alert('✅ Permintaan penukaran Pi berhasil diajukan!\nAdmin akan transfer dalam 1×24 jam.');
+    } catch (e) { alert('Gagal mengajukan: ' + e.message); }
+    if (btn) { btn.disabled = false; btn.innerHTML = '<i class="fas fa-circle-nodes"></i> Ajukan Penukaran Pi'; }
 }
 
 // ── Preview & Request: SGT → Rupiah ────────────────────────
@@ -4710,31 +4712,55 @@ function swtUpdateRpPreview() {
 }
 
 async function swtRequestRupiah() {
-    if (!_swtUser) return;
-    const amt = parseInt(document.getElementById('swm-rp-sgt-amt')?.value)||0;
+    if (!_swtUser) return alert('Silakan login ke Wallet terlebih dahulu.');
+    const amt = parseInt(document.getElementById('swm-rp-sgt-amt')?.value) || 0;
     const bank = document.getElementById('swm-rp-bank')?.value?.trim();
     const bal = _swtData?.balance || 0;
-    if (amt < 1000 || amt % 1000 !== 0) return alert('Minimal 1.000 SGT, kelipatan 1.000.');
-    if (!bank) return alert('Masukkan nomor rekening bank.');
-    if (amt > bal) return alert('Saldo SGT tidak cukup!');
     const msgEl = document.getElementById('swm-rp-msg');
+
+    // Validasi
+    if (amt < 1000 || amt % 1000 !== 0) return alert('Minimal 1.000 SGT, kelipatan 1.000.');
+    if (!bank) return alert('Masukkan nomor rekening bank tujuan.');
+    if (amt > bal) return alert('Saldo SGT tidak cukup! Saldo kamu: ' + bal.toLocaleString('id-ID') + ' SGT');
+
+    if (msgEl) msgEl.style.display = 'none';
+
     try {
+        const rupiahAmt = (amt / 1000) * 10000;
+        // Simpan request ke Firestore
         await window.db.collection('sgt_exchange_requests').add({
-            uid: _swtUser.uid, email: _swtUser.email,
-            type: 'SGT_TO_RUPIAH', sgtAmount: amt, rupiahAmount: (amt/1000)*10000,
-            bankInfo: bank, status: 'pending',
+            uid: _swtUser.uid,
+            email: _swtUser.email || '',
+            type: 'SGT_TO_RUPIAH',
+            sgtAmount: amt,
+            rupiahAmount: rupiahAmt,
+            bankInfo: bank,
+            status: 'pending',
             createdAt: firebase.firestore.FieldValue.serverTimestamp()
         });
-        const newBal = bal - amt;
-        await _swtSave({ ..._swtData, balance: newBal });
-        _swtData.balance = newBal;
+        // Mutasi _swtData langsung, lalu panggil _swtSave(uid)
+        _swtData.balance = bal - amt;
+        _swtData.totalRedeemed = (_swtData.totalRedeemed || 0) + amt;
+        _swtData.history = [{
+            key: 'exchange_rp', pts: -amt, ts: Date.now(),
+            label: 'Tukar ' + amt.toLocaleString('id-ID') + ' SGT → Rp ' + rupiahAmt.toLocaleString('id-ID')
+        }, ...(_swtData.history || [])].slice(0, 60);
+        await _swtSave(_swtUser.uid);
         _swtUpdateUI();
+        // Reset form
         document.getElementById('swm-rp-sgt-amt').value = '';
         document.getElementById('swm-rp-bank').value = '';
         swtUpdateRpPreview();
-        if (msgEl) { msgEl.style.display='block'; msgEl.style.background='rgba(16,185,129,0.12)'; msgEl.style.border='1px solid rgba(16,185,129,0.25)'; msgEl.style.color='#6ee7b7'; msgEl.textContent='✅ Permintaan berhasil diajukan! Transfer Rupiah dalam 1×24 jam hari kerja.'; }
-    } catch(e) {
-        if (msgEl) { msgEl.style.display='block'; msgEl.style.background='rgba(239,68,68,0.12)'; msgEl.style.color='#fca5a5'; msgEl.textContent='Gagal: ' + e.message; }
+        // Tampilkan pesan sukses
+        if (msgEl) {
+            msgEl.style.cssText = 'display:block;margin-top:10px;padding:10px 12px;border-radius:9px;font-size:0.78em;text-align:center;background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.25);color:#6ee7b7;';
+            msgEl.textContent = '✅ Berhasil! Transfer Rp ' + rupiahAmt.toLocaleString('id-ID') + ' akan diproses admin dalam 1×24 jam hari kerja.';
+        }
+    } catch (e) {
+        if (msgEl) {
+            msgEl.style.cssText = 'display:block;margin-top:10px;padding:10px 12px;border-radius:9px;font-size:0.78em;text-align:center;background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.25);color:#fca5a5;';
+            msgEl.textContent = '❌ Gagal mengajukan: ' + e.message;
+        }
     }
 }
 </script>
