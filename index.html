@@ -52,6 +52,123 @@
 
         a, button, [onclick], .dropdown-item { cursor: pointer !important; }
 
+        /* ======= SGT TOKEN SYSTEM ======= */
+        .sgt-floating {
+            position: fixed; bottom: 28px; right: 28px;
+            z-index: 9999; display: flex; flex-direction: column; align-items: flex-end; gap: 12px;
+        }
+        .sgt-fab {
+            width: 58px; height: 58px; border-radius: 50%;
+            background: linear-gradient(135deg, #d4a017, #f0c842, #d4a017);
+            border: none; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 8px 32px rgba(212,160,23,0.5);
+            font-family: 'Cinzel', serif; font-weight: 900;
+            color: var(--dark); font-size: 1.1em; letter-spacing: -1px;
+            transition: all 0.3s; position: relative;
+            animation: sgt-pulse 2.5s ease-in-out infinite;
+        }
+        .sgt-fab:hover { transform: scale(1.1); box-shadow: 0 12px 40px rgba(212,160,23,0.7); }
+        @keyframes sgt-pulse { 0%,100%{box-shadow:0 8px 32px rgba(212,160,23,0.5)} 50%{box-shadow:0 8px 48px rgba(212,160,23,0.85), 0 0 0 8px rgba(212,160,23,0.15)} }
+        .sgt-badge-count {
+            position: absolute; top: -4px; right: -4px;
+            background: #ef4444; color: white; border-radius: 50%;
+            width: 22px; height: 22px; font-size: 0.65em; font-weight: 800;
+            display: flex; align-items: center; justify-content: center;
+            border: 2px solid var(--dark); font-family: 'DM Sans', sans-serif;
+        }
+        .sgt-panel {
+            background: rgba(7,13,26,0.97); border: 1px solid rgba(212,160,23,0.35);
+            border-radius: 20px; padding: 24px; width: 320px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+            display: none; animation: sgt-slide-in 0.3s ease;
+            backdrop-filter: blur(20px);
+        }
+        .sgt-panel.open { display: block; }
+        @keyframes sgt-slide-in { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+        .sgt-panel-title {
+            color: var(--accent); font-family: 'Cinzel', serif; font-size: 0.9em;
+            font-weight: 900; letter-spacing: 1px; margin-bottom: 4px;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .sgt-panel-sub { color: rgba(255,255,255,0.45); font-size: 0.75em; margin-bottom: 18px; }
+        .sgt-balance {
+            background: linear-gradient(135deg, rgba(212,160,23,0.15), rgba(240,200,66,0.08));
+            border: 1px solid rgba(212,160,23,0.25); border-radius: 14px;
+            padding: 16px 20px; text-align: center; margin-bottom: 18px;
+        }
+        .sgt-balance .amount { font-family: 'Playfair Display', serif; font-size: 2.2em; font-weight: 900; color: var(--accent); line-height: 1; }
+        .sgt-balance .label { color: rgba(255,255,255,0.5); font-size: 0.72em; letter-spacing: 2px; text-transform: uppercase; margin-top: 4px; }
+        .sgt-tasks { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+        .sgt-task {
+            display: flex; align-items: center; gap: 10px; padding: 10px 12px;
+            background: rgba(255,255,255,0.04); border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.06); transition: 0.2s; cursor: pointer;
+        }
+        .sgt-task:hover { background: rgba(212,160,23,0.08); border-color: rgba(212,160,23,0.2); }
+        .sgt-task.done { opacity: 0.5; pointer-events: none; }
+        .sgt-task-icon { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 0.9em; flex-shrink: 0; }
+        .sgt-task-text { flex: 1; }
+        .sgt-task-text .t { font-size: 0.8em; color: var(--white); font-weight: 600; }
+        .sgt-task-text .s { font-size: 0.7em; color: rgba(255,255,255,0.4); }
+        .sgt-task-pts { color: var(--accent); font-weight: 800; font-size: 0.82em; white-space: nowrap; }
+        .sgt-cta {
+            background: var(--gold-gradient); color: var(--dark);
+            border: none; width: 100%; padding: 11px; border-radius: 10px;
+            font-weight: 700; font-size: 0.82em; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            transition: 0.2s;
+        }
+        .sgt-cta:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(212,160,23,0.4); }
+        .sgt-disclaimer { color: rgba(255,255,255,0.25); font-size: 0.67em; text-align: center; margin-top: 10px; }
+
+        /* SGT Banner di Hero */
+        .sgt-hero-banner {
+            display: inline-flex; align-items: center; gap: 12px;
+            background: rgba(212,160,23,0.1); border: 1px solid rgba(212,160,23,0.3);
+            border-radius: 12px; padding: 12px 20px; margin-top: 20px;
+            cursor: pointer; transition: 0.25s; text-decoration: none;
+            animation: fadeUp 0.6s ease 0.7s both;
+        }
+        .sgt-hero-banner:hover { background: rgba(212,160,23,0.18); transform: translateY(-2px); }
+        .sgt-hero-banner .sgt-coin { width: 36px; height: 36px; border-radius: 50%; background: var(--gold-gradient); display: flex; align-items: center; justify-content: center; font-family: 'Cinzel', serif; font-weight: 900; color: var(--dark); font-size: 0.85em; flex-shrink: 0; }
+        .sgt-hero-banner .sgt-info .t { color: var(--accent); font-weight: 700; font-size: 0.82em; }
+        .sgt-hero-banner .sgt-info .s { color: rgba(255,255,255,0.5); font-size: 0.73em; margin-top: 1px; }
+
+        /* SGT strip in market page */
+        .sgt-mart-strip {
+            background: linear-gradient(135deg, rgba(212,160,23,0.12), rgba(16,185,129,0.08));
+            border: 1px solid rgba(212,160,23,0.25); border-radius: 16px;
+            padding: 18px 24px; display: flex; align-items: center; gap: 16px;
+            margin-bottom: 32px; flex-wrap: wrap;
+        }
+        .sgt-mart-strip .sgt-coin-lg { width: 48px; height: 48px; border-radius: 50%; background: var(--gold-gradient); display: flex; align-items: center; justify-content: center; font-family: 'Cinzel', serif; font-weight: 900; color: var(--dark); font-size: 1em; flex-shrink: 0; box-shadow: 0 4px 16px rgba(212,160,23,0.4); }
+        .sgt-mart-strip .sgt-text { flex: 1; }
+        .sgt-mart-strip .sgt-text h4 { color: var(--accent); font-weight: 700; font-size: 0.9em; margin-bottom: 3px; }
+        .sgt-mart-strip .sgt-text p { color: rgba(255,255,255,0.55); font-size: 0.78em; line-height: 1.4; }
+        .sgt-earn-badges { display: flex; gap: 8px; flex-wrap: wrap; }
+        .sgt-earn-badge { background: rgba(255,255,255,0.07); border: 1px solid rgba(212,160,23,0.2); border-radius: 20px; padding: 4px 12px; font-size: 0.7em; color: rgba(255,255,255,0.7); display: flex; align-items: center; gap: 5px; }
+        .sgt-earn-badge i { color: var(--accent); font-size: 0.85em; }
+
+        /* Mart hero update */
+        .mart-ext-link {
+            display: inline-flex; align-items: center; gap: 10px;
+            background: linear-gradient(135deg, #0d9488, #059669);
+            color: white; padding: 14px 28px; border-radius: 12px;
+            font-weight: 700; font-size: 0.88em; text-decoration: none;
+            box-shadow: 0 8px 28px rgba(13,148,136,0.4);
+            transition: all 0.3s; border: none; cursor: pointer;
+        }
+        .mart-ext-link:hover { transform: translateY(-2px); box-shadow: 0 14px 40px rgba(13,148,136,0.55); }
+        .mart-preview-note {
+            background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px; padding: 14px 20px; margin-bottom: 28px;
+            display: flex; align-items: center; gap: 12px;
+        }
+        .mart-preview-note i { color: #5eead4; font-size: 1.2em; flex-shrink: 0; }
+        .mart-preview-note p { color: rgba(255,255,255,0.6); font-size: 0.82em; line-height: 1.5; }
+        .mart-preview-note a { color: #5eead4; font-weight: 700; }
+
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: var(--dark); }
         ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 3px; }
@@ -1321,25 +1438,117 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
     <script>
-    // Firebase untuk website publik — portal-sagatama
+    // ============================================================
+    //  FIREBASE CONFIG — portal-sagatama
+    //  Project: portal-sagatama | Region: asia-southeast2
+    // ============================================================
+    const FIREBASE_CONFIG = {
+      apiKey:            "AIzaSyDNWOochfAyHjBYUNyq2IAYhA9p7Ie834M",
+      authDomain:        "portal-sagatama.firebaseapp.com",
+      projectId:         "portal-sagatama",
+      storageBucket:     "portal-sagatama.firebasestorage.app",
+      messagingSenderId: "372845954028",
+      appId:             "1:372845954028:web:189f2a3127ea8189b9f6c9"
+    };
+
     try {
       if (!firebase.apps.length) {
-        firebase.initializeApp({
-          apiKey:            "AIzaSyDNWOochfAyHjBYUNyq2IAYhA9p7Ie834M",
-          authDomain:        "portal-sagatama.firebaseapp.com",
-          projectId:         "portal-sagatama",
-          storageBucket:     "portal-sagatama.firebasestorage.app",
-          messagingSenderId: "372845954028",
-          appId:             "1:372845954028:web:189f2a3127ea8189b9f6c9"
-        });
+        firebase.initializeApp(FIREBASE_CONFIG);
       }
       // Stub HA agar tidak error jika auth.js tidak ada
       window.HA = window.HA || {
         toast: function(m,t){ console.log('[HA]',m); },
         fmt:   { rupiah: function(n){ return 'Rp '+parseInt(n||0).toLocaleString('id-ID'); } }
       };
-    } catch(e) { console.warn('[Firebase]', e.message); }
+
+      // ── Shorthand helpers ────────────────────────────────────
+      window.db      = firebase.firestore();
+      window.fbAuth  = firebase.auth();
+      window.fbStore = firebase.storage();
+
+      // ── Firestore offline persistence ───────────────────────
+      window.db.enablePersistence({ synchronizeTabs: true })
+        .catch(err => {
+          if (err.code === 'failed-precondition') console.warn('[Firestore] Multi-tab persistence unavailable');
+          else if (err.code === 'unimplemented')   console.warn('[Firestore] Persistence not supported');
+        });
+
+      console.info('%c✅ Firebase portal-sagatama terhubung', 'color:#d4a017;font-weight:bold;');
+
+    } catch(e) { console.warn('[Firebase init]', e.message); }
+
+    // ============================================================
+    //  SGT TOKEN — Firestore-backed loyalitas sistem
+    //  Koleksi: sgt_tokens/{visitorId}
+    // ============================================================
+    (function initSGTFirestore() {
+      try {
+        const SGT_COL = 'sgt_tokens';
+
+        // Generate/get stable visitor ID (no auth required)
+        function getVisitorId() {
+          let vid = localStorage.getItem('sg_vid');
+          if (!vid) {
+            vid = 'v_' + Date.now() + '_' + Math.random().toString(36).slice(2, 9);
+            localStorage.setItem('sg_vid', vid);
+          }
+          return vid;
+        }
+        window.SGT_VID = getVisitorId();
+
+        const sgtRef = window.db.collection(SGT_COL).doc(window.SGT_VID);
+
+        // Sync Firestore → localStorage setiap berubah (realtime)
+        sgtRef.onSnapshot(snap => {
+          if (snap.exists) {
+            const data = snap.data();
+            try {
+              const local = JSON.parse(localStorage.getItem('sgt_data') || '{}');
+              // Ambil nilai terbesar (antara local & cloud)
+              const merged = {
+                balance:   Math.max(local.balance || 0, data.balance || 0),
+                claimed:   [...new Set([...(local.claimed || []), ...(data.claimed || [])])],
+                lastVisit: data.lastVisit || local.lastVisit || ''
+              };
+              localStorage.setItem('sgt_data', JSON.stringify(merged));
+            } catch(e) {}
+            // Update UI jika panel terbuka
+            if (typeof renderSGT === 'function') renderSGT();
+          }
+        }, err => console.warn('[SGT onSnapshot]', err));
+
+        // Fungsi simpan SGT ke Firestore + localStorage
+        window.saveSGTFirestore = function(data) {
+          try { localStorage.setItem('sgt_data', JSON.stringify(data)); } catch(e) {}
+          sgtRef.set({
+            balance:   data.balance || 0,
+            claimed:   data.claimed || [],
+            lastVisit: data.lastVisit || '',
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+            visitorId: window.SGT_VID,
+            portal:    'portal-sagatama'
+          }, { merge: true }).catch(e => console.warn('[SGT save]', e));
+        };
+
+        // Update leaderboard SGT global (top earners — anonim)
+        window.updateSGTLeaderboard = function(balance) {
+          window.db.collection('sgt_leaderboard').doc(window.SGT_VID).set({
+            balance, updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+          }, { merge: true }).catch(()=>{});
+        };
+
+        // Live total SGT terdistribusi (community metric)
+        window.db.collection('sgt_tokens').onSnapshot(snap => {
+          const total = snap.docs.reduce((s, d) => s + (d.data().balance || 0), 0);
+          document.querySelectorAll('.sgt-community-total').forEach(el => {
+            el.textContent = total.toLocaleString('id-ID');
+          });
+        }, ()=>{});
+
+      } catch(e) { console.warn('[SGT Firestore]', e); }
+    })();
     </script>
 </head>
 <body>
@@ -1509,13 +1718,22 @@
             </div>
 
             <div class="dropdown">
-                <button class="dropbtn mart"><i class="fas fa-store"></i> Sagatama Mart</button>
-                <div class="dropdown-content">
-                    <div class="dropdown-header">Katalog Produk</div>
-                    <a onclick="pindahHalaman('market', 'katalog-top')"><i class="fas fa-grid-2"></i> Semua Produk</a>
-                    <a onclick="pindahHalaman('market', 'produk-madu')"><i class="fas fa-jar"></i> Madu Hidayatul Amin</a>
-                    <a onclick="pindahHalaman('market', 'produk-herbal')"><i class="fas fa-leaf"></i> Produk Herbal Surau</a>
-                    <a onclick="pindahHalaman('market', 'produk-jasa')"><i class="fas fa-robot"></i> Jasa Digital AI</a>
+                <button class="dropbtn mart"><i class="fas fa-store"></i> Sagatama Mart <span style="background:#10b981;color:white;font-size:0.6em;padding:2px 6px;border-radius:10px;margin-left:2px;font-weight:800;letter-spacing:0.5px;">LIVE</span></button>
+                <div class="dropdown-content" style="min-width:320px;">
+                    <div class="dropdown-header">🛒 Toko Online Resmi</div>
+                    <a href="https://sagatama-mart.vercel.app" target="_blank" style="background:linear-gradient(135deg,rgba(13,148,136,0.2),rgba(16,185,129,0.1));border-bottom:2px solid rgba(16,185,129,0.3)!important;">
+                        <i class="fas fa-external-link-alt" style="color:#5eead4;"></i>
+                        <div>
+                            <div style="color:white;font-weight:700;font-size:0.88em;">Buka sagatama-mart.vercel.app</div>
+                            <div style="color:rgba(255,255,255,0.45);font-size:0.72em;margin-top:2px;">Toko lengkap — semua produk & checkout</div>
+                        </div>
+                    </a>
+                    <div class="dropdown-header" style="margin-top:4px;">Produk Unggulan</div>
+                    <a href="https://sagatama-mart.vercel.app" target="_blank"><i class="fas fa-jar" style="color:var(--accent);"></i> Madu Hidayatul Amin</a>
+                    <a href="https://sagatama-mart.vercel.app" target="_blank"><i class="fas fa-leaf" style="color:#5eead4;"></i> Herbal Surau &amp; Organik</a>
+                    <a href="https://sagatama-mart.vercel.app" target="_blank"><i class="fas fa-robot" style="color:#c4b5fd;"></i> Jasa Digital &amp; AI</a>
+                    <a href="https://sagatama-mart.vercel.app" target="_blank"><i class="fas fa-circle-nodes" style="color:#a78bfa;"></i> Bayar via Pi Network ✓</a>
+                    <a onclick="pindahHalaman('market', 'katalog-top')" style="border-top:1px solid rgba(255,255,255,0.07);justify-content:center;text-align:center;color:rgba(255,255,255,0.4);font-size:0.75em;"><i class="fas fa-eye"></i> &nbsp;Preview produk di halaman ini</a>
                 </div>
             </div>
         </div>
@@ -1596,14 +1814,15 @@
     </div>
     <div class="mobile-menu-item">
         <button class="mobile-menu-toggle" onclick="toggleMobileSub('sub-mart')">
-            <span><i class="fas fa-store" style="margin-right:10px;color:#10b981;"></i> Sagatama Mart</span>
+            <span><i class="fas fa-store" style="margin-right:10px;color:#10b981;"></i> Sagatama Mart <span style="background:#10b981;color:white;font-size:0.6em;padding:1px 6px;border-radius:8px;margin-left:4px;">LIVE</span></span>
             <i class="fas fa-chevron-down"></i>
         </button>
         <div class="mobile-submenu" id="sub-mart">
-            <a onclick="pindahHalaman('market', 'katalog-top'); closeMobileMenu()">Semua Produk</a>
-            <a onclick="pindahHalaman('market', 'produk-madu'); closeMobileMenu()">Madu Hidayatul Amin</a>
-            <a onclick="pindahHalaman('market', 'produk-herbal'); closeMobileMenu()">Herbal Surau</a>
-            <a onclick="pindahHalaman('market', 'produk-jasa'); closeMobileMenu()">Jasa Digital AI</a>
+            <a href="https://sagatama-mart.vercel.app" target="_blank" style="color:#5eead4;font-weight:700;border-left-color:#10b981!important;">🛒 Buka Toko Online (sagatama-mart.vercel.app)</a>
+            <a href="https://sagatama-mart.vercel.app" target="_blank">Madu Hidayatul Amin</a>
+            <a href="https://sagatama-mart.vercel.app" target="_blank">Herbal &amp; Produk Organik</a>
+            <a href="https://sagatama-mart.vercel.app" target="_blank">Jasa Digital AI</a>
+            <a onclick="pindahHalaman('market', 'katalog-top'); closeMobileMenu()" style="color:rgba(255,255,255,0.4);font-size:0.82em;">↳ Preview produk di portal ini</a>
         </div>
     </div>
 </div>
@@ -1616,6 +1835,8 @@
             ⬡ Portal Sagatama (Pilar 1) — Beranda Utama Yayasan &nbsp;|&nbsp;
             ⬡ Portal Hidayatulamin (Pilar 2) — Portal Akademik Santri &nbsp;|&nbsp;
             ⬡ Yayasan Hidayatulamin Sagatama (Pilar 3) — Dashboard Resmi Yayasan &nbsp;|&nbsp;
+            🛒 Sagatama Mart: sagatama-mart.vercel.app — Produk Halal Terpercaya &nbsp;|&nbsp;
+            🪙 SGT Token: Kunjungi · Share · Beli Produk → Klaim Poin Gratis! &nbsp;|&nbsp;
             Niatkan 513: 5x Istighfar · 1x Al-Fatihah · 3x Al-Ikhlas Utama &nbsp;|&nbsp;
             🟢 Pengunjung: <span class="live-visitor-count">—</span> &nbsp;|&nbsp;
             💰 Total Donasi: <span class="live-donasi-total">memuat...</span> &nbsp;|&nbsp;
@@ -1652,6 +1873,18 @@
                 </a>
                 <a href="#firebase-pilar" class="btn-outline" onclick="pindahHalaman('home')">
                     <i class="fas fa-layer-group"></i> Lihat 3 Pilar
+                </a>
+            </div>
+            <div style="display:flex;justify-content:center;flex-wrap:wrap;gap:12px;margin-top:20px;animation:fadeUp 0.6s ease 0.7s both;">
+                <a class="sgt-hero-banner" onclick="toggleSGTPanel()">
+                    <div class="sgt-coin">SGT</div>
+                    <div class="sgt-info">
+                        <div class="t">🎁 Klaim Token SGT Gratis!</div>
+                        <div class="s">Kunjungi, share, beli produk → dapat poin SGT</div>
+                    </div>
+                </a>
+                <a href="https://sagatama-mart.vercel.app" target="_blank" style="display:inline-flex;align-items:center;gap:8px;background:rgba(13,148,136,0.15);border:1px solid rgba(13,148,136,0.35);color:#5eead4;padding:12px 20px;border-radius:12px;font-weight:700;font-size:0.8em;text-decoration:none;transition:0.25s;animation:fadeUp 0.6s ease 0.75s both;" onmouseover="this.style.background='rgba(13,148,136,0.25)'" onmouseout="this.style.background='rgba(13,148,136,0.15)'">
+                    <i class="fas fa-store"></i> Sagatama Mart <i class="fas fa-external-link-alt" style="font-size:0.8em;opacity:0.6;"></i>
                 </a>
             </div>
         </div>
@@ -2804,16 +3037,44 @@
                 <i class="fas fa-store"></i> Pilar Ekonomi Sagatama
             </div>
             <h1 style="font-family: 'Playfair Display', serif; color: white; font-size: clamp(2em, 5vw, 3.5em); margin-bottom: 16px;">Sagatama <span style="color: #a7f3d0;">Mart</span></h1>
-            <p style="color: rgba(255,255,255,0.7); max-width: 600px; margin: 0 auto 30px; line-height: 1.7;">Produk halal unggulan dari dapur, kebun, dan lab digital Yayasan Hidayatul Amin Sagatama. Setiap pembelian mendukung kemandirian pesantren.</p>
+            <p style="color: rgba(255,255,255,0.7); max-width: 600px; margin: 0 auto 28px; line-height: 1.7;">Produk halal unggulan dari dapur, kebun, dan lab digital Yayasan Hidayatul Amin Sagatama. Setiap pembelian mendukung kemandirian pesantren.</p>
+            <div style="display:flex;justify-content:center;gap:14px;flex-wrap:wrap;margin-bottom:24px;">
+                <a href="https://sagatama-mart.vercel.app" target="_blank" class="mart-ext-link">
+                    <i class="fas fa-store"></i> Buka Toko Resmi — sagatama-mart.vercel.app
+                    <i class="fas fa-external-link-alt" style="font-size:0.85em;opacity:0.8;"></i>
+                </a>
+                <button onclick="claimSGT('mart',50,document.getElementById('task-mart'));toggleSGTPanel();" style="background:rgba(212,160,23,0.2);border:1px solid rgba(212,160,23,0.4);color:var(--accent);padding:14px 22px;border-radius:12px;font-weight:700;font-size:0.82em;cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:0.2s;" onmouseover="this.style.background='rgba(212,160,23,0.3)'" onmouseout="this.style.background='rgba(212,160,23,0.2)'">
+                    <span style="font-family:'Cinzel',serif;font-weight:900;">SGT</span> Klaim +50 SGT Sekarang
+                </button>
+            </div>
             <div style="display: flex; justify-content: center; gap: 30px; flex-wrap: wrap;">
                 <div style="text-align: center; color: white;"><div style="font-family: 'Playfair Display', serif; font-size: 1.8em; font-weight: 900; color: #a7f3d0;">100%</div><div style="font-size: 0.78em; opacity: 0.7; text-transform: uppercase; letter-spacing: 1px;">Produk Halal</div></div>
                 <div style="text-align: center; color: white;"><div style="font-family: 'Playfair Display', serif; font-size: 1.8em; font-weight: 900; color: #a7f3d0;">π</div><div style="font-size: 0.78em; opacity: 0.7; text-transform: uppercase; letter-spacing: 1px;">Terima Pi Coin</div></div>
                 <div style="text-align: center; color: white;"><div style="font-family: 'Playfair Display', serif; font-size: 1.8em; font-weight: 900; color: #a7f3d0;">8+</div><div style="font-size: 0.78em; opacity: 0.7; text-transform: uppercase; letter-spacing: 1px;">Kategori Produk</div></div>
+                <div style="text-align: center; color: white;"><div style="font-family: 'Playfair Display', serif; font-size: 1.8em; font-weight: 900; color: #f0c842;">SGT</div><div style="font-size: 0.78em; opacity: 0.7; text-transform: uppercase; letter-spacing: 1px;">Token Reward</div></div>
             </div>
         </div>
     </div>
 
     <div class="container" style="padding-top: 50px; padding-bottom: 100px;">
+        <!-- Preview Notice & SGT Strip -->
+        <div class="mart-preview-note">
+            <i class="fas fa-info-circle"></i>
+            <p>Ini adalah <strong style="color:white;">preview produk</strong> di Portal Sagatama. Untuk pengalaman belanja lengkap, checkout, dan pembayaran, kunjungi toko resmi kami di <a href="https://sagatama-mart.vercel.app" target="_blank">sagatama-mart.vercel.app</a> →</p>
+        </div>
+        <div class="sgt-mart-strip">
+            <div class="sgt-coin-lg">SGT</div>
+            <div class="sgt-text">
+                <h4>🎁 Dapatkan Token SGT dari Setiap Pembelian!</h4>
+                <p>Setiap pembelian produk Sagatama Mart memberi Anda poin SGT. Tukarkan poin untuk diskon produk berikutnya, merchandise eksklusif, atau wakaf atas nama Anda.</p>
+            </div>
+            <div class="sgt-earn-badges">
+                <div class="sgt-earn-badge"><i class="fas fa-shopping-cart"></i> Beli produk</div>
+                <div class="sgt-earn-badge"><i class="fas fa-share-alt"></i> Share ke WA</div>
+                <div class="sgt-earn-badge"><i class="fas fa-eye"></i> Kunjungi daily</div>
+                <div class="sgt-earn-badge"><i class="fas fa-user-plus"></i> Daftar santri</div>
+            </div>
+        </div>
         <div id="katalog-top" class="filter-bar" style="justify-content: center;">
             <button class="filter-btn active" onclick="filterProduk('all', this)"><i class="fas fa-grid-2"></i> Semua</button>
             <button class="filter-btn" onclick="filterProduk('Madu', this)"><i class="fas fa-jar"></i> Madu</button>
@@ -2833,7 +3094,7 @@
                 <div class="product-info">
                     <div class="product-title">Madu Hidayatul Amin</div>
                     <p class="product-desc">Madu murni hutan pilihan yang diproses secara alami. Terjamin keasliannya dengan sertifikasi halal dan bebas campuran.</p>
-                    <div class="price-area">
+                    <div class="price-area"><a href="https://sagatama-mart.vercel.app" target="_blank" style="display:block;text-align:center;color:#5eead4;font-size:0.72em;font-weight:700;margin-bottom:8px;text-decoration:none;"><i class="fas fa-store"></i> Lihat di Sagatama Mart →</a>
                         <span class="product-price">Rp 150.000</span>
                         <div class="pi-price"><i class="fas fa-circle-nodes"></i> 47.8 Pi Coin</div>
                         <button class="btn-buy" onclick="pesan('Madu Hidayatul Amin', '150.000')"><i class="fab fa-whatsapp"></i> BELI SEKARANG</button>
@@ -2849,7 +3110,7 @@
                 <div class="product-info">
                     <div class="product-title">Ramuan Herbal Surau</div>
                     <p class="product-desc">Olahan alami santri beradab untuk menjaga stamina dan imunitas lahir batin secara alami.</p>
-                    <div class="price-area">
+                    <div class="price-area"><a href="https://sagatama-mart.vercel.app" target="_blank" style="display:block;text-align:center;color:#5eead4;font-size:0.72em;font-weight:700;margin-bottom:8px;text-decoration:none;"><i class="fas fa-store"></i> Lihat di Sagatama Mart →</a>
                         <span class="product-price">Rp 85.000</span>
                         <div class="pi-price"><i class="fas fa-circle-nodes"></i> 27.2 Pi Coin</div>
                         <button class="btn-buy" onclick="pesan('Herbal Surau', '85.000')"><i class="fab fa-whatsapp"></i> BELI SEKARANG</button>
@@ -2865,7 +3126,7 @@
                 <div class="product-info">
                     <div class="product-title">Jasa Asisten AI Sagatama</div>
                     <p class="product-desc">Pembuatan sistem asisten AI pintar (Prompt Engineering) dan aplikasi Firebase untuk bisnis atau yayasan Anda.</p>
-                    <div class="price-area">
+                    <div class="price-area"><a href="https://sagatama-mart.vercel.app" target="_blank" style="display:block;text-align:center;color:#5eead4;font-size:0.72em;font-weight:700;margin-bottom:8px;text-decoration:none;"><i class="fas fa-store"></i> Lihat di Sagatama Mart →</a>
                         <span class="product-price">Rp 2.500.000</span>
                         <div class="pi-price"><i class="fas fa-circle-nodes"></i> 750 Pi Coin</div>
                         <button class="btn-buy" onclick="pesan('Jasa AI Custom Sagatama', '2.500.000')"><i class="fab fa-whatsapp"></i> KONSULTASI GRATIS</button>
@@ -2881,7 +3142,7 @@
                 <div class="product-info">
                     <div class="product-title">Buku Saku Rahasia 513</div>
                     <p class="product-desc">Panduan eksklusif mengenai kedalaman spiritual amalan 513 dan wasilah silsilah yang benar menuju keberkahan.</p>
-                    <div class="price-area">
+                    <div class="price-area"><a href="https://sagatama-mart.vercel.app" target="_blank" style="display:block;text-align:center;color:#5eead4;font-size:0.72em;font-weight:700;margin-bottom:8px;text-decoration:none;"><i class="fas fa-store"></i> Lihat di Sagatama Mart →</a>
                         <span class="product-price">Rp 55.000</span>
                         <div class="pi-price"><i class="fas fa-circle-nodes"></i> 15.0 Pi Coin</div>
                         <button class="btn-buy" onclick="pesan('Buku Saku Rahasia 513', '55.000')"><i class="fab fa-whatsapp"></i> BELI BUKU</button>
@@ -2897,7 +3158,7 @@
                 <div class="product-info">
                     <div class="product-title">Kaos "Gagah" Sagatama AI</div>
                     <p class="product-desc">Kaos premium dengan desain integrasi Dzikir & Teknologi. Nyaman untuk santri modern yang bersemangat.</p>
-                    <div class="price-area">
+                    <div class="price-area"><a href="https://sagatama-mart.vercel.app" target="_blank" style="display:block;text-align:center;color:#5eead4;font-size:0.72em;font-weight:700;margin-bottom:8px;text-decoration:none;"><i class="fas fa-store"></i> Lihat di Sagatama Mart →</a>
                         <span class="product-price">Rp 125.000</span>
                         <div class="pi-price"><i class="fas fa-circle-nodes"></i> 35.0 Pi Coin</div>
                         <button class="btn-buy" onclick="pesan('Kaos Sagatama AI', '125.000')"><i class="fab fa-whatsapp"></i> BELI KAOS</button>
@@ -2913,7 +3174,7 @@
                 <div class="product-info">
                     <div class="product-title">Beras Organik Silsilah</div>
                     <p class="product-desc">Beras sehat hasil tani kebun produktif yayasan, bebas pestisida dan penuh berkah doa para santri.</p>
-                    <div class="price-area">
+                    <div class="price-area"><a href="https://sagatama-mart.vercel.app" target="_blank" style="display:block;text-align:center;color:#5eead4;font-size:0.72em;font-weight:700;margin-bottom:8px;text-decoration:none;"><i class="fas fa-store"></i> Lihat di Sagatama Mart →</a>
                         <span class="product-price">Rp 90.000 / 5kg</span>
                         <div class="pi-price"><i class="fas fa-circle-nodes"></i> 28.0 Pi Coin</div>
                         <button class="btn-buy" onclick="pesan('Beras Organik Silsilah', '90.000')"><i class="fab fa-whatsapp"></i> BELI BERAS</button>
@@ -2929,7 +3190,7 @@
                 <div class="product-info">
                     <div class="product-title">Jasa Pembuatan Website Firebase</div>
                     <p class="product-desc">Pembuatan website profesional berbasis Firebase untuk masjid, pesantren, yayasan, atau bisnis halal Anda.</p>
-                    <div class="price-area">
+                    <div class="price-area"><a href="https://sagatama-mart.vercel.app" target="_blank" style="display:block;text-align:center;color:#5eead4;font-size:0.72em;font-weight:700;margin-bottom:8px;text-decoration:none;"><i class="fas fa-store"></i> Lihat di Sagatama Mart →</a>
                         <span class="product-price">Rp 1.500.000</span>
                         <div class="pi-price"><i class="fas fa-circle-nodes"></i> 450 Pi Coin</div>
                         <button class="btn-buy" onclick="pesan('Jasa Website Firebase Profesional', '1.500.000')"><i class="fab fa-whatsapp"></i> KONSULTASI</button>
@@ -2945,7 +3206,7 @@
                 <div class="product-info">
                     <div class="product-title">Madu Hitam Habatussauda</div>
                     <p class="product-desc">Kombinasi madu murni dengan habatussauda (jintan hitam) pilihan. Formula tradisional untuk kesehatan optimal.</p>
-                    <div class="price-area">
+                    <div class="price-area"><a href="https://sagatama-mart.vercel.app" target="_blank" style="display:block;text-align:center;color:#5eead4;font-size:0.72em;font-weight:700;margin-bottom:8px;text-decoration:none;"><i class="fas fa-store"></i> Lihat di Sagatama Mart →</a>
                         <span class="product-price">Rp 185.000</span>
                         <div class="pi-price"><i class="fas fa-circle-nodes"></i> 55.0 Pi Coin</div>
                         <button class="btn-buy" onclick="pesan('Madu Hitam Habatussauda', '185.000')"><i class="fab fa-whatsapp"></i> BELI SEKARANG</button>
@@ -3550,6 +3811,164 @@ window.addEventListener('scroll', () => {
     });
 </script>
 
+<!-- ======= SGT TOKEN FLOATING WIDGET ======= -->
+<div class="sgt-floating" id="sgtFloating">
+    <div class="sgt-panel" id="sgtPanel">
+        <div class="sgt-panel-title"><span>SGT</span> Sagatama Token</div>
+        <div class="sgt-panel-sub">Token loyalitas digital Yayasan Sagatama</div>
+        <div class="sgt-balance">
+            <div class="amount" id="sgtBalance">0</div>
+            <div class="label">SGT Points Anda</div>
+        </div>
+        <div class="sgt-tasks">
+            <div class="sgt-task" id="task-visit" onclick="claimSGT('visit',10,this)">
+                <div class="sgt-task-icon" style="background:rgba(16,185,129,0.15);color:#5eead4;"><i class="fas fa-eye"></i></div>
+                <div class="sgt-task-text">
+                    <div class="t">Kunjungi Portal</div>
+                    <div class="s">Bonus harian untuk setiap kunjungan</div>
+                </div>
+                <div class="sgt-task-pts">+10 SGT</div>
+            </div>
+            <div class="sgt-task" id="task-share" onclick="claimSGT('share',25,this)">
+                <div class="sgt-task-icon" style="background:rgba(212,160,23,0.15);color:var(--accent);"><i class="fab fa-whatsapp"></i></div>
+                <div class="sgt-task-text">
+                    <div class="t">Share ke WhatsApp</div>
+                    <div class="s">Bagikan portal Sagatama</div>
+                </div>
+                <div class="sgt-task-pts">+25 SGT</div>
+            </div>
+            <div class="sgt-task" id="task-mart" onclick="claimSGT('mart',50,this)">
+                <div class="sgt-task-icon" style="background:rgba(13,148,136,0.15);color:#5eead4;"><i class="fas fa-store"></i></div>
+                <div class="sgt-task-text">
+                    <div class="t">Kunjungi Sagatama Mart</div>
+                    <div class="s">Buka toko dan lihat produk</div>
+                </div>
+                <div class="sgt-task-pts">+50 SGT</div>
+            </div>
+            <div class="sgt-task" id="task-psb" onclick="claimSGT('psb',100,this)">
+                <div class="sgt-task-icon" style="background:rgba(124,58,237,0.15);color:#c4b5fd;"><i class="fas fa-user-plus"></i></div>
+                <div class="sgt-task-text">
+                    <div class="t">Isi Form Pendaftaran</div>
+                    <div class="s">Daftar sebagai calon santri</div>
+                </div>
+                <div class="sgt-task-pts">+100 SGT</div>
+            </div>
+            <div class="sgt-task" id="task-donasi" onclick="claimSGT('donasi',200,this)">
+                <div class="sgt-task-icon" style="background:rgba(212,160,23,0.15);color:var(--accent);"><i class="fas fa-hand-holding-heart"></i></div>
+                <div class="sgt-task-text">
+                    <div class="t">Lakukan Donasi</div>
+                    <div class="s">Dukung pembangunan yayasan</div>
+                </div>
+                <div class="sgt-task-pts">+200 SGT</div>
+            </div>
+        </div>
+        <button class="sgt-cta" onclick="shareToWhatsApp()">
+            <i class="fab fa-whatsapp"></i> Share & Dapatkan 25 SGT
+        </button>
+        <div class="sgt-disclaimer">SGT = poin loyalitas digital, dapat ditukar diskon produk & merchandise Sagatama</div>
+        <div style="margin-top:10px;background:rgba(212,160,23,0.07);border-radius:8px;padding:8px 12px;display:flex;align-items:center;justify-content:space-between;">
+            <span style="color:rgba(255,255,255,0.35);font-size:0.68em;"><i class="fas fa-users" style="margin-right:4px;color:rgba(212,160,23,0.5);"></i>Total SGT komunitas:</span>
+            <span style="color:var(--accent);font-weight:800;font-size:0.75em;" class="sgt-community-total">—</span>
+        </div>
+    </div>
+    <button class="sgt-fab" onclick="toggleSGTPanel()" title="Klaim Token SGT">
+        SGT
+        <span class="sgt-badge-count" id="sgtNotif">5</span>
+    </button>
+</div>
+
+<script>
+// ======= SGT TOKEN SYSTEM — Firebase-backed =======
+function getSGTData() {
+    try {
+        const d = JSON.parse(localStorage.getItem('sgt_data') || '{}');
+        return { balance: d.balance || 0, claimed: d.claimed || [], lastVisit: d.lastVisit || '' };
+    } catch(e) { return { balance: 0, claimed: [], lastVisit: '' }; }
+}
+function saveSGTData(d) {
+    // Simpan ke localStorage DAN Firestore
+    try { localStorage.setItem('sgt_data', JSON.stringify(d)); } catch(e) {}
+    if (typeof window.saveSGTFirestore === 'function') window.saveSGTFirestore(d);
+    if (typeof window.updateSGTLeaderboard === 'function') window.updateSGTLeaderboard(d.balance || 0);
+}
+function renderSGT() {
+    const d = getSGTData();
+    const bal = document.getElementById('sgtBalance');
+    if (bal) animateCount(bal, d.balance);
+
+    const today = new Date().toDateString();
+    let pendingCount = 0;
+    ['visit','share','mart','psb','donasi'].forEach(key => {
+        const el = document.getElementById('task-' + key);
+        if (!el) return;
+        const isDone = key === 'visit'
+            ? d.lastVisit === today
+            : d.claimed.includes(key);
+        if (isDone) { el.classList.add('done'); el.querySelector('.sgt-task-pts').innerHTML = '<i class="fas fa-check" style="color:#10b981;"></i>'; }
+        else pendingCount++;
+    });
+    const notif = document.getElementById('sgtNotif');
+    if (notif) { notif.textContent = pendingCount; notif.style.display = pendingCount > 0 ? 'flex' : 'none'; }
+}
+function animateCount(el, target) {
+    const start = parseInt(el.textContent) || 0;
+    const diff = target - start;
+    if (diff === 0) return;
+    let step = 0; const steps = 20;
+    const timer = setInterval(() => {
+        step++;
+        el.textContent = Math.round(start + diff * (step / steps));
+        if (step >= steps) clearInterval(timer);
+    }, 20);
+}
+function claimSGT(key, pts, el) {
+    if (el.classList.contains('done')) return;
+    const d = getSGTData();
+    const today = new Date().toDateString();
+    if (key === 'visit') {
+        if (d.lastVisit === today) return;
+        d.lastVisit = today;
+    } else {
+        if (d.claimed.includes(key)) return;
+        d.claimed.push(key);
+    }
+    d.balance = (d.balance || 0) + pts;
+    saveSGTData(d);
+
+    // Special action for share
+    if (key === 'share') shareToWhatsApp();
+    if (key === 'mart') window.open('https://sagatama-mart.vercel.app', '_blank');
+    if (key === 'psb') { pindahHalaman('home'); setTimeout(()=>{ document.getElementById('psb')?.scrollIntoView({behavior:'smooth'}); }, 300); }
+    if (key === 'donasi') { pindahHalaman('home'); setTimeout(()=>{ document.getElementById('donasi')?.scrollIntoView({behavior:'smooth'}); }, 300); }
+
+    // Show toast
+    showToast('🪙 +' + pts + ' SGT berhasil diklaim! Total: ' + d.balance + ' SGT');
+    renderSGT();
+}
+function toggleSGTPanel() {
+    const p = document.getElementById('sgtPanel');
+    p.classList.toggle('open');
+    renderSGT();
+}
+function shareToWhatsApp() {
+    const txt = encodeURIComponent('Assalamualaikum! Saya menemukan Portal Sagatama — ekosistem digital pesantren modern berbasis Firebase. Cek langsung: https://sagatama-mart.vercel.app\n\n🌟 Yayasan Hidayatul Amin Sagatama — Spiritual · Teknologi AI · Ekonomi Mandiri');
+    window.open('https://wa.me/?text=' + txt, '_blank');
+}
+
+// Auto-claim visit token
+document.addEventListener('DOMContentLoaded', () => {
+    const d = getSGTData();
+    const today = new Date().toDateString();
+    if (d.lastVisit !== today) {
+        d.lastVisit = today;
+        d.balance = (d.balance || 0) + 10;
+        saveSGTData(d);
+        setTimeout(() => showToast('🪙 +10 SGT diklaim otomatis karena kunjungan Anda hari ini!'), 2500);
+    }
+    renderSGT();
+});
+</script>
+
 <script>
 // LIVE PI PRICE (CoinGecko)
 async function fetchPiPrice() {
@@ -3594,55 +4013,112 @@ setInterval(fetchPiPrice, 300000);
 
 // ======= FIREBASE LIVE COUNTERS =======
 (function initFirebaseLive() {
-    try {
-        const db = firebase.firestore();
-
-        // --- Visitor Counter ---
-        const visitorRef = db.collection('siteStats').doc('visitors');
-        // Increment setiap kunjungan sesi baru
-        const visited = sessionStorage.getItem('sg_visited');
-        if (!visited) {
-            sessionStorage.setItem('sg_visited', '1');
-            visitorRef.set({ count: firebase.firestore.FieldValue.increment(1) }, { merge: true });
-        }
-        // Listen realtime
-        visitorRef.onSnapshot(snap => {
-            const count = snap.data()?.count || 0;
-            document.querySelectorAll('.live-visitor-count').forEach(el => {
-                el.textContent = count.toLocaleString('id-ID');
-            });
-        });
-
-        // --- Donasi Realtime ---
-        const donasiRef = db.collection('siteStats').doc('donasi');
-        donasiRef.onSnapshot(snap => {
-            const total = snap.data()?.total || 0;
-            document.querySelectorAll('.live-donasi-total').forEach(el => {
-                el.textContent = 'Rp ' + total.toLocaleString('id-ID');
-            });
-        });
-
-        // --- Jumlah Santri Realtime ---
-        db.collection('siteStats').doc('santri').onSnapshot(snap => {
-            const jml = snap.data()?.jumlah || 0;
-            document.querySelectorAll('.live-santri-count').forEach(el => {
-                el.textContent = jml.toLocaleString('id-ID');
-            });
-        });
-
-        // --- Warta/Berita terbaru di marquee ---
-        db.collection('warta').orderBy('tanggal', 'desc').limit(3).onSnapshot(snap => {
-            if (snap.empty) return;
-            const items = snap.docs.map(d => d.data().judul || '').filter(Boolean);
-            const marqueeEl = document.getElementById('marquee-warta');
-            if (marqueeEl && items.length) {
-                marqueeEl.textContent = items.map(t => '📰 ' + t).join('  |  ');
-            }
-        });
-
-    } catch(e) {
-        console.warn('[Firebase Live]', e.message);
+    // Tunggu Firebase siap (max 3 detik)
+    function whenReady(fn, tries) {
+        tries = tries || 0;
+        if (window.db) { fn(window.db); return; }
+        if (tries > 30) { console.warn('[Firebase Live] db not ready'); return; }
+        setTimeout(() => whenReady(fn, tries + 1), 100);
     }
+
+    whenReady(function(db) {
+        try {
+            // --- Visitor Counter ---
+            const visitorRef = db.collection('siteStats').doc('visitors');
+            const visited = sessionStorage.getItem('sg_visited');
+            if (!visited) {
+                sessionStorage.setItem('sg_visited', '1');
+                visitorRef.set(
+                    { count: firebase.firestore.FieldValue.increment(1), lastSeen: firebase.firestore.FieldValue.serverTimestamp() },
+                    { merge: true }
+                );
+            }
+            visitorRef.onSnapshot(snap => {
+                const count = snap.data()?.count || 0;
+                document.querySelectorAll('.live-visitor-count').forEach(el => {
+                    el.textContent = count.toLocaleString('id-ID');
+                });
+            });
+
+            // --- Donasi Realtime ---
+            db.collection('siteStats').doc('donasi').onSnapshot(snap => {
+                const total = snap.data()?.total || 0;
+                document.querySelectorAll('.live-donasi-total').forEach(el => {
+                    el.textContent = 'Rp ' + total.toLocaleString('id-ID');
+                });
+            });
+
+            // --- Jumlah Santri Realtime ---
+            db.collection('siteStats').doc('santri').onSnapshot(snap => {
+                const jml = snap.data()?.jumlah || 0;
+                document.querySelectorAll('.live-santri-count').forEach(el => {
+                    el.textContent = jml.toLocaleString('id-ID');
+                });
+            });
+
+            // --- Warta/Berita terbaru di marquee ---
+            db.collection('warta').orderBy('tanggal', 'desc').limit(5).onSnapshot(snap => {
+                if (snap.empty) return;
+                const items = snap.docs.map(d => d.data().judul || '').filter(Boolean);
+                const marqueeEl = document.getElementById('marquee-warta');
+                if (marqueeEl && items.length) {
+                    marqueeEl.textContent = items.map(t => '📰 ' + t).join('  |  ');
+                }
+                // Update news cards jika ada
+                const newsGrid = document.querySelector('.news-grid');
+                if (newsGrid && snap.docs.length >= 1) {
+                    snap.docs.slice(0, 3).forEach((doc, i) => {
+                        const data = doc.data();
+                        const cards = newsGrid.querySelectorAll('.news-card');
+                        if (cards[i] && data.judul) {
+                            const titleEl = cards[i].querySelector('.news-title');
+                            const excerptEl = cards[i].querySelector('.news-excerpt');
+                            const metaEl = cards[i].querySelector('.news-meta');
+                            if (titleEl) titleEl.textContent = data.judul;
+                            if (excerptEl && data.isi) excerptEl.textContent = data.isi.slice(0, 120) + '...';
+                            if (metaEl && data.tanggal?.toDate) {
+                                const tgl = data.tanggal.toDate();
+                                metaEl.innerHTML = '<i class="fas fa-calendar"></i> ' + tgl.toLocaleDateString('id-ID', {day:'numeric', month:'long', year:'numeric'});
+                            }
+                        }
+                    });
+                }
+            });
+
+            // --- Progress Pembangunan Realtime ---
+            db.collection('siteStats').doc('pembangunan').onSnapshot(snap => {
+                if (!snap.exists) return;
+                const data = snap.data();
+                const map = {
+                    'progress-masjid': data.masjid,
+                    'progress-kelas':  data.kelas,
+                    'progress-asrama': data.asrama,
+                    'progress-lab':    data.lab
+                };
+                Object.entries(map).forEach(([id, val]) => {
+                    if (val === undefined) return;
+                    const el = document.getElementById(id);
+                    if (el) {
+                        el.style.width = val + '%';
+                        const pct = el.closest('.card')?.querySelector('[data-pct]');
+                        if (pct) pct.textContent = val + '%';
+                    }
+                });
+            });
+
+            // --- Saldo Donasi Target ---
+            db.collection('siteStats').doc('donasiTarget').onSnapshot(snap => {
+                if (!snap.exists) return;
+                const { terkumpul, target } = snap.data();
+                const pct = target ? Math.min(100, Math.round((terkumpul / target) * 100)) : 0;
+                document.querySelectorAll('.donasi-progress-bar').forEach(el => el.style.width = pct + '%');
+                document.querySelectorAll('.donasi-pct').forEach(el => el.textContent = pct + '%');
+            });
+
+        } catch(e) {
+            console.warn('[Firebase Live]', e.message);
+        }
+    });
 })();
 </script>
 </body>
