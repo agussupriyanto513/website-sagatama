@@ -4417,17 +4417,17 @@ window.addEventListener('scroll', () => {
 
 <!-- ======= SGT FLOATING BUTTON ======= -->
 <div class="sgt-floating" id="sgtFloating">
-    <button class="sgt-fab" onclick="toggleSGTPanel()" title="Buka SGT Wallet">
+    <button class="sgt-fab" onclick="openSGTWallet()" title="Buka SGT Wallet">
         SGT
         <span class="sgt-badge-count" id="sgtNotif">5</span>
     </button>
 </div>
 
-<!-- ======= SGT WALLET MODAL ENHANCED ======= -->
+<!-- ======= SGT WALLET MODAL — FULL REBUILD ======= -->
 <div class="sgt-wallet-overlay" id="sgt-wallet-overlay" onclick="closeSGTWalletOutside(event)">
 <div class="sgt-wallet-modal" id="swm-modal">
 
-    <!-- HEADER -->
+    <!-- HEADER BRAND -->
     <div class="swm-header">
         <div class="swm-header-top">
             <div class="swm-brand">
@@ -4440,8 +4440,8 @@ window.addEventListener('scroll', () => {
             <button class="swm-close" onclick="closeSGTWallet()"><i class="fas fa-times"></i></button>
         </div>
 
-        <!-- Tampil hanya jika sudah login -->
-        <div id="swm-wallet" style="display:none;">
+        <!-- BALANCE SECTION (hanya jika login) -->
+        <div id="swm-logged-header" style="display:none;">
             <div class="swm-balance-card">
                 <div class="swm-bal-label">Saldo Anda</div>
                 <div class="swm-bal-top">
@@ -4456,17 +4456,17 @@ window.addEventListener('scroll', () => {
                     </div>
                 </div>
                 <div class="swm-konversi-row">
-                    <div class="swm-konv-badge pi" onclick="swtTab('tukar',document.querySelectorAll('.swm-tab')[1])">
+                    <div class="swm-konv-badge pi" onclick="swtSwitchTab('tukar')">
                         <div class="lbl">500 SGT =</div>
                         <div class="val">1 π Pi</div>
                     </div>
-                    <div class="swm-konv-badge rp" onclick="swtTab('tukar',document.querySelectorAll('.swm-tab')[1])">
+                    <div class="swm-konv-badge rp" onclick="swtSwitchTab('tukar')">
                         <div class="lbl">1 π Pi ≈</div>
                         <div class="val" id="swm-pi-rp-rate">Rp …</div>
                     </div>
                     <div class="swm-konv-badge pi" style="cursor:default;">
                         <div class="lbl">Status</div>
-                        <div class="val" style="color:#86efac;">Testnet</div>
+                        <div class="val" style="color:#86efac;">Testnet 🟢</div>
                     </div>
                 </div>
             </div>
@@ -4482,16 +4482,16 @@ window.addEventListener('scroll', () => {
 
         <!-- TABS (hanya jika login) -->
         <div class="swm-tabs" id="swm-tabs" style="display:none;">
-            <button class="swm-tab active" onclick="swtTab('misi',this)">
+            <button class="swm-tab active" id="tab-btn-misi" onclick="swtSwitchTab('misi')">
                 <i class="fas fa-tasks"></i> Misi
             </button>
-            <button class="swm-tab" onclick="swtTab('tukar',this)">
+            <button class="swm-tab" id="tab-btn-tukar" onclick="swtSwitchTab('tukar')">
                 <i class="fas fa-exchange-alt"></i> Tukar
             </button>
-            <button class="swm-tab" onclick="swtTab('riwayat',this)">
+            <button class="swm-tab" id="tab-btn-riwayat" onclick="swtSwitchTab('riwayat')">
                 <i class="fas fa-history"></i> Riwayat
             </button>
-            <button class="swm-tab" onclick="swtTab('papan',this)">
+            <button class="swm-tab" id="tab-btn-papan" onclick="swtSwitchTab('papan')">
                 <i class="fas fa-trophy"></i> Papan
             </button>
         </div>
@@ -4500,10 +4500,10 @@ window.addEventListener('scroll', () => {
     <!-- BODY -->
     <div class="swm-body" id="swm-body">
 
-        <!-- AUTH SCREEN -->
-        <div id="swm-auth">
+        <!-- ===== AUTH SCREEN ===== -->
+        <div id="swm-auth" style="display:block;">
             <div id="swm-auth-title" class="swm-auth-title">Masuk ke SGT Wallet</div>
-            <div id="swm-auth-sub" class="swm-auth-sub">Login untuk simpan &amp; gunakan poin SGT Anda secara permanen. Kumpulkan SGT dan tukar ke Pi Network atau Rupiah!</div>
+            <div id="swm-auth-sub" class="swm-auth-sub">Login untuk simpan &amp; gunakan poin SGT Anda. Kumpulkan SGT dan tukar ke Pi Network atau Rupiah!</div>
             <button class="swm-google-btn" onclick="swtSignInGoogle()">
                 <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#4285F4" d="M44.5 20H24v8.5h11.8C34.7 33.9 30.1 37 24 37c-7.2 0-13-5.8-13-13s5.8-13 13-13c3.1 0 5.9 1.1 8.1 2.9l6.4-6.4C34.6 4.1 29.6 2 24 2 11.8 2 2 11.8 2 24s9.8 22 22 22c11 0 21-8 21-22 0-1.3-.2-2.7-.5-4z"/></svg>
                 Masuk dengan Google
@@ -4521,108 +4521,119 @@ window.addEventListener('scroll', () => {
                 <label>Password</label>
                 <input type="password" id="swm-pass" placeholder="Min. 6 karakter">
             </div>
-            <div class="swm-err" id="swm-err"></div>
+            <div class="swm-err" id="swm-err" style="display:none;"></div>
             <button class="swm-auth-btn" id="swm-auth-btn" onclick="swtHandleAuth()">
                 <span id="swm-auth-btn-text">Masuk</span>
             </button>
             <div class="swm-toggle" id="swm-toggle">Belum punya akun? <a onclick="swtToggleMode()">Daftar</a></div>
         </div>
 
-        <!-- WALLET CONTENT (hanya jika login) -->
+        <!-- ===== WALLET CONTENT (hanya jika login) ===== -->
         <div id="swm-wallet-content" style="display:none;">
+
+            <!-- Stats row -->
             <div class="swm-stats-row">
-                <div class="swm-stat"><div class="n" id="swm-earned">0</div><div class="l">Earned</div></div>
-                <div class="swm-stat"><div class="n" id="swm-redeemed">0</div><div class="l">Tukar</div></div>
+                <div class="swm-stat"><div class="n" id="swm-earned">0</div><div class="l">Diperoleh</div></div>
+                <div class="swm-stat"><div class="n" id="swm-redeemed">0</div><div class="l">Ditukar</div></div>
                 <div class="swm-stat"><div class="n" id="swm-pi-earned">0</div><div class="l">π Klaim</div></div>
             </div>
 
             <!-- TAB: MISI -->
-            <div id="swm-tab-misi">
+            <div id="swm-tab-misi" style="display:block;">
                 <div id="swm-tasks"></div>
             </div>
 
             <!-- TAB: TUKAR -->
             <div id="swm-tab-tukar" style="display:none;">
+
+                <!-- SGT → PI -->
                 <div class="tukar-section-title"><i class="fas fa-coins" style="color:#a78bfa"></i> Tukar ke Pi Network</div>
                 <div class="swm-exchange-card pi-card">
                     <div class="swm-exc-header">
-                        <div class="swm-exc-icon pi"><span style="font-size:1.2em;color:white;font-weight:900;">π</span></div>
+                        <div class="swm-exc-icon pi"><span style="font-size:1.3em;color:white;font-weight:900;">π</span></div>
                         <div>
                             <div class="swm-exc-title">SGT → Pi Network</div>
-                            <div class="swm-exc-sub">Tukar poin ke koin Pi · Belanja di Sagatama Mart</div>
+                            <div class="swm-exc-sub">Kurs tetap: 500 SGT = 1 π · Belanja di Sagatama Mart</div>
                         </div>
-                        <div class="swm-exc-badge">TESTNET 10π</div>
+                        <div class="swm-exc-badge" style="background:rgba(134,239,172,0.15);color:#86efac;border:1px solid rgba(134,239,172,0.3);">AKTIF ✓</div>
                     </div>
                     <div class="swm-kurs-info">
                         <span class="k">Kurs</span>
                         <span class="v">500 SGT = 1 π Pi</span>
                     </div>
+                    <!-- Input jumlah SGT -->
+                    <div class="swm-input-label" style="margin-bottom:6px;">Jumlah SGT yang ditukar</div>
                     <div class="swm-input-row">
                         <div class="swm-input-group">
-                            <div class="swm-input-label">Jumlah SGT</div>
-                            <input class="swm-inp pi-inp" type="number" id="pi-sgt-in" placeholder="500" min="500" step="500" oninput="hitungPi()" value="500">
+                            <input class="swm-inp pi-inp" type="number" id="pi-sgt-in" placeholder="500" min="500" step="500" oninput="hitungPi()" value="">
                             <span class="swm-inp-suffix">SGT</span>
                         </div>
                         <div class="swm-arrow"><i class="fas fa-arrow-right"></i></div>
                         <div class="swm-input-group">
-                            <div class="swm-input-label">Dapat Pi</div>
-                            <input class="swm-inp pi-inp" type="number" id="pi-out" placeholder="1" readonly>
-                            <span class="swm-inp-suffix">π</span>
+                            <input class="swm-inp pi-inp" type="text" id="pi-out" placeholder="0 π" readonly style="color:#a78bfa;">
+                            <span class="swm-inp-suffix" style="color:#a78bfa;">π</span>
                         </div>
                     </div>
-                    <div class="swm-preview pi-card">
-                        <span class="kiri">Saldo setelah tukar</span>
-                        <span class="kanan" id="pi-sisa">— SGT</span>
+                    <div class="swm-preview" style="background:rgba(124,58,237,0.1);border:1px solid rgba(124,58,237,0.2);border-radius:10px;padding:10px 14px;display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;font-size:0.78em;">
+                        <span style="color:rgba(255,255,255,0.45);">Saldo setelah tukar</span>
+                        <span style="color:#a78bfa;font-weight:800;" id="pi-sisa">— SGT</span>
                     </div>
-                    <button class="swm-btn-tukar pi-btn" id="pi-tukar-btn" onclick="konfirmasiTukar('pi')">
-                        <i class="fas fa-exchange-alt"></i> Tukar ke Pi Network
+                    <button class="swm-btn-tukar pi-btn" id="pi-tukar-btn" onclick="konfirmasiTukar('pi')" disabled>
+                        <i class="fas fa-exchange-alt"></i> Masukkan jumlah SGT
                     </button>
-                    <div class="swm-note">
+                    <div class="swm-note" style="margin-top:10px;">
                         <i class="fas fa-info-circle"></i>
-                        <p>Pi masih di fase <strong style="color:rgba(212,160,23,0.7)">Testnet (10 π)</strong>. Setelah klik tukar, notifikasi dikirim ke admin via WhatsApp. Pi dikirim ke akun Pi Anda (<strong style="color:#a78bfa">@sagatama_pi</strong>) dalam 1×24 jam. Gunakan untuk belanja di <a href="https://sagatama-mart.vercel.app" target="_blank">Sagatama Mart</a>. Saat Mainnet, nilai Pi otomatis lebih tinggi.</p>
+                        <p>Fase <strong style="color:#a78bfa">Testnet</strong> — Pi dikirim ke dompet Pi Anda via admin dalam 1×24 jam. Saat Mainnet nanti nilai Pi lebih tinggi! Gunakan Pi untuk belanja di <a href="https://sagatama-mart.vercel.app" target="_blank">Sagatama Mart</a>.</p>
                     </div>
                 </div>
 
-                <div class="tukar-section-title"><i class="fas fa-money-bill-wave" style="color:#fca5a5"></i> Tukar ke Rupiah</div>
+                <!-- SGT → RUPIAH -->
+                <div class="tukar-section-title" style="margin-top:20px;"><i class="fas fa-money-bill-wave" style="color:#fca5a5"></i> Cairkan ke Rupiah</div>
                 <div class="swm-exchange-card rp-card">
                     <div class="swm-exc-header">
-                        <div class="swm-exc-icon rp"><i class="fas fa-rupiah-sign" style="color:white;font-size:0.9em;"></i></div>
+                        <div class="swm-exc-icon rp"><span style="color:white;font-weight:900;font-size:1em;">Rp</span></div>
                         <div>
                             <div class="swm-exc-title">SGT → Rupiah</div>
-                            <div class="swm-exc-sub">Cairkan ke saldo e-wallet atau transfer bank</div>
+                            <div class="swm-exc-sub">Cairkan ke e-wallet atau rekening bank</div>
                         </div>
-                        <div class="swm-exc-badge">SEGERA</div>
+                        <div class="swm-exc-badge">VIA ADMIN</div>
                     </div>
                     <div class="swm-kurs-info">
-                        <span class="k">Kurs saat ini</span>
-                        <span class="v" id="rp-kurs-display">1 π ≈ Rp …</span>
+                        <span class="k">Kurs live</span>
+                        <span class="v" id="rp-kurs-display" style="color:#fca5a5;">1 π ≈ Rp …</span>
                     </div>
+                    <!-- Input jumlah SGT -->
+                    <div class="swm-input-label" style="margin-bottom:6px;">Jumlah SGT yang dicairkan</div>
                     <div class="swm-input-row">
                         <div class="swm-input-group">
-                            <div class="swm-input-label">Jumlah SGT</div>
-                            <input class="swm-inp rp-inp" type="number" id="rp-sgt-in" placeholder="1000" min="500" step="500" oninput="hitungRp()" value="1000">
+                            <input class="swm-inp rp-inp" type="number" id="rp-sgt-in" placeholder="500" min="500" step="500" oninput="hitungRp()" value="">
                             <span class="swm-inp-suffix">SGT</span>
                         </div>
                         <div class="swm-arrow"><i class="fas fa-arrow-right"></i></div>
                         <div class="swm-input-group">
-                            <div class="swm-input-label">Dapat Rp</div>
-                            <input class="swm-inp rp-inp" type="text" id="rp-out" placeholder="Rp …" readonly>
+                            <input class="swm-inp rp-inp" type="text" id="rp-out" placeholder="Rp 0" readonly style="color:#fca5a5;">
                         </div>
                     </div>
-                    <div class="swm-preview rp-card">
-                        <span class="kiri">Saldo setelah tukar</span>
-                        <span class="kanan" id="rp-sisa">— SGT</span>
+                    <div class="swm-preview" style="background:rgba(220,38,38,0.08);border:1px solid rgba(220,38,38,0.18);border-radius:10px;padding:10px 14px;display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;font-size:0.78em;">
+                        <span style="color:rgba(255,255,255,0.45);">Saldo setelah cairkan</span>
+                        <span style="color:#fca5a5;font-weight:800;" id="rp-sisa">— SGT</span>
                     </div>
-                    <button class="swm-btn-tukar rp-btn" id="rp-tukar-btn" onclick="konfirmasiTukar('rp')">
-                        <i class="fas fa-hand-holding-usd"></i> Ajukan Pencairan Rupiah
+                    <button class="swm-btn-tukar rp-btn" id="rp-tukar-btn" onclick="konfirmasiTukar('rp')" disabled>
+                        <i class="fas fa-hand-holding-usd"></i> Masukkan jumlah SGT
                     </button>
-                    <div class="swm-note">
+                    <div class="swm-note" style="margin-top:10px;">
                         <i class="fas fa-info-circle"></i>
-                        <p>Pencairan Rp melalui konfirmasi admin via WhatsApp. Nilai 1 π dihitung berdasarkan harga pasar Pi saat pencairan. Min. 500 SGT (= 1 π).</p>
+                        <p>Pencairan via WhatsApp admin. Nilai dihitung dari harga Pi pasar saat pencairan. Min. <strong style="color:rgba(255,255,255,0.6)">500 SGT</strong>, kelipatan 500.</p>
                     </div>
                 </div>
 
-                <div class="tukar-section-title"><i class="fas fa-gift" style="color:var(--accent)"></i> Hadiah &amp; Diskon</div>
+                <!-- Hadiah & Diskon -->
+                <div class="tukar-section-title" style="margin-top:20px;"><i class="fas fa-gift" style="color:var(--accent)"></i> Hadiah &amp; Diskon</div>
+                <div style="background:rgba(212,160,23,0.07);border:1px solid rgba(212,160,23,0.15);border-radius:10px;padding:10px 14px;margin-bottom:12px;font-size:0.74em;color:rgba(255,255,255,0.5);">
+                    <i class="fas fa-wallet" style="color:var(--accent);margin-right:6px;"></i>
+                    Saldo: <strong style="color:var(--accent);" id="swm-redeem-bal">0 SGT</strong>
+                    <span style="margin-left:8px;">· Admin WA akan dikonfirmasi otomatis.</span>
+                </div>
                 <div class="swm-redeem-grid" id="swm-redeem"></div>
             </div>
 
@@ -4635,7 +4646,8 @@ window.addEventListener('scroll', () => {
             <div id="swm-tab-papan" style="display:none;">
                 <div id="swm-lb"><div class="swm-empty">Memuat data…</div></div>
             </div>
-        </div>
+
+        </div><!-- /swm-wallet-content -->
 
     </div><!-- /swm-body -->
 </div><!-- /modal -->
@@ -4649,7 +4661,7 @@ window.addEventListener('scroll', () => {
     <div class="swm-c-desc" id="swm-c-desc"></div>
     <div class="swm-c-detail">
         <div class="swm-c-row"><span class="l">Biaya SGT</span><span class="r" id="swm-c-cost">—</span></div>
-        <div class="swm-c-row" id="swm-c-row-dest" style="display:none;"><span class="l" id="swm-c-dest-label">Dapat</span><span class="r" id="swm-c-dest-val">—</span></div>
+        <div class="swm-c-row" id="swm-c-row-dest"><span class="l" id="swm-c-dest-label">Dapat</span><span class="r" id="swm-c-dest-val">—</span></div>
         <div class="swm-c-row" style="border-top:1px solid rgba(255,255,255,0.06);margin-top:6px;padding-top:6px;">
             <span class="l">Sisa SGT</span><span class="r" id="swm-c-after">—</span>
         </div>
@@ -4661,121 +4673,153 @@ window.addEventListener('scroll', () => {
 </div>
 </div>
 
-<!-- ======= SGT WALLET SYSTEM — Firebase Auth Powered ======= -->
+<!-- ======= SGT WALLET SYSTEM — FULL REBUILD ======= -->
 <script>
 // ============================================================
-//  SGT WALLET — Menggunakan Firebase Auth dari portal-sagatama
-//  Data tersimpan di: sgt_users/{uid} dan sgt_leaderboard/{uid}
+//  SGT WALLET — Firebase Auth + Firestore
+//  Data: sgt_users/{uid} | sgt_leaderboard/{uid}
+//  Kurs: 500 SGT = 1 π Pi | Live price from CoinGecko
 // ============================================================
 
 const SGT_TASKS = [
-    { key:'visit', name:'Kunjungi Portal Harian', desc:'Bonus otomatis tiap hari hadir', pts:10, icon:'👁️', bg:'rgba(16,185,129,0.15)', c:'#5eead4', daily:true },
-    { key:'share', name:'Share ke WhatsApp', desc:'Bagikan portal Sagatama ke kontak Anda', pts:25, icon:'📱', bg:'rgba(212,160,23,0.15)', c:'#d4a017' },
-    { key:'mart', name:'Kunjungi Sagatama Mart', desc:'Buka toko dan lihat produk unggulan', pts:50, icon:'🛍️', bg:'rgba(13,148,136,0.15)', c:'#5eead4' },
-    { key:'psb', name:'Isi Form Pendaftaran', desc:'Daftar sebagai calon santri baru', pts:100, icon:'📝', bg:'rgba(124,58,237,0.15)', c:'#c4b5fd' },
-    { key:'donasi', name:'Lakukan Donasi', desc:'Dukung pembangunan yayasan Sagatama', pts:200, icon:'❤️', bg:'rgba(212,160,23,0.15)', c:'#d4a017' },
-];
-const SGT_REDEEM = [
-    { key:'disc5', name:'Diskon 5% Mart', emoji:'🏷️', cost:200, desc:'Kupon diskon 5% di Sagatama Mart' },
-    { key:'disc10', name:'Diskon 10% Mart', emoji:'🎫', cost:400, desc:'Kupon diskon 10% di Sagatama Mart' },
-    { key:'stiker', name:'Stiker Eksklusif', emoji:'🌟', cost:150, desc:'Stiker eksklusif Yayasan Sagatama' },
-    { key:'kaos', name:'Kaos Sagatama', emoji:'👕', cost:1000, desc:'Kaos edisi terbatas yayasan' },
-    { key:'buku', name:'Buku Pesantren', emoji:'📖', cost:500, desc:'Buku pembelajaran santri pilihan' },
-    { key:'sertif', name:'Sertifikat Digital', emoji:'📜', cost:300, desc:'Sertifikat kontribusi komunitas' },
+    { key:'visit',  name:'Kunjungi Portal Harian',  desc:'Bonus otomatis tiap hari hadir',        pts:10,  icon:'👁️', bg:'rgba(16,185,129,0.15)', c:'#5eead4', daily:true },
+    { key:'share',  name:'Share ke WhatsApp',        desc:'Bagikan portal Sagatama ke kontak Anda', pts:25,  icon:'📱', bg:'rgba(212,160,23,0.15)', c:'#d4a017' },
+    { key:'mart',   name:'Kunjungi Sagatama Mart',   desc:'Buka toko dan lihat produk unggulan',    pts:50,  icon:'🛍️', bg:'rgba(13,148,136,0.15)', c:'#5eead4' },
+    { key:'psb',    name:'Isi Form Pendaftaran',     desc:'Daftar sebagai calon santri baru',       pts:100, icon:'📝', bg:'rgba(124,58,237,0.15)', c:'#c4b5fd' },
+    { key:'donasi', name:'Lakukan Donasi',           desc:'Dukung pembangunan yayasan Sagatama',    pts:200, icon:'❤️', bg:'rgba(212,160,23,0.15)', c:'#d4a017' },
 ];
 
+const SGT_REDEEM = [
+    { key:'disc5',  name:'Diskon 5% Mart',      emoji:'🏷️', cost:200,  desc:'Kupon diskon 5% di Sagatama Mart' },
+    { key:'disc10', name:'Diskon 10% Mart',     emoji:'🎫', cost:400,  desc:'Kupon diskon 10% di Sagatama Mart' },
+    { key:'stiker', name:'Stiker Eksklusif',    emoji:'🌟', cost:150,  desc:'Stiker eksklusif Yayasan Sagatama' },
+    { key:'kaos',   name:'Kaos Sagatama',       emoji:'👕', cost:1000, desc:'Kaos edisi terbatas yayasan' },
+    { key:'buku',   name:'Buku Pesantren',      emoji:'📖', cost:500,  desc:'Buku pembelajaran santri pilihan' },
+    { key:'sertif', name:'Sertifikat Digital',  emoji:'📜', cost:300,  desc:'Sertifikat kontribusi komunitas' },
+];
+
+// State global
 let _swtUser = null;
-let _swtData = { balance:0, totalEarned:0, totalRedeemed:0, claimed:[], lastVisit:'', streak:0, history:[] };
+let _swtData = { balance:0, totalEarned:0, totalRedeemed:0, piEarned:0, claimed:[], lastVisit:'', streak:0, history:[] };
 let _swtPendingRedeem = null;
 let _swtIsRegister = false;
+let _sgtPiUsd = 3.14;
+let _sgtUsdIdr = 16000;
+
+// ── Utilitas ─────────────────────────────────────────────
+function _el(id) { return document.getElementById(id); }
+function _fmtRp(val) { return 'Rp ' + Math.floor(val).toLocaleString('id-ID'); }
+function _sgtToPi(sgt) { return sgt / 500; }
+function _sgtToRp(sgt) { return (sgt / 500) * _sgtPiUsd * _sgtUsdIdr; }
 
 // ── Tunggu Firebase siap ──────────────────────────────────
 function _swtWhenReady(fn, n) {
-    n = n||0;
-    if (window.db && firebase.auth) { fn(); return; }
-    if (n>30) return;
-    setTimeout(()=>_swtWhenReady(fn, n+1), 100);
+    n = n || 0;
+    if (window.db && window.firebase?.auth) { fn(); return; }
+    if (n > 40) { console.warn('[SGT] Firebase timeout'); return; }
+    setTimeout(() => _swtWhenReady(fn, n + 1), 100);
 }
 
-_swtWhenReady(function() {
+_swtWhenReady(function () {
     firebase.auth().onAuthStateChanged(user => {
         _swtUser = user;
-        if (user) {
-            _swtShowWallet(user);
-        } else {
-            _swtShowAuth();
-        }
+        if (user) _swtOnLogin(user);
+        else      _swtOnLogout();
         _swtUpdateNavBtn();
     });
 });
 
-// ── Modal Open/Close ─────────────────────────────────────
-function openSGTWallet() {
-    document.getElementById('sgt-wallet-overlay').classList.add('open');
-}
-function closeSGTWallet() {
-    document.getElementById('sgt-wallet-overlay').classList.remove('open');
-}
-function closeSGTWalletOutside(e) {
-    if (e.target.id === 'sgt-wallet-overlay') closeSGTWallet();
-}
-
-// ── Auth Screens ─────────────────────────────────────────
-function _swtShowAuth() {
-    document.getElementById('swm-auth').style.display = 'block';
-    document.getElementById('swm-wallet').style.display = 'none';
-}
-function _swtShowWallet(user) {
-    document.getElementById('swm-auth').style.display = 'none';
-    document.getElementById('swm-wallet').style.display = 'block';
-    const name = user.displayName || user.email?.split('@')[0] || 'Pengguna';
-    document.getElementById('swm-uname').textContent = name;
-    document.getElementById('swm-avatar').textContent = (name[0]||'U').toUpperCase();
-    _swtLoadData(user.uid);
-}
-function _swtUpdateNavBtn() {
-    const btn = document.getElementById('navSgtBtn');
-    const bal = document.getElementById('navSgtBal');
-    if (!btn||!bal) return;
-    if (_swtUser) {
-        bal.textContent = (_swtData.balance||0).toLocaleString('id-ID') + ' SGT';
-    } else {
-        bal.textContent = 'Login';
+// ── Kurs live ─────────────────────────────────────────────
+async function _sgtFetchRates() {
+    // Sync Pi price dari ticker yang sudah ada
+    const tp = _el('piTickerPrice');
+    if (tp) {
+        const p = parseFloat(tp.textContent.replace('$', ''));
+        if (!isNaN(p) && p > 0) _sgtPiUsd = p;
     }
+    // Fetch kurs IDR
+    try {
+        const r = await fetch('https://api.exchangerate-api.com/v4/latest/USD', { signal: AbortSignal.timeout(4000) });
+        const d = await r.json();
+        if (d.rates?.IDR) _sgtUsdIdr = d.rates.IDR;
+    } catch(e) { /* pakai fallback */ }
+}
+_sgtFetchRates();
+
+// Dipanggil oleh updatePiUI (ticker) saat harga Pi diperbarui
+function _sgtSyncPiPrice(price) {
+    if (price > 0) { _sgtPiUsd = price; _swtUpdateEquiv(); }
 }
 
+// ── Modal Open/Close ─────────────────────────────────────
+function openSGTWallet()  { _el('sgt-wallet-overlay').classList.add('open'); }
+function closeSGTWallet() { _el('sgt-wallet-overlay').classList.remove('open'); }
+function closeSGTWalletOutside(e) { if (e.target.id === 'sgt-wallet-overlay') closeSGTWallet(); }
+function toggleSGTPanel() { openSGTWallet(); } // backward compat
+
+// ── Login / Logout views ──────────────────────────────────
+function _swtOnLogin(user) {
+    _el('swm-auth').style.display = 'none';
+    _el('swm-logged-header').style.display = 'block';
+    _el('swm-tabs').style.display = 'flex';
+    _el('swm-wallet-content').style.display = 'block';
+
+    const name = user.displayName || user.email?.split('@')[0] || 'Pengguna';
+    _el('swm-uname').textContent = name;
+    _el('swm-avatar').textContent = (name[0] || 'U').toUpperCase();
+
+    _swtLoadData(user.uid);
+    _swtSwitchTabInternal('misi'); // default tab
+}
+
+function _swtOnLogout() {
+    _el('swm-auth').style.display = 'block';
+    _el('swm-logged-header').style.display = 'none';
+    _el('swm-tabs').style.display = 'none';
+    _el('swm-wallet-content').style.display = 'none';
+    _swtData = { balance:0, totalEarned:0, totalRedeemed:0, piEarned:0, claimed:[], lastVisit:'', streak:0, history:[] };
+}
+
+// ── Nav button ────────────────────────────────────────────
+function _swtUpdateNavBtn() {
+    const btn = _el('navSgtBtn');
+    const bal = _el('navSgtBal');
+    if (!btn || !bal) return;
+    bal.textContent = _swtUser ? (_swtData.balance || 0).toLocaleString('id-ID') + ' SGT' : 'Login';
+}
+
+// ── Auth ──────────────────────────────────────────────────
 function swtToggleMode() {
     _swtIsRegister = !_swtIsRegister;
-    document.getElementById('swm-auth-title').textContent = _swtIsRegister ? 'Buat Akun Baru' : 'Masuk ke SGT Wallet';
-    document.getElementById('swm-auth-sub').textContent = _swtIsRegister ? 'Daftarkan diri untuk mulai kumpulkan SGT' : 'Login untuk simpan & gunakan poin SGT Anda secara permanen';
-    document.getElementById('swm-auth-btn-text').textContent = _swtIsRegister ? 'Daftar' : 'Masuk';
-    document.getElementById('swm-name').style.display = _swtIsRegister ? 'block' : 'none';
-    document.getElementById('swm-toggle').innerHTML = _swtIsRegister
+    _el('swm-auth-title').textContent = _swtIsRegister ? 'Buat Akun Baru' : 'Masuk ke SGT Wallet';
+    _el('swm-auth-btn-text').textContent = _swtIsRegister ? 'Daftar' : 'Masuk';
+    _el('swm-name').style.display = _swtIsRegister ? 'block' : 'none';
+    _el('swm-toggle').innerHTML = _swtIsRegister
         ? 'Sudah punya akun? <a onclick="swtToggleMode()">Masuk</a>'
         : 'Belum punya akun? <a onclick="swtToggleMode()">Daftar</a>';
     _swtErrMsg('');
 }
 function _swtErrMsg(m) {
-    const el = document.getElementById('swm-err');
-    el.textContent = m; el.style.display = m ? 'block' : 'none';
+    const el = _el('swm-err');
+    if (!el) return;
+    el.textContent = m;
+    el.style.display = m ? 'block' : 'none';
 }
 
 async function swtSignInGoogle() {
     try {
         _swtErrMsg('');
-        const p = new firebase.auth.GoogleAuthProvider();
-        await firebase.auth().signInWithPopup(p);
-        closeSGTWallet(); setTimeout(openSGTWallet, 300);
+        await firebase.auth().signInWithPopup(new firebase.auth.GoogleAuthProvider());
     } catch(e) { _swtErrMsg(e.message); }
 }
 
 async function swtHandleAuth() {
-    const email = (document.getElementById('swm-email').value||'').trim();
-    const pass = document.getElementById('swm-pass').value||'';
-    const name = (document.getElementById('swm-name').value||'').trim();
-    if (!email||!pass) { _swtErrMsg('Email dan password wajib diisi.'); return; }
-    const btn = document.getElementById('swm-auth-btn');
-    btn.disabled = true;
+    const email = (_el('swm-email')?.value || '').trim();
+    const pass  = _el('swm-pass')?.value || '';
+    const name  = (_el('swm-name-inp')?.value || '').trim();
+    if (!email || !pass) { _swtErrMsg('Email dan password wajib diisi.'); return; }
+    const btn = _el('swm-auth-btn');
+    if (btn) btn.disabled = true;
     try {
         _swtErrMsg('');
         if (_swtIsRegister) {
@@ -4786,38 +4830,50 @@ async function swtHandleAuth() {
             await firebase.auth().signInWithEmailAndPassword(email, pass);
         }
     } catch(e) {
-        const msgs = { 'auth/user-not-found':'Akun tidak ditemukan.', 'auth/wrong-password':'Password salah.', 'auth/email-already-in-use':'Email sudah terdaftar.', 'auth/weak-password':'Password min 6 karakter.', 'auth/invalid-email':'Format email salah.' };
-        _swtErrMsg(msgs[e.code]||e.message);
-    } finally { btn.disabled = false; }
+        const msgs = {
+            'auth/user-not-found':'Akun tidak ditemukan.',
+            'auth/wrong-password':'Password salah.',
+            'auth/email-already-in-use':'Email sudah terdaftar.',
+            'auth/weak-password':'Password min 6 karakter.',
+            'auth/invalid-email':'Format email salah.',
+            'auth/invalid-credential':'Email atau password salah.'
+        };
+        _swtErrMsg(msgs[e.code] || e.message);
+    } finally { if (btn) btn.disabled = false; }
 }
 
 async function swtSignOut() {
     await firebase.auth().signOut();
-    _swtData = { balance:0, totalEarned:0, totalRedeemed:0, claimed:[], lastVisit:'', streak:0, history:[] };
     _swtUpdateNavBtn();
 }
 
-// ── Data ─────────────────────────────────────────────────
+// ── Data Firestore ────────────────────────────────────────
 async function _swtLoadData(uid) {
     try {
         const doc = await window.db.collection('sgt_users').doc(uid).get();
         if (doc.exists) {
             _swtData = { ..._swtData, ...doc.data() };
         } else {
-            // Cek localStorage lama (migrasi)
+            // User baru — cek migrasi localStorage
             try {
-                const old = JSON.parse(localStorage.getItem('sgt_data')||'{}');
-                _swtData = { balance: old.balance||10, totalEarned: old.balance||10, totalRedeemed:0, claimed: old.claimed||[], lastVisit: new Date().toDateString(), streak:1, history:[{ key:'visit', pts:10, ts:Date.now(), label:'Kunjungan Pertama' }] };
+                const old = JSON.parse(localStorage.getItem('sgt_data') || '{}');
+                _swtData = { balance: old.balance || 10, totalEarned: old.balance || 10, totalRedeemed: 0, piEarned: 0,
+                    claimed: old.claimed || [], lastVisit: new Date().toDateString(), streak: 1,
+                    history: [{ key:'visit', pts:10, ts:Date.now(), label:'Kunjungan Pertama' }] };
             } catch(e) {
-                _swtData = { balance:10, totalEarned:10, totalRedeemed:0, claimed:[], lastVisit: new Date().toDateString(), streak:1, history:[{ key:'visit', pts:10, ts:Date.now(), label:'Kunjungan Pertama' }] };
+                _swtData = { balance:10, totalEarned:10, totalRedeemed:0, piEarned:0, claimed:[],
+                    lastVisit: new Date().toDateString(), streak:1,
+                    history:[{ key:'visit', pts:10, ts:Date.now(), label:'Kunjungan Pertama' }] };
             }
             await _swtSave(uid);
-            showToast('🎉 Selamat datang di SGT Wallet! +10 SGT bonus pertama!');
+            showToast('🎉 Selamat datang! +10 SGT bonus pertama!');
         }
         await _swtAutoVisit(uid);
         _swtRender();
         _swtUpdateNavBtn();
         _swtLoadLB(uid);
+        await _sgtFetchRates();
+        _swtUpdateEquiv();
     } catch(e) {
         console.warn('[SGT Wallet]', e);
         _swtRender();
@@ -4826,51 +4882,65 @@ async function _swtLoadData(uid) {
 
 async function _swtSave(uid) {
     try {
-        await window.db.collection('sgt_users').doc(uid).set(_swtData, { merge:true });
+        await window.db.collection('sgt_users').doc(uid).set(_swtData, { merge: true });
         const name = _swtUser?.displayName || _swtUser?.email?.split('@')[0] || 'Anonim';
-        await window.db.collection('sgt_leaderboard').doc(uid).set({ name, balance: _swtData.balance, uid }, { merge:true });
-        // Update nav
+        await window.db.collection('sgt_leaderboard').doc(uid).set(
+            { name, balance: _swtData.balance, uid }, { merge: true }
+        );
         _swtUpdateNavBtn();
-        // Sync ke SGT lama (backward compat)
         try { localStorage.setItem('sgt_data', JSON.stringify({ balance:_swtData.balance, claimed:_swtData.claimed, lastVisit:_swtData.lastVisit })); } catch(e){}
-    } catch(e) {
-        console.warn('[SGT save]', e);
-    }
+    } catch(e) { console.warn('[SGT save]', e); }
 }
 
 async function _swtAutoVisit(uid) {
     const today = new Date().toDateString();
     if (_swtData.lastVisit === today) return;
-    const yest = new Date(Date.now()-86400000).toDateString();
-    const ns = _swtData.lastVisit === yest ? (_swtData.streak||0)+1 : 1;
+    const yest = new Date(Date.now() - 86400000).toDateString();
+    const ns = _swtData.lastVisit === yest ? (_swtData.streak || 0) + 1 : 1;
     const pts = ns >= 7 ? 20 : 10;
     _swtData.lastVisit = today;
     _swtData.streak = ns;
-    _swtData.balance = (_swtData.balance||0) + pts;
-    _swtData.totalEarned = (_swtData.totalEarned||0) + pts;
-    _swtData.history = [{ key:'visit', pts, ts:Date.now(), label:`Kunjungan Harian${ns>1?' · Streak '+ns+' hari':''}` }, ...(_swtData.history||[])].slice(0,60);
+    _swtData.balance = (_swtData.balance || 0) + pts;
+    _swtData.totalEarned = (_swtData.totalEarned || 0) + pts;
+    _swtData.history = [{ key:'visit', pts, ts:Date.now(), label:`Kunjungan Harian${ns > 1 ? ' · Streak '+ns+' hari' : ''}` }, ...(_swtData.history || [])].slice(0, 60);
     await _swtSave(uid);
-    setTimeout(()=> showToast(`🪙 +${pts} SGT kunjungan harian! Streak: ${ns} hari${ns>=7?' 🔥':''}`), 2000);
+    setTimeout(() => showToast(`🪙 +${pts} SGT kunjungan harian! Streak: ${ns} hari${ns >= 7 ? ' 🔥' : ''}`), 2000);
 }
 
 // ── Render ────────────────────────────────────────────────
 function _swtRender() {
-    _swtAnimNum(document.getElementById('swm-bal'), _swtData.balance||0);
-    _swtAnimNum(document.getElementById('swm-earned'), _swtData.totalEarned||0);
-    _swtAnimNum(document.getElementById('swm-redeemed'), _swtData.totalRedeemed||0);
-    if (document.getElementById('swm-streak')) document.getElementById('swm-streak').textContent = _swtData.streak||0;
-    if (document.getElementById('swm-redeem-bal')) document.getElementById('swm-redeem-bal').textContent = (_swtData.balance||0)+' SGT';
+    _swtAnimNum(_el('swm-bal'),      _swtData.balance || 0);
+    _swtAnimNum(_el('swm-earned'),   _swtData.totalEarned || 0);
+    _swtAnimNum(_el('swm-redeemed'), _swtData.totalRedeemed || 0);
+    const piEl = _el('swm-pi-earned');
+    if (piEl) piEl.textContent = (_swtData.piEarned || 0).toFixed(3);
+    const strEl = _el('swm-streak');
+    if (strEl) strEl.textContent = _swtData.streak || 0;
+    const rbEl = _el('swm-redeem-bal');
+    if (rbEl) rbEl.textContent = (_swtData.balance || 0) + ' SGT';
     _swtRenderTasks();
     _swtRenderRedeem();
+    _swtUpdateEquiv();
+}
+
+function _swtUpdateEquiv() {
+    const bal = _swtData.balance || 0;
+    const piEq = (bal / 500).toFixed(3);
+    const rpEq = _sgtToRp(bal);
+    const piRpRate = _sgtPiUsd * _sgtUsdIdr;
+    if (_el('swm-pi-equiv'))    _el('swm-pi-equiv').textContent    = piEq + ' π';
+    if (_el('swm-rp-equiv'))    _el('swm-rp-equiv').textContent    = _fmtRp(rpEq);
+    if (_el('swm-pi-rp-rate'))  _el('swm-pi-rp-rate').textContent  = _fmtRp(piRpRate);
+    if (_el('rp-kurs-display')) _el('rp-kurs-display').textContent = '1 π ≈ ' + _fmtRp(piRpRate);
 }
 
 function _swtRenderTasks() {
     const today = new Date().toDateString();
-    const box = document.getElementById('swm-tasks');
+    const box = _el('swm-tasks');
     if (!box) return;
     box.innerHTML = SGT_TASKS.map(t => {
-        const done = t.daily ? _swtData.lastVisit===today : (_swtData.claimed||[]).includes(t.key);
-        return `<div class="swm-task ${done?'swm-done':''}" id="swmt-${t.key}" ${!done?`onclick="_swtClaimTask('${t.key}',${t.pts},this)"`:''}>
+        const done = t.daily ? _swtData.lastVisit === today : (_swtData.claimed || []).includes(t.key);
+        return `<div class="swm-task ${done ? 'swm-done' : ''}" id="swmt-${t.key}" ${!done ? `onclick="_swtClaimTask('${t.key}',${t.pts},this)"` : ''}>
             <div class="swm-ticon" style="background:${t.bg};color:${t.c};">${t.icon}</div>
             <div class="swm-tinfo"><div class="swm-tname">${t.name}</div><div class="swm-tdesc">${t.desc}</div></div>
             ${done ? '<i class="fas fa-check-circle" style="color:#10b981;font-size:1.1em;"></i>' : `<div class="swm-tpts">+${t.pts} SGT</div>`}
@@ -4879,12 +4949,12 @@ function _swtRenderTasks() {
 }
 
 function _swtRenderRedeem() {
-    const box = document.getElementById('swm-redeem');
+    const box = _el('swm-redeem');
     if (!box) return;
-    const bal = _swtData.balance||0;
+    const bal = _swtData.balance || 0;
     box.innerHTML = SGT_REDEEM.map(r => {
         const locked = bal < r.cost;
-        return `<div class="swm-rcard ${locked?'swm-locked':''}" ${!locked?`onclick="_swtOpenConfirm('${r.key}')"`:''} title="${locked?'SGT tidak cukup':'Tukar '+r.name}">
+        return `<div class="swm-rcard ${locked ? 'swm-locked' : ''}" ${!locked ? `onclick="_swtOpenConfirm('${r.key}')"` : ''} title="${locked ? 'SGT tidak cukup' : 'Tukar '+r.name}">
             <div class="swm-remoji">${r.emoji}</div>
             <div class="swm-rname">${r.name}</div>
             <div class="swm-rcost">🪙 ${r.cost} SGT</div>
@@ -4895,91 +4965,104 @@ function _swtRenderRedeem() {
 
 // ── Task Claim ────────────────────────────────────────────
 async function _swtClaimTask(key, pts, el) {
-    if (!_swtUser||el.classList.contains('swm-done')) return;
+    if (!_swtUser || el.classList.contains('swm-done')) return;
     if (key === 'share') {
-        const txt = encodeURIComponent('Assalamualaikum! Temukan Portal Sagatama — ekosistem digital pesantren modern berbasis Firebase 🕌\n\n🌐 https://portal-sagatama.web.app\n\n🌟 Yayasan Hidayatul Amin Sagatama — Spiritual · Teknologi AI · Ekonomi Mandiri');
-        window.open('https://wa.me/?text='+txt,'_blank');
+        const txt = encodeURIComponent('Assalamualaikum! Temukan Portal Sagatama 🕌\n\nhttps://portal-sagatama.web.app\n\nEkosistem digital pesantren modern! ✨');
+        window.open('https://wa.me/?text=' + txt, '_blank');
         el.querySelector('.swm-tpts').innerHTML = `<button onclick="_swtConfirmShare(event)" style="background:#d4a017;color:#070d1a;border:none;border-radius:6px;padding:4px 8px;font-size:0.7em;font-weight:800;cursor:pointer;">Sudah ✓</button>`;
         return;
     }
-    if (key==='mart') window.open('https://sagatama-mart.vercel.app','_blank');
-    if (key==='psb') { closeSGTWallet(); setTimeout(()=>scrollToSection('psb'),300); }
-    if (key==='donasi') { closeSGTWallet(); setTimeout(()=>scrollToSection('donasi'),300); }
-    await _swtAddPts(key, pts, SGT_TASKS.find(t=>t.key===key)?.name||key);
+    if (key === 'mart')   window.open('https://sagatama-mart.vercel.app', '_blank');
+    if (key === 'psb')    { closeSGTWallet(); setTimeout(() => scrollToSection('psb'), 300); }
+    if (key === 'donasi') { closeSGTWallet(); setTimeout(() => scrollToSection('donasi'), 300); }
+    await _swtAddPts(key, pts, SGT_TASKS.find(t => t.key === key)?.name || key);
 }
 
 async function _swtConfirmShare(e) {
     e.stopPropagation();
-    const el = document.getElementById('swmt-share');
-    if (!el||!_swtUser||(_swtData.claimed||[]).includes('share')) { _swtRenderTasks(); return; }
+    const el = _el('swmt-share');
+    if (!el || !_swtUser || (_swtData.claimed || []).includes('share')) { _swtRenderTasks(); return; }
     await _swtAddPts('share', 25, 'Share ke WhatsApp');
 }
 
 async function _swtAddPts(key, pts, label) {
     if (!_swtUser) return;
     const today = new Date().toDateString();
-    if (key==='visit'&&_swtData.lastVisit===today) return;
-    if (key!=='visit'&&(_swtData.claimed||[]).includes(key)) return;
-    if (key!=='visit') _swtData.claimed = [...(_swtData.claimed||[]), key];
-    _swtData.balance = (_swtData.balance||0)+pts;
-    _swtData.totalEarned = (_swtData.totalEarned||0)+pts;
-    _swtData.history = [{ key, pts, ts:Date.now(), label }, ...(_swtData.history||[])].slice(0,60);
+    if (key === 'visit' && _swtData.lastVisit === today) return;
+    if (key !== 'visit' && (_swtData.claimed || []).includes(key)) return;
+    if (key !== 'visit') _swtData.claimed = [...(_swtData.claimed || []), key];
+    _swtData.balance      = (_swtData.balance || 0) + pts;
+    _swtData.totalEarned  = (_swtData.totalEarned || 0) + pts;
+    _swtData.history      = [{ key, pts, ts: Date.now(), label }, ...(_swtData.history || [])].slice(0, 60);
     await _swtSave(_swtUser.uid);
     _swtRender();
     showToast(`🪙 +${pts} SGT dari "${label}"! Total: ${_swtData.balance} SGT`);
 }
 
-// ── Redeem ────────────────────────────────────────────────
+// ── Redeem (Hadiah/Diskon) ────────────────────────────────
 function _swtOpenConfirm(key) {
-    const r = SGT_REDEEM.find(x=>x.key===key);
+    const r = SGT_REDEEM.find(x => x.key === key);
     if (!r) return;
     _swtPendingRedeem = r;
-    document.getElementById('swm-c-emoji').textContent = r.emoji;
-    document.getElementById('swm-c-title').textContent = r.name;
-    document.getElementById('swm-c-desc').textContent = r.desc;
-    document.getElementById('swm-c-cost').textContent = r.cost+' SGT';
-    document.getElementById('swm-c-after').textContent = ((_swtData.balance||0)-r.cost)+' SGT';
-    document.getElementById('swm-confirm').classList.add('open');
-}
-function swtCloseConfirm() {
-    document.getElementById('swm-confirm').classList.remove('open');
-    _swtPendingRedeem = null;
-}
-async function swtDoRedeem() {
-    if (!_swtPendingRedeem||!_swtUser) return;
-    const r = _swtPendingRedeem;
-    _swtData.balance = (_swtData.balance||0) - r.cost;
-    _swtData.totalRedeemed = (_swtData.totalRedeemed||0) + r.cost;
-    _swtData.history = [{ key:'redeem', pts:-r.cost, ts:Date.now(), label:'Tukar: '+r.name }, ...(_swtData.history||[])].slice(0,60);
-    await _swtSave(_swtUser.uid);
-    swtCloseConfirm();
-    _swtRender();
-    _swtRenderHistory();
-    showToast(`🎁 Berhasil! Admin WA akan segera dihubungi untuk klaim "${r.name}"`);
-    setTimeout(()=>{
-        const name = _swtUser.displayName||_swtUser.email;
-        const txt = encodeURIComponent(`Assalamualaikum Admin Sagatama,\n\nSaya ingin menukar poin SGT:\n\n*Nama:* ${name}\n*Email:* ${_swtUser.email}\n*Hadiah:* ${r.name} ${r.emoji}\n*Biaya:* ${r.cost} SGT\n\nMohon konfirmasi penukaran. Jazakallah.`);
-        window.open('https://wa.me/6285213346061?text='+txt,'_blank');
-    }, 800);
+    _el('swm-c-emoji').textContent  = r.emoji;
+    _el('swm-c-title').textContent  = r.name;
+    _el('swm-c-desc').textContent   = r.desc;
+    _el('swm-c-cost').textContent   = r.cost + ' SGT';
+    _el('swm-c-dest-label').textContent = 'Hadiah';
+    _el('swm-c-dest-val').textContent   = r.name + ' ' + r.emoji;
+    _el('swm-c-after').textContent  = ((_swtData.balance || 0) - r.cost) + ' SGT';
+    const ok = _el('swm-c-ok');
+    if (ok) { ok.className = 'swm-c-ok'; ok.textContent = 'Ya, Tukar!'; }
+    _el('swm-confirm').classList.add('open');
 }
 
-// ── History ───────────────────────────────────────────────
+function swtCloseConfirm() {
+    _el('swm-confirm').classList.remove('open');
+    _swtPendingRedeem = null;
+    _sgtPendingType = null;
+    _sgtPendingAmt  = 0;
+}
+
+// ── TAB SWITCHER ─────────────────────────────────────────
+function _swtSwitchTabInternal(id) {
+    ['misi','tukar','riwayat','papan'].forEach(t => {
+        const el = _el('swm-tab-' + t);
+        if (el) el.style.display = t === id ? 'block' : 'none';
+        const btn = _el('tab-btn-' + t);
+        if (btn) btn.classList.toggle('active', t === id);
+    });
+    if (id === 'riwayat') _swtRenderHistory();
+    if (id === 'papan' && _swtUser) _swtLoadLB(_swtUser.uid);
+    if (id === 'tukar') {
+        _sgtFetchRates().then(() => { hitungPi(); hitungRp(); _swtUpdateEquiv(); });
+    }
+}
+
+// Fungsi publik dipanggil dari onclick HTML
+function swtSwitchTab(id) { _swtSwitchTabInternal(id); }
+// Alias lama untuk backward compat
+function swtTab(id, btn) { _swtSwitchTabInternal(id); }
+
+// ── Riwayat ───────────────────────────────────────────────
 function _swtRenderHistory() {
-    const box = document.getElementById('swm-history');
+    const box = _el('swm-history');
     if (!box) return;
-    const hist = _swtData.history||[];
+    const hist = _swtData.history || [];
     if (!hist.length) { box.innerHTML = '<div class="swm-empty">Belum ada transaksi</div>'; return; }
     const ICONS = { visit:'👁️', share:'📱', mart:'🛍️', psb:'📝', donasi:'❤️', redeem:'🎁', pi_out:'🟣', rp_out:'💵' };
-    const BGAS = { visit:'rgba(16,185,129,0.15)', share:'rgba(212,160,23,0.15)', mart:'rgba(13,148,136,0.15)', psb:'rgba(124,58,237,0.15)', donasi:'rgba(212,160,23,0.15)', redeem:'rgba(239,68,68,0.15)', pi_out:'rgba(124,58,237,0.15)', rp_out:'rgba(220,38,38,0.15)' };
-    box.innerHTML = hist.slice(0,20).map(h=>{
-        const d = new Date(h.ts);
-        const tgl = d.toLocaleDateString('id-ID',{day:'numeric',month:'short'}) + ' ' + d.toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'});
+    const BGAS  = { visit:'rgba(16,185,129,0.15)', share:'rgba(212,160,23,0.15)', mart:'rgba(13,148,136,0.15)',
+                    psb:'rgba(124,58,237,0.15)', donasi:'rgba(212,160,23,0.15)', redeem:'rgba(239,68,68,0.15)',
+                    pi_out:'rgba(124,58,237,0.15)', rp_out:'rgba(220,38,38,0.15)' };
+    box.innerHTML = hist.slice(0, 20).map(h => {
+        const d   = new Date(h.ts);
+        const tgl = d.toLocaleDateString('id-ID', { day:'numeric', month:'short' }) + ' ' +
+                    d.toLocaleTimeString('id-ID', { hour:'2-digit', minute:'2-digit' });
         return `<div class="swm-hitem">
             <div class="swm-hleft">
                 <div class="swm-hicon" style="background:${BGAS[h.key]||'rgba(255,255,255,0.07)'};">${ICONS[h.key]||'📦'}</div>
                 <div><div class="swm-hdesc">${h.label||h.key}</div><div class="swm-htime">${tgl}</div></div>
             </div>
-            <div class="swm-hpts ${h.pts>0?'plus':'minus'}">${h.pts>0?'+':''}${h.pts} SGT</div>
+            <div class="swm-hpts ${h.pts > 0 ? 'plus' : 'minus'}">${h.pts > 0 ? '+' : ''}${h.pts} SGT</div>
         </div>`;
     }).join('');
 }
@@ -4987,353 +5070,228 @@ function _swtRenderHistory() {
 // ── Leaderboard ───────────────────────────────────────────
 async function _swtLoadLB(myUid) {
     try {
-        const snap = await window.db.collection('sgt_leaderboard').orderBy('balance','desc').limit(10).get();
-        const box = document.getElementById('swm-lb');
+        const snap = await window.db.collection('sgt_leaderboard').orderBy('balance', 'desc').limit(10).get();
+        const box = _el('swm-lb');
         if (!box) return;
         if (snap.empty) { box.innerHTML = '<div class="swm-empty">Belum ada data</div>'; return; }
         let myRank = '—';
-        box.innerHTML = snap.docs.map((doc,i)=>{
+        box.innerHTML = snap.docs.map((doc, i) => {
             const d = doc.data();
             const isMe = doc.id === myUid;
-            if (isMe) myRank = '#'+(i+1);
-            const rc = i===0?'r1':i===1?'r2':i===2?'r3':'';
-            const ri = i===0?'🥇':i===1?'🥈':i===2?'🥉':'#'+(i+1);
-            return `<div class="swm-lbitem ${isMe?'swm-me':''}">
+            if (isMe) myRank = '#' + (i + 1);
+            const rc = i === 0 ? 'r1' : i === 1 ? 'r2' : i === 2 ? 'r3' : '';
+            const ri = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : '#' + (i + 1);
+            return `<div class="swm-lbitem ${isMe ? 'swm-me' : ''}">
                 <div class="swm-lbrank ${rc}">${ri}</div>
                 <div class="swm-lbav">${(d.name||'?')[0].toUpperCase()}</div>
-                <div class="swm-lbname">${d.name||'Anonim'}${isMe?' <span style="font-size:0.7em;color:#d4a017;">(Anda)</span>':''}</div>
+                <div class="swm-lbname">${d.name||'Anonim'}${isMe ? ' <span style="font-size:0.7em;color:#d4a017;">(Anda)</span>' : ''}</div>
                 <div class="swm-lbpts">${(d.balance||0).toLocaleString('id-ID')} SGT</div>
             </div>`;
         }).join('');
-        if (document.getElementById('swm-rank')) document.getElementById('swm-rank').textContent = myRank;
+        const rankEl = _el('swm-rank');
+        if (rankEl) rankEl.textContent = myRank;
     } catch(e) {
-        const box = document.getElementById('swm-lb');
+        const box = _el('swm-lb');
         if (box) box.innerHTML = '<div class="swm-empty">Gagal memuat data</div>';
     }
 }
 
-// ── Tabs ──────────────────────────────────────────────────
-function swtTab(id, btn) {
-    document.querySelectorAll('.swm-tab').forEach(b=>b.classList.remove('active'));
-    ['misi','tukar','riwayat','papan'].forEach(t=>{
-        const el = document.getElementById('swm-tab-'+t);
-        if (el) el.style.display = t===id ? 'block' : 'none';
-    });
-    btn.classList.add('active');
-    if (id==='riwayat') _swtRenderHistory();
-    if (id==='papan'&&_swtUser) _swtLoadLB(_swtUser.uid);
-    if (id==='tukar') _swtRenderRedeem();
-}
-
-// ── Number animate ────────────────────────────────────────
+// ── Animasi angka ─────────────────────────────────────────
 function _swtAnimNum(el, target) {
     if (!el) return;
-    const start = parseInt(el.textContent.replace(/\D/g,''))||0;
-    const diff = target - start;
-    if (diff===0) return;
-    let s=0; const steps=20;
-    const t = setInterval(()=>{
+    const start = parseInt(el.textContent.replace(/\D/g,'')) || 0;
+    const diff  = target - start;
+    if (diff === 0) { el.textContent = target.toLocaleString('id-ID'); return; }
+    let s = 0; const steps = 20;
+    const t = setInterval(() => {
         s++;
-        el.textContent = Math.round(start + diff*(s/steps)).toLocaleString('id-ID');
-        if (s>=steps) clearInterval(t);
+        el.textContent = Math.round(start + diff * (s / steps)).toLocaleString('id-ID');
+        if (s >= steps) clearInterval(t);
     }, 20);
 }
 
-// ── Backward compat: old panel still works ────────────────
-function toggleSGTPanel() { openSGTWallet(); }
+// ════════════════════════════════════════════════════════════
+//  EXCHANGE ENGINE — SGT ↔ Pi ↔ Rupiah
+// ════════════════════════════════════════════════════════════
+let _sgtPendingType = null;
+let _sgtPendingAmt  = 0;
 
-// ══════════════════════════════════════════════════════════
-//  SGT ↔ PI ↔ RUPIAH — EXCHANGE ENGINE (FIXED & COMPLETE)
-//  Kurs: 500 SGT = 1 π Pi | Harga Pi live dari CoinGecko
-// ══════════════════════════════════════════════════════════
-
-// Harga Pi live (diperbarui dari fetchPiPrice)
-window._sgtPiUsd = 3.14;   // fallback harga Pi USD
-window._sgtUsdIdr = 16000; // fallback kurs USD→IDR
-
-// Ambil kurs USD/IDR live
-async function _sgtFetchUsdIdr() {
-    try {
-        const r = await fetch('https://api.exchangerate-api.com/v4/latest/USD', { signal: AbortSignal.timeout(5000) });
-        const d = await r.json();
-        if (d.rates?.IDR) window._sgtUsdIdr = d.rates.IDR;
-    } catch(e) { /* fallback 16000 */ }
-}
-_sgtFetchUsdIdr();
-
-// Sync harga Pi dari ticker yang sudah ada ke engine ini
-function _sgtSyncPiPrice() {
-    const el = document.getElementById('piTickerPrice');
-    if (el) {
-        const txt = el.textContent.replace('$','').trim();
-        const parsed = parseFloat(txt);
-        if (!isNaN(parsed) && parsed > 0) window._sgtPiUsd = parsed;
-    }
-}
-
-// Hitung Rupiah dari SGT
-function _sgtSGTtoRp(sgt) {
-    _sgtSyncPiPrice();
-    const pi = sgt / 500;
-    return pi * window._sgtPiUsd * window._sgtUsdIdr;
-}
-
-// Hitung Pi dari SGT
-function _sgtSGTtoPi(sgt) {
-    return sgt / 500;
-}
-
-// Format Rupiah Indonesia
-function _fmtRp(val) {
-    return 'Rp ' + Math.floor(val).toLocaleString('id-ID');
-}
-
-// Update equivalent di header saldo wallet
-function _swtUpdateEquiv() {
-    const bal = _swtData.balance || 0;
-    const piEq = (bal / 500).toFixed(3);
-    const rpEq = _sgtSGTtoRp(bal);
-    const piEl = document.getElementById('swm-pi-equiv');
-    const rpEl = document.getElementById('swm-rp-equiv');
-    const rateEl = document.getElementById('swm-pi-rp-rate');
-    if (piEl) piEl.textContent = piEq + ' π';
-    if (rpEl) rpEl.textContent = _fmtRp(rpEq);
-    if (rateEl) rateEl.textContent = _fmtRp(window._sgtPiUsd * window._sgtUsdIdr);
-}
-
-// ── Hitung realtime input Pi ────────────────────────────
 function hitungPi() {
-    const sgt = parseFloat(document.getElementById('pi-sgt-in')?.value) || 0;
-    const pi = _sgtSGTtoPi(sgt);
-    const outEl = document.getElementById('pi-out');
-    const sisaEl = document.getElementById('pi-sisa');
-    const btn = document.getElementById('pi-tukar-btn');
+    const sgt = parseFloat(_el('pi-sgt-in')?.value) || 0;
+    const pi  = _sgtToPi(sgt);
     const bal = _swtData.balance || 0;
+    const sisa = bal - sgt;
 
-    if (outEl) outEl.value = pi > 0 ? pi.toFixed(4) : '';
-    if (sisaEl) sisaEl.textContent = (bal - sgt >= 0 ? (bal - sgt).toLocaleString('id-ID') : '—') + ' SGT';
+    if (_el('pi-out'))  _el('pi-out').value  = sgt > 0 ? pi.toFixed(4) + ' π' : '';
+    if (_el('pi-sisa')) _el('pi-sisa').textContent = sisa >= 0 ? sisa.toLocaleString('id-ID') + ' SGT' : '— SGT';
 
     const valid = sgt >= 500 && sgt % 500 === 0 && sgt <= bal;
+    const btn   = _el('pi-tukar-btn');
     if (btn) {
         btn.disabled = !valid || !_swtUser;
         btn.innerHTML = valid
-            ? '<i class="fas fa-exchange-alt"></i> Tukar ' + sgt.toLocaleString('id-ID') + ' SGT → ' + pi.toFixed(2) + ' π'
-            : '<i class="fas fa-exchange-alt"></i> Tukar ke Pi Network';
+            ? `<i class="fas fa-exchange-alt"></i> Tukar ${sgt.toLocaleString('id-ID')} SGT → ${pi.toFixed(2)} π`
+            : `<i class="fas fa-exchange-alt"></i> ${sgt > bal ? 'Saldo tidak cukup' : sgt > 0 && sgt % 500 !== 0 ? 'Harus kelipatan 500' : 'Masukkan jumlah SGT'}`;
     }
 }
 
-// ── Hitung realtime input Rupiah ────────────────────────
 function hitungRp() {
-    const sgt = parseFloat(document.getElementById('rp-sgt-in')?.value) || 0;
-    const rp = _sgtSGTtoRp(sgt);
-    const outEl = document.getElementById('rp-out');
-    const sisaEl = document.getElementById('rp-sisa');
-    const kursEl = document.getElementById('rp-kurs-display');
-    const btn = document.getElementById('rp-tukar-btn');
+    const sgt = parseFloat(_el('rp-sgt-in')?.value) || 0;
+    const rp  = _sgtToRp(sgt);
     const bal = _swtData.balance || 0;
+    const sisa = bal - sgt;
 
-    if (outEl) outEl.value = sgt > 0 ? _fmtRp(rp) : '';
-    if (sisaEl) sisaEl.textContent = (bal - sgt >= 0 ? (bal - sgt).toLocaleString('id-ID') : '—') + ' SGT';
-    if (kursEl) kursEl.textContent = '1 π ≈ ' + _fmtRp(window._sgtPiUsd * window._sgtUsdIdr);
+    if (_el('rp-out'))         _el('rp-out').value         = sgt > 0 ? _fmtRp(rp) : '';
+    if (_el('rp-sisa'))        _el('rp-sisa').textContent  = sisa >= 0 ? sisa.toLocaleString('id-ID') + ' SGT' : '— SGT';
+    if (_el('rp-kurs-display')) _el('rp-kurs-display').textContent = '1 π ≈ ' + _fmtRp(_sgtPiUsd * _sgtUsdIdr);
 
     const valid = sgt >= 500 && sgt % 500 === 0 && sgt <= bal;
+    const btn   = _el('rp-tukar-btn');
     if (btn) {
         btn.disabled = !valid || !_swtUser;
         btn.innerHTML = valid
-            ? '<i class="fas fa-hand-holding-usd"></i> Cairkan ' + sgt.toLocaleString('id-ID') + ' SGT → ' + _fmtRp(rp)
-            : '<i class="fas fa-hand-holding-usd"></i> Ajukan Pencairan Rupiah';
+            ? `<i class="fas fa-hand-holding-usd"></i> Cairkan ${sgt.toLocaleString('id-ID')} SGT → ${_fmtRp(rp)}`
+            : `<i class="fas fa-hand-holding-usd"></i> ${sgt > bal ? 'Saldo tidak cukup' : sgt > 0 && sgt % 500 !== 0 ? 'Harus kelipatan 500' : 'Masukkan jumlah SGT'}`;
     }
 }
 
-// ── State konfirmasi penukaran ───────────────────────────
-let _sgtPendingType = null;   // 'pi' | 'rp'
-let _sgtPendingAmt  = 0;      // jumlah SGT
-
-// ── Buka modal konfirmasi ────────────────────────────────
 function konfirmasiTukar(type) {
-    if (!_swtUser) { showToast('⚠️ Silakan login terlebih dahulu!'); openSGTWallet(); return; }
+    if (!_swtUser) { showToast('⚠️ Silakan login terlebih dahulu!'); return; }
 
     const inputId = type === 'pi' ? 'pi-sgt-in' : 'rp-sgt-in';
-    const sgt = parseFloat(document.getElementById(inputId)?.value) || 0;
+    const sgt = parseFloat(_el(inputId)?.value) || 0;
     const bal = _swtData.balance || 0;
 
-    if (sgt < 500)        { showToast('⚠️ Minimal 500 SGT untuk ditukarkan!'); return; }
-    if (sgt % 500 !== 0)  { showToast('⚠️ Jumlah SGT harus kelipatan 500!'); return; }
-    if (sgt > bal)        { showToast('⚠️ Saldo SGT tidak mencukupi!'); return; }
+    if (sgt < 500)       { showToast('⚠️ Minimal 500 SGT!'); return; }
+    if (sgt % 500 !== 0) { showToast('⚠️ Harus kelipatan 500 SGT!'); return; }
+    if (sgt > bal)       { showToast('⚠️ Saldo SGT tidak cukup!'); return; }
 
     _sgtPendingType = type;
     _sgtPendingAmt  = sgt;
+    _swtPendingRedeem = null; // pastikan bukan redeem hadiah
 
-    // Isi modal konfirmasi
-    const pi  = _sgtSGTtoPi(sgt);
-    const rp  = _sgtSGTtoRp(sgt);
+    const pi   = _sgtToPi(sgt);
+    const rp   = _sgtToRp(sgt);
     const sisa = bal - sgt;
 
-    const emojiEl  = document.getElementById('swm-c-emoji');
-    const titleEl  = document.getElementById('swm-c-title');
-    const descEl   = document.getElementById('swm-c-desc');
-    const costEl   = document.getElementById('swm-c-cost');
-    const afterEl  = document.getElementById('swm-c-after');
-    const destRow  = document.getElementById('swm-c-row-dest');
-    const destLbl  = document.getElementById('swm-c-dest-label');
-    const destVal  = document.getElementById('swm-c-dest-val');
-    const okBtn    = document.getElementById('swm-c-ok');
-
     if (type === 'pi') {
-        if (emojiEl)  emojiEl.textContent  = '🟣';
-        if (titleEl)  titleEl.textContent  = 'Konfirmasi Tukar ke Pi';
-        if (descEl)   descEl.textContent   = 'SGT Anda akan dikonversi ke Pi Network dan dikirim ke dompet Pi Anda via admin.';
-        if (destLbl)  destLbl.textContent  = 'Dapat Pi';
-        if (destVal)  destVal.textContent  = pi.toFixed(4) + ' π';
-        if (okBtn)  { okBtn.className = 'swm-c-ok pi-ok'; okBtn.textContent = 'Ya, Tukar ke Pi!'; }
+        _el('swm-c-emoji').textContent      = '🟣';
+        _el('swm-c-title').textContent      = 'Tukar SGT → Pi';
+        _el('swm-c-desc').textContent       = 'SGT dikurangi, Pi dikirim ke dompet Anda via admin dalam 1×24 jam.';
+        _el('swm-c-dest-label').textContent = 'Dapat Pi';
+        _el('swm-c-dest-val').textContent   = pi.toFixed(4) + ' π';
+        const ok = _el('swm-c-ok');
+        if (ok) { ok.className = 'swm-c-ok pi-ok'; ok.textContent = 'Ya, Tukar ke Pi!'; }
     } else {
-        if (emojiEl)  emojiEl.textContent  = '💵';
-        if (titleEl)  titleEl.textContent  = 'Ajukan Pencairan Rupiah';
-        if (descEl)   descEl.textContent   = 'Admin akan menghubungi Anda via WhatsApp untuk proses pencairan ke rekening/e-wallet.';
-        if (destLbl)  destLbl.textContent  = 'Estimasi Rupiah';
-        if (destVal)  destVal.textContent  = _fmtRp(rp);
-        if (okBtn)  { okBtn.className = 'swm-c-ok rp-ok'; okBtn.textContent = 'Ya, Ajukan Cairkan!'; }
+        _el('swm-c-emoji').textContent      = '💵';
+        _el('swm-c-title').textContent      = 'Cairkan ke Rupiah';
+        _el('swm-c-desc').textContent       = 'Admin WA akan menghubungi Anda untuk proses transfer ke rekening/e-wallet.';
+        _el('swm-c-dest-label').textContent = 'Estimasi Rupiah';
+        _el('swm-c-dest-val').textContent   = _fmtRp(rp);
+        const ok = _el('swm-c-ok');
+        if (ok) { ok.className = 'swm-c-ok rp-ok'; ok.textContent = 'Ya, Cairkan!'; }
     }
 
-    if (costEl)  costEl.textContent  = sgt.toLocaleString('id-ID') + ' SGT';
-    if (afterEl) afterEl.textContent = sisa.toLocaleString('id-ID') + ' SGT';
-    if (destRow) destRow.style.display = 'flex';
-
-    document.getElementById('swm-confirm').classList.add('open');
+    _el('swm-c-cost').textContent  = sgt.toLocaleString('id-ID') + ' SGT';
+    _el('swm-c-after').textContent = sisa.toLocaleString('id-ID') + ' SGT';
+    _el('swm-confirm').classList.add('open');
 }
 
-// ── Eksekusi tukar setelah konfirmasi ────────────────────
 async function swtDoConfirm() {
-    // Jika ada pending redeem (hadiah/diskon), delegasikan ke handler lama
-    if (_swtPendingRedeem) { await swtDoRedeem(); return; }
+    // Jika yang pending adalah hadiah/diskon
+    if (_swtPendingRedeem && !_sgtPendingType) {
+        await _swtDoRedeem();
+        return;
+    }
+
     if (!_sgtPendingType || !_swtUser) return;
 
-    const type   = _sgtPendingType;
-    const sgt    = _sgtPendingAmt;
-    const pi     = _sgtSGTtoPi(sgt);
-    const rp     = _sgtSGTtoRp(sgt);
-    const bal    = _swtData.balance || 0;
+    const type = _sgtPendingType;
+    const sgt  = _sgtPendingAmt;
+    const bal  = _swtData.balance || 0;
+    if (sgt > bal) { showToast('⚠️ Saldo tidak cukup!'); swtCloseConfirm(); return; }
 
-    if (sgt > bal) { showToast('⚠️ Saldo tidak mencukupi!'); swtCloseConfirm(); return; }
+    const pi = _sgtToPi(sgt);
+    const rp = _sgtToRp(sgt);
 
-    // Kurangi saldo & catat riwayat
-    _swtData.balance        = bal - sgt;
-    _swtData.totalRedeemed  = (_swtData.totalRedeemed || 0) + sgt;
+    _swtData.balance       = bal - sgt;
+    _swtData.totalRedeemed = (_swtData.totalRedeemed || 0) + sgt;
+    if (type === 'pi') _swtData.piEarned = ((_swtData.piEarned || 0) + pi);
 
-    const histLabel = type === 'pi'
-        ? `Tukar SGT → ${pi.toFixed(4)} π Pi`
-        : `Cairkan SGT → ${_fmtRp(rp)}`;
+    const label = type === 'pi'
+        ? `Tukar ${sgt.toLocaleString('id-ID')} SGT → ${pi.toFixed(4)} π`
+        : `Cairkan ${sgt.toLocaleString('id-ID')} SGT → ${_fmtRp(rp)}`;
 
     _swtData.history = [
-        { key: type === 'pi' ? 'pi_out' : 'rp_out', pts: -sgt, ts: Date.now(), label: histLabel },
+        { key: type === 'pi' ? 'pi_out' : 'rp_out', pts: -sgt, ts: Date.now(), label },
         ...(_swtData.history || [])
     ].slice(0, 60);
-
-    // Tambah counter π klaim jika pi
-    if (type === 'pi') {
-        _swtData.piEarned = ((_swtData.piEarned || 0) + pi);
-    }
 
     await _swtSave(_swtUser.uid);
     swtCloseConfirm();
     _swtRender();
-    _swtUpdateEquiv();
     _swtRenderHistory();
 
     // Reset input
-    const inEl = document.getElementById(type === 'pi' ? 'pi-sgt-in' : 'rp-sgt-in');
-    if (inEl) inEl.value = '';
+    const inEl = _el(type === 'pi' ? 'pi-sgt-in' : 'rp-sgt-in');
+    if (inEl) { inEl.value = ''; }
     if (type === 'pi') hitungPi(); else hitungRp();
-
-    // Notifikasi & WhatsApp ke admin
-    if (type === 'pi') {
-        showToast(`✅ Permintaan ${pi.toFixed(4)} π dikirim! Admin segera konfirmasi via WA.`);
-        setTimeout(() => {
-            const name = _swtUser.displayName || _swtUser.email;
-            const txt  = encodeURIComponent(
-                `Assalamualaikum Admin Sagatama 🕌\n\n` +
-                `*📤 PERMINTAAN TUKAR SGT → Pi Network*\n\n` +
-                `👤 Nama   : ${name}\n` +
-                `📧 Email  : ${_swtUser.email}\n` +
-                `🪙 SGT    : ${sgt.toLocaleString('id-ID')} SGT\n` +
-                `π  Pi     : ${pi.toFixed(4)} π\n\n` +
-                `*(Testnet — harap kirim ke dompet Pi saya)*\n` +
-                `Mohon konfirmasi. Jazakallah! 🙏`
-            );
-            window.open('https://wa.me/6285213346061?text=' + txt, '_blank');
-        }, 800);
-    } else {
-        showToast(`✅ Pengajuan pencairan ${_fmtRp(rp)} dikirim! Admin segera memproses.`);
-        setTimeout(() => {
-            const name = _swtUser.displayName || _swtUser.email;
-            const txt  = encodeURIComponent(
-                `Assalamualaikum Admin Sagatama 🕌\n\n` +
-                `*💵 PERMINTAAN PENCAIRAN SGT → RUPIAH*\n\n` +
-                `👤 Nama      : ${name}\n` +
-                `📧 Email     : ${_swtUser.email}\n` +
-                `🪙 SGT       : ${sgt.toLocaleString('id-ID')} SGT\n` +
-                `π  Pi setara : ${pi.toFixed(4)} π\n` +
-                `💰 Est. Rp   : ${_fmtRp(rp)}\n\n` +
-                `Harga Pi saat ini: $${window._sgtPiUsd.toFixed(2)}\n` +
-                `Kurs IDR: ${_fmtRp(window._sgtUsdIdr)}/USD\n\n` +
-                `Mohon info rekening/e-wallet tujuan. Jazakallah! 🙏`
-            );
-            window.open('https://wa.me/6285213346061?text=' + txt, '_blank');
-        }, 800);
-    }
 
     _sgtPendingType = null;
     _sgtPendingAmt  = 0;
+
+    if (type === 'pi') {
+        showToast(`✅ Permintaan ${pi.toFixed(4)} π terkirim ke admin!`);
+        setTimeout(() => {
+            const name = _swtUser.displayName || _swtUser.email;
+            window.open('https://wa.me/6285213346061?text=' + encodeURIComponent(
+                `Assalamualaikum Admin Sagatama 🕌\n\n*TUKAR SGT → Pi Network*\n\n` +
+                `👤 Nama  : ${name}\n📧 Email : ${_swtUser.email}\n` +
+                `🪙 SGT   : ${sgt.toLocaleString('id-ID')} SGT\n` +
+                `π  Pi    : ${pi.toFixed(4)} π\n\n` +
+                `Tolong kirim ke dompet Pi saya. Jazakallah! 🙏`
+            ), '_blank');
+        }, 800);
+    } else {
+        showToast(`✅ Permintaan pencairan ${_fmtRp(rp)} terkirim!`);
+        setTimeout(() => {
+            const name = _swtUser.displayName || _swtUser.email;
+            window.open('https://wa.me/6285213346061?text=' + encodeURIComponent(
+                `Assalamualaikum Admin Sagatama 🕌\n\n*CAIRKAN SGT → RUPIAH*\n\n` +
+                `👤 Nama     : ${name}\n📧 Email    : ${_swtUser.email}\n` +
+                `🪙 SGT      : ${sgt.toLocaleString('id-ID')} SGT\n` +
+                `π  Pi setara: ${pi.toFixed(4)} π\n` +
+                `💰 Est. Rp  : ${_fmtRp(rp)}\n` +
+                `📊 Pi price : $${_sgtPiUsd.toFixed(2)} | Kurs: ${_fmtRp(_sgtUsdIdr)}/USD\n\n` +
+                `Mohon info rekening/e-wallet. Jazakallah! 🙏`
+            ), '_blank');
+        }, 800);
+    }
 }
 
-// ── Inisialisasi input exchange saat tab tukar dibuka ───
-const _origSwtTab = swtTab;
-swtTab = function(id, btn) {
-    _origSwtTab(id, btn);
-    if (id === 'tukar') {
-        _sgtFetchUsdIdr().then(() => {
-            hitungPi();
-            hitungRp();
-            _swtUpdateEquiv();
-            // Update kurs display
-            const kursEl = document.getElementById('rp-kurs-display');
-            if (kursEl) kursEl.textContent = '1 π ≈ ' + _fmtRp(window._sgtPiUsd * window._sgtUsdIdr);
-        });
-    }
-};
-
-// ── Override _swtRender agar update equiv juga ───────────
-const _origSwtRender = _swtRender;
-_swtRender = function() {
-    _origSwtRender();
-    _swtUpdateEquiv();
-    // Update swm-pi-earned jika ada
-    const piEarnEl = document.getElementById('swm-pi-earned');
-    if (piEarnEl) piEarnEl.textContent = (_swtData.piEarned || 0).toFixed(3);
-};
-
-// ── Show tabs after login ─────────────────────────────
-const _origShowWallet = _swtShowWallet;
-_swtShowWallet = function(user) {
-    _origShowWallet(user);
-    const tabs = document.getElementById('swm-tabs');
-    const content = document.getElementById('swm-wallet-content');
-    if (tabs) tabs.style.display = 'flex';
-    if (content) content.style.display = 'block';
-    // Render misi tab aktif default
-    const misiTab = document.getElementById('swm-tab-misi');
-    if (misiTab) misiTab.style.display = 'block';
-};
-
-// ── Sign out reset tabs ───────────────────────────────
-const _origSignOut = swtSignOut;
-swtSignOut = async function() {
-    await _origSignOut();
-    const tabs = document.getElementById('swm-tabs');
-    const content = document.getElementById('swm-wallet-content');
-    if (tabs) tabs.style.display = 'none';
-    if (content) content.style.display = 'none';
-};
+async function _swtDoRedeem() {
+    if (!_swtPendingRedeem || !_swtUser) return;
+    const r = _swtPendingRedeem;
+    _swtData.balance       = (_swtData.balance || 0) - r.cost;
+    _swtData.totalRedeemed = (_swtData.totalRedeemed || 0) + r.cost;
+    _swtData.history       = [
+        { key:'redeem', pts:-r.cost, ts:Date.now(), label:'Tukar: '+r.name },
+        ...(_swtData.history || [])
+    ].slice(0, 60);
+    await _swtSave(_swtUser.uid);
+    swtCloseConfirm();
+    _swtRender();
+    _swtRenderHistory();
+    showToast(`🎁 Berhasil! Admin WA akan mengkonfirmasi "${r.name}"`);
+    setTimeout(() => {
+        const name = _swtUser.displayName || _swtUser.email;
+        window.open('https://wa.me/6285213346061?text=' + encodeURIComponent(
+            `Assalamualaikum Admin Sagatama,\n\nSaya ingin menukar poin SGT:\n\n` +
+            `*Nama:* ${name}\n*Email:* ${_swtUser.email}\n` +
+            `*Hadiah:* ${r.name} ${r.emoji}\n*Biaya:* ${r.cost} SGT\n\nMohon konfirmasi. Jazakallah.`
+        ), '_blank');
+    }, 800);
+}
 </script>
 
 <script>
