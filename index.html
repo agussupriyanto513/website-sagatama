@@ -45,7 +45,7 @@
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; scroll-behavior: smooth; }
-        [id] { scroll-margin-top: 100px; }
+        [id] { scroll-margin-top: 78px; }
 
         body {
             font-family: 'DM Sans', sans-serif;
@@ -179,44 +179,46 @@
 
         /* ======= NAVBAR ======= */
         nav {
-            background: rgba(7, 13, 26, 0.97);
-            backdrop-filter: blur(20px);
+            background: rgba(7, 13, 26, 0.98);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
             position: fixed;
             top: 0;
             width: 100%;
             z-index: 1000;
-            height: 80px;
+            height: 62px;
             display: flex;
             align-items: center;
-            border-bottom: 1px solid rgba(212, 160, 23, 0.25);
+            border-bottom: 1px solid rgba(212, 160, 23, 0.2);
             transition: all 0.3s ease;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.4);
         }
-        nav.scrolled { height: 68px; box-shadow: 0 4px 40px rgba(0,0,0,0.5); }
+        nav.scrolled { height: 56px; box-shadow: 0 4px 40px rgba(0,0,0,0.6); border-bottom-color: rgba(212,160,23,0.35); }
 
         .nav-container {
             display: flex;
             align-items: center;
-            max-width: 1400px;
             width: 100%;
             margin: 0 auto;
-            padding: 0 30px;
-            gap: 8px;
+            padding: 0 14px;
+            gap: 3px;
+            overflow: visible;
         }
 
         .logo-nav {
             display: flex;
             align-items: center;
-            gap: 14px;
+            gap: 8px;
             text-decoration: none;
-            margin-right: auto;
             flex-shrink: 0;
+            margin-right: 4px;
         }
 
         .logo-icon {
-            width: 46px;
-            height: 46px;
-            border-radius: 10px;
-            border: 2px solid var(--accent);
+            width: 34px;
+            height: 34px;
+            border-radius: 8px;
+            border: 1.5px solid var(--accent);
             background: linear-gradient(135deg, var(--primary), var(--secondary));
             display: flex;
             align-items: center;
@@ -224,14 +226,14 @@
             font-family: 'Cinzel', serif;
             font-weight: 900;
             color: var(--accent);
-            font-size: 1em;
+            font-size: 0.82em;
             letter-spacing: -1px;
             flex-shrink: 0;
         }
 
         .logo-text { display: flex; flex-direction: column; }
-        .logo-text .name { color: var(--white); font-weight: 700; font-size: 0.82em; letter-spacing: 0.5px; line-height: 1.2; }
-        .logo-text .tagline { color: var(--accent); font-size: 0.6em; letter-spacing: 2px; text-transform: uppercase; font-weight: 500; }
+        .logo-text .name { color: var(--white); font-weight: 700; font-size: 0.74em; letter-spacing: 0.2px; line-height: 1.2; white-space: nowrap; }
+        .logo-text .tagline { color: var(--accent); font-size: 0.52em; letter-spacing: 1.2px; text-transform: uppercase; font-weight: 500; opacity: 0.8; white-space: nowrap; }
 
         /* HAMBURGER */
         .hamburger { display: none; flex-direction: column; gap: 5px; background: none; border: none; padding: 8px; cursor: pointer; }
@@ -244,13 +246,13 @@
         .mobile-menu {
             display: none;
             position: fixed;
-            top: 80px; left: 0; width: 100%;
+            top: 62px; left: 0; width: 100%;
             background: rgba(7,13,26,0.98);
             backdrop-filter: blur(20px);
             z-index: 999;
             padding: 20px;
             border-bottom: 2px solid var(--accent);
-            max-height: calc(100vh - 80px);
+            max-height: calc(100vh - 62px);
             overflow-y: auto;
         }
         .mobile-menu.open { display: block; }
@@ -278,21 +280,21 @@
         .dropdown { position: relative; }
         .dropbtn {
             background: transparent;
-            border: 1px solid rgba(212,160,23,0.3);
-            color: rgba(255,255,255,0.85);
-            padding: 9px 16px; border-radius: 8px;
-            font-weight: 500; font-size: 0.76em;
-            display: flex; align-items: center; gap: 7px;
-            text-transform: uppercase; letter-spacing: 0.5px;
-            transition: all 0.25s; font-family: 'DM Sans', sans-serif;
-            white-space: nowrap;
+            border: 1px solid rgba(212,160,23,0.15);
+            color: rgba(255,255,255,0.75);
+            padding: 5px 9px; border-radius: 7px;
+            font-weight: 500; font-size: 0.66em;
+            display: flex; align-items: center; gap: 4px;
+            text-transform: uppercase; letter-spacing: 0.3px;
+            transition: all 0.2s; font-family: 'DM Sans', sans-serif;
+            white-space: nowrap; cursor: pointer;
         }
-        .dropbtn i { color: var(--accent); font-size: 0.9em; }
-        .dropdown:hover .dropbtn, .dropbtn:hover { background: rgba(212,160,23,0.12); border-color: var(--accent); color: var(--white); }
-        .dropbtn.mart { background: linear-gradient(135deg, rgba(13,148,136,0.3), rgba(13,148,136,0.15)); border-color: var(--emerald); color: #5eead4; }
-        .dropbtn.mart:hover { background: rgba(13,148,136,0.35); }
-        .dropbtn.pilar { background: linear-gradient(135deg, rgba(212,160,23,0.25), rgba(240,200,66,0.15)); border-color: var(--accent); color: var(--accent-light); }
-        .dropbtn.pilar:hover { background: rgba(212,160,23,0.35); }
+        .dropbtn i { color: var(--accent); font-size: 0.82em; }
+        .dropdown:hover .dropbtn, .dropbtn:hover { background: rgba(212,160,23,0.1); border-color: rgba(212,160,23,0.45); color: var(--white); }
+        .dropbtn.mart { background: linear-gradient(135deg, rgba(13,148,136,0.2), rgba(13,148,136,0.08)); border-color: rgba(13,148,136,0.35); color: #5eead4; }
+        .dropbtn.mart:hover { background: rgba(13,148,136,0.28); }
+        .dropbtn.pilar { background: linear-gradient(135deg, rgba(212,160,23,0.18), rgba(240,200,66,0.08)); border-color: rgba(212,160,23,0.4); color: var(--accent-light); }
+        .dropbtn.pilar:hover { background: rgba(212,160,23,0.26); }
 
         .dropdown-content {
             display: none; position: absolute;
@@ -343,7 +345,7 @@
         .marquee-bar {
             background: var(--dark); color: var(--accent);
             padding: 9px 0; font-size: 0.8em; font-weight: 600;
-            margin-top: 80px; border-bottom: 1px solid rgba(212,160,23,0.3);
+            margin-top: 62px; border-bottom: 1px solid rgba(212,160,23,0.3);
             overflow: hidden; position: relative;
         }
         .marquee-bar::before {
@@ -1444,199 +1446,155 @@
         /* ======= SGT WALLET MODAL — Full System ======= */
         #sgt-wallet-overlay {
             position: fixed; inset: 0; z-index: 10000;
-            background: rgba(0,0,0,0.82); backdrop-filter: blur(10px);
+            background: rgba(0,0,0,0.75); backdrop-filter: blur(8px);
             display: flex; align-items: center; justify-content: center;
             opacity: 0; pointer-events: none; transition: opacity 0.3s;
             padding: 16px;
         }
         #sgt-wallet-overlay.open { opacity: 1; pointer-events: all; }
         .sgt-wallet-modal {
-            background: #0a1220; border: 1px solid rgba(212,160,23,0.25);
-            border-radius: 20px; width: 100%; max-width: 420px;
+            background: #070d1a;
+            border: 1px solid rgba(212,160,23,0.3);
+            border-radius: 24px;
+            width: 100%; max-width: 560px;
             max-height: 90vh; overflow-y: auto;
-            transform: scale(0.94) translateY(16px); transition: transform 0.3s;
-            box-shadow: 0 32px 80px rgba(0,0,0,0.7);
+            transform: scale(0.93) translateY(20px);
+            transition: transform 0.35s cubic-bezier(0.34,1.4,0.64,1);
+            position: relative;
+            background-image: radial-gradient(ellipse at 10% 0%, rgba(212,160,23,0.07) 0%, transparent 50%),
+                              radial-gradient(ellipse at 90% 100%, rgba(10,122,191,0.07) 0%, transparent 50%);
         }
         #sgt-wallet-overlay.open .sgt-wallet-modal { transform: scale(1) translateY(0); }
         .sgt-wallet-modal::-webkit-scrollbar { width: 4px; }
         .sgt-wallet-modal::-webkit-scrollbar-thumb { background: rgba(212,160,23,0.3); border-radius: 2px; }
 
-        /* Header */
         .swm-header {
+            padding: 20px 24px 16px;
+            border-bottom: 1px solid rgba(255,255,255,0.07);
             display: flex; align-items: center; justify-content: space-between;
-            padding: 18px 20px 14px;
-            border-bottom: 1px solid rgba(255,255,255,0.06);
+            position: sticky; top: 0; background: rgba(7,13,26,0.97);
+            backdrop-filter: blur(10px); z-index: 2; border-radius: 24px 24px 0 0;
         }
         .swm-logo { display: flex; align-items: center; gap: 10px; }
         .swm-coin { width: 34px; height: 34px; border-radius: 50%; background: linear-gradient(135deg,#d4a017,#f0c842,#d4a017); display: flex; align-items: center; justify-content: center; font-family: 'Cinzel',serif; font-weight: 900; font-size: 0.75em; color: #070d1a; box-shadow: 0 4px 14px rgba(212,160,23,0.45); }
         .swm-title { font-family: 'Cinzel',serif; font-weight: 900; font-size: 0.88em; color: #d4a017; letter-spacing: 1px; }
-        .swm-subtitle-hdr { font-size: 0.62em; color: rgba(255,255,255,0.3); margin-top: 2px; }
-        .swm-close { background: rgba(255,255,255,0.07); border: none; color: rgba(255,255,255,0.6); width: 30px; height: 30px; border-radius: 8px; cursor: pointer; font-size: 0.9em; transition: 0.2s; }
-        .swm-close:hover { background: rgba(255,255,255,0.14); color: #fff; }
+        .swm-close { background: rgba(255,255,255,0.07); border: none; color: rgba(255,255,255,0.6); width: 32px; height: 32px; border-radius: 8px; cursor: pointer; font-size: 0.9em; transition: 0.2s; }
+        .swm-close:hover { background: rgba(255,255,255,0.12); color: #fff; }
 
-        /* Kurs Bar */
-        .swm-kurs-bar {
-            display: flex; align-items: center; justify-content: center; gap: 16px;
-            padding: 8px 20px; background: rgba(124,58,237,0.08);
-            border-bottom: 1px solid rgba(124,58,237,0.15); font-size: 0.72em;
-        }
-        .swm-kurs-item { display: flex; align-items: center; gap: 5px; color: rgba(255,255,255,0.5); }
-        .swm-kurs-val { color: #c4b5fd; font-weight: 700; font-family: 'Cinzel',serif; }
-        .swm-kurs-sep { color: rgba(255,255,255,0.15); }
+        .swm-body { padding: 20px 24px 24px; }
 
-        /* Body */
-        .swm-body { padding: 18px 20px 20px; }
-
-        /* Auth */
+        /* Auth screen */
         .swm-auth { text-align: center; }
-        .swm-auth-coin { width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg,#d4a017,#f0c842); margin: 0 auto 14px; display: flex; align-items: center; justify-content: center; font-family: 'Cinzel',serif; font-weight: 900; font-size: 1.1em; color: #070d1a; box-shadow: 0 8px 28px rgba(212,160,23,0.5); animation: sgt-pulse 2.5s ease-in-out infinite; }
-        .swm-auth h3 { font-family: 'Playfair Display',serif; font-size: 1.3em; font-weight: 900; color: #fff; margin-bottom: 5px; }
-        .swm-auth p { color: rgba(255,255,255,0.38); font-size: 0.78em; margin-bottom: 18px; line-height: 1.5; }
-        .swm-btn-google { width: 100%; padding: 11px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.14); background: rgba(255,255,255,0.06); color: #fff; font-family: 'DM Sans',sans-serif; font-weight: 600; font-size: 0.83em; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 11px; }
-        .swm-btn-google:hover { background: rgba(255,255,255,0.11); }
-        .swm-divider { display: flex; align-items: center; gap: 10px; margin: 4px 0 11px; }
-        .swm-divider::before,.swm-divider::after { content:''; flex:1; height:1px; background:rgba(255,255,255,0.08); }
-        .swm-divider span { color: rgba(255,255,255,0.22); font-size: 0.7em; }
-        .swm-inp { width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.09); color: #fff; padding: 10px 13px; border-radius: 9px; font-family: 'DM Sans',sans-serif; font-size: 0.83em; outline: none; margin-bottom: 9px; transition: 0.2s; }
-        .swm-inp:focus { border-color: rgba(212,160,23,0.45); background: rgba(212,160,23,0.03); }
-        .swm-inp::placeholder { color: rgba(255,255,255,0.18); }
-        .swm-btn-gold { width: 100%; padding: 11px; border-radius: 10px; border: none; background: linear-gradient(135deg,#d4a017,#f0c842,#d4a017); color: #070d1a; font-family: 'DM Sans',sans-serif; font-weight: 700; font-size: 0.86em; cursor: pointer; transition: 0.2s; margin-bottom: 9px; }
+        .swm-auth-coin { width: 64px; height: 64px; border-radius: 50%; background: linear-gradient(135deg,#d4a017,#f0c842); margin: 0 auto 16px; display: flex; align-items: center; justify-content: center; font-family: 'Cinzel',serif; font-weight: 900; font-size: 1.2em; color: #070d1a; box-shadow: 0 8px 32px rgba(212,160,23,0.5); animation: sgt-pulse 2.5s ease-in-out infinite; }
+        .swm-auth h3 { font-family: 'Playfair Display',serif; font-size: 1.4em; font-weight: 900; color: #fff; margin-bottom: 6px; }
+        .swm-auth p { color: rgba(255,255,255,0.4); font-size: 0.8em; margin-bottom: 20px; }
+        .swm-btn-google { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.07); color: #fff; font-family: 'DM Sans',sans-serif; font-weight: 600; font-size: 0.85em; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 12px; }
+        .swm-btn-google:hover { background: rgba(255,255,255,0.12); }
+        .swm-divider { display: flex; align-items: center; gap: 10px; margin: 4px 0 12px; }
+        .swm-divider::before,.swm-divider::after { content:''; flex:1; height:1px; background:rgba(255,255,255,0.1); }
+        .swm-divider span { color: rgba(255,255,255,0.25); font-size: 0.72em; }
+        .swm-inp { width: 100%; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 11px 14px; border-radius: 9px; font-family: 'DM Sans',sans-serif; font-size: 0.85em; outline: none; margin-bottom: 10px; transition: 0.2s; }
+        .swm-inp:focus { border-color: rgba(212,160,23,0.5); background: rgba(212,160,23,0.04); }
+        .swm-inp::placeholder { color: rgba(255,255,255,0.2); }
+        .swm-btn-gold { width: 100%; padding: 12px; border-radius: 10px; border: none; background: linear-gradient(135deg,#d4a017,#f0c842,#d4a017); color: #070d1a; font-family: 'DM Sans',sans-serif; font-weight: 700; font-size: 0.88em; cursor: pointer; transition: 0.2s; margin-bottom: 10px; }
         .swm-btn-gold:hover { box-shadow: 0 6px 20px rgba(212,160,23,0.4); transform: translateY(-1px); }
-        .swm-toggle { font-size: 0.75em; color: rgba(255,255,255,0.3); }
-        .swm-toggle a { color: #d4a017; cursor: pointer; text-decoration: underline; }
-        .swm-err { background: rgba(239,68,68,0.12); border: 1px solid rgba(239,68,68,0.25); color: #fca5a5; font-size: 0.76em; padding: 9px 12px; border-radius: 8px; margin-bottom: 11px; display: none; text-align: left; line-height: 1.5; }
+        .swm-toggle { font-size: 0.78em; color: rgba(255,255,255,0.35); }
+        .swm-toggle a { color: #d4a017; cursor: pointer; font-weight: 600; }
+        .swm-err { background: rgba(239,68,68,0.14); border: 1px solid rgba(239,68,68,0.25); border-radius: 8px; padding: 8px 12px; color: #fca5a5; font-size: 0.77em; margin-bottom: 10px; display: none; text-align: left; }
 
-        /* Balance card */
-        .swm-balance { background: linear-gradient(135deg,rgba(212,160,23,0.1),rgba(15,52,96,0.2)); border: 1px solid rgba(212,160,23,0.2); border-radius: 14px; padding: 16px; margin-bottom: 14px; }
-        .swm-bal-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 12px; }
-        .swm-bal-lbl { color: rgba(255,255,255,0.4); font-size: 0.7em; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 3px; }
-        .swm-bal-amt { font-family: 'Cinzel',serif; font-size: 2em; font-weight: 900; color: #f0c842; line-height: 1; }
-        .swm-bal-unit { font-size: 0.72em; color: rgba(212,160,23,0.6); font-weight: 600; margin-top: 2px; }
-        .swm-user-chip { display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.05); border-radius: 20px; padding: 5px 10px; }
-        .swm-avatar { width: 26px; height: 26px; border-radius: 50%; background: rgba(212,160,23,0.2); color: #d4a017; font-weight: 700; font-size: 0.75em; display: flex; align-items: center; justify-content: center; }
-        .swm-uname { font-size: 0.72em; color: rgba(255,255,255,0.6); max-width: 80px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-        .swm-bal-stats { display: grid; grid-template-columns: repeat(4,1fr); gap: 8px; }
-        .swm-bstat { text-align: center; background: rgba(255,255,255,0.04); border-radius: 8px; padding: 7px 4px; }
-        .swm-bstat .v { color: #fff; font-weight: 700; font-size: 0.88em; font-family: 'Cinzel',serif; }
-        .swm-bstat .l { color: rgba(255,255,255,0.3); font-size: 0.6em; margin-top: 2px; }
-
-        /* Pi equivalent display */
-        .swm-pi-equiv { display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 10px; padding: 8px 12px; background: rgba(124,58,237,0.1); border: 1px solid rgba(124,58,237,0.2); border-radius: 10px; font-size: 0.75em; }
-        .swm-pi-equiv .pi-icon { color: #a78bfa; font-weight: 900; font-family: 'Cinzel',serif; }
-        .swm-pi-equiv .pi-val { color: #c4b5fd; font-weight: 700; }
-        .swm-pi-equiv .pi-lbl { color: rgba(255,255,255,0.35); }
+        /* Wallet screen */
+        .swm-balance { background: linear-gradient(135deg,rgba(212,160,23,0.18),rgba(15,52,96,0.4)); border: 1px solid rgba(212,160,23,0.3); border-radius: 18px; padding: 20px 22px; margin-bottom: 16px; position: relative; overflow: hidden; }
+        .swm-balance::after { content:'SGT'; position:absolute; right:-8px; bottom:-16px; font-family:'Cinzel',serif; font-size:80px; font-weight:900; color:rgba(212,160,23,0.06); line-height:1; pointer-events:none; }
+        .swm-bal-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px; }
+        .swm-bal-lbl { color: rgba(255,255,255,0.4); font-size: 0.7em; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 4px; }
+        .swm-bal-amt { font-family: 'Playfair Display',serif; font-size: 2.8em; font-weight: 900; color: #d4a017; line-height: 1; }
+        .swm-bal-unit { color: rgba(212,160,23,0.6); font-size: 0.75em; font-weight: 600; margin-left: 4px; }
+        .swm-user-chip { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.1); border-radius: 50px; padding: 6px 12px; display: flex; align-items: center; gap: 7px; font-size: 0.73em; color: rgba(255,255,255,0.65); max-width: 160px; }
+        .swm-avatar { width: 24px; height: 24px; border-radius: 50%; background: linear-gradient(135deg,#d4a017,#f0c842); display: flex; align-items: center; justify-content: center; color: #070d1a; font-weight: 800; font-size: 0.7em; flex-shrink: 0; }
+        .swm-uname { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .swm-bal-stats { display: flex; gap: 20px; }
+        .swm-bstat .v { font-weight: 700; font-size: 0.88em; color: #fff; }
+        .swm-bstat .l { font-size: 0.67em; color: rgba(255,255,255,0.35); margin-top: 1px; }
 
         /* Tabs */
-        .swm-tabs { display: flex; gap: 4px; margin-bottom: 14px; background: rgba(255,255,255,0.04); border-radius: 10px; padding: 4px; }
-        .swm-tab { flex: 1; padding: 7px 4px; border: none; background: transparent; color: rgba(255,255,255,0.4); font-family: 'DM Sans',sans-serif; font-size: 0.7em; font-weight: 600; border-radius: 7px; cursor: pointer; transition: 0.2s; white-space: nowrap; }
+        .swm-tabs { display: flex; gap: 4px; background: rgba(255,255,255,0.04); border-radius: 10px; padding: 4px; margin-bottom: 14px; }
+        .swm-tab { flex: 1; padding: 8px 6px; border-radius: 7px; border: none; background: transparent; color: rgba(255,255,255,0.4); font-family: 'DM Sans',sans-serif; font-size: 0.72em; font-weight: 600; cursor: pointer; transition: 0.2s; white-space: nowrap; }
         .swm-tab.active { background: rgba(212,160,23,0.18); color: #d4a017; }
 
         /* Tasks */
-        .swm-task { display: flex; align-items: center; gap: 11px; padding: 11px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 10px; margin-bottom: 8px; cursor: pointer; transition: 0.2s; }
-        .swm-task:hover { background: rgba(255,255,255,0.06); border-color: rgba(212,160,23,0.2); }
-        .swm-task.swm-done { opacity: 0.5; cursor: not-allowed; }
-        .swm-ticon { width: 36px; height: 36px; border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 1em; flex-shrink: 0; }
-        .swm-tname { font-size: 0.8em; font-weight: 600; color: #fff; margin-bottom: 2px; }
-        .swm-tdesc { font-size: 0.68em; color: rgba(255,255,255,0.35); }
-        .swm-tpts { font-family: 'Cinzel',serif; font-size: 0.75em; font-weight: 700; color: #d4a017; margin-left: auto; flex-shrink: 0; white-space: nowrap; }
+        .swm-task { display: flex; align-items: center; gap: 12px; padding: 12px 14px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; margin-bottom: 8px; cursor: pointer; transition: 0.2s; }
+        .swm-task:hover:not(.swm-done) { background: rgba(212,160,23,0.07); border-color: rgba(212,160,23,0.2); }
+        .swm-task.swm-done { opacity: 0.42; cursor: default; }
+        .swm-ticon { width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1em; flex-shrink: 0; }
+        .swm-tinfo { flex: 1; }
+        .swm-tname { font-size: 0.82em; font-weight: 600; color: #fff; }
+        .swm-tdesc { font-size: 0.7em; color: rgba(255,255,255,0.35); margin-top: 1px; }
+        .swm-tpts { color: #d4a017; font-weight: 800; font-size: 0.82em; white-space: nowrap; }
 
-        /* Redeem grid */
-        .swm-redeem-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-        .swm-rcard { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 11px; padding: 13px 11px; text-align: center; cursor: pointer; transition: 0.2s; }
-        .swm-rcard:hover:not(.swm-locked) { border-color: rgba(212,160,23,0.35); background: rgba(212,160,23,0.06); }
-        .swm-rcard.swm-locked { opacity: 0.4; cursor: not-allowed; }
-        .swm-remoji { font-size: 1.6em; margin-bottom: 5px; }
-        .swm-rname { font-size: 0.76em; font-weight: 700; color: #fff; margin-bottom: 3px; }
-        .swm-rcost { font-size: 0.68em; color: #d4a017; font-weight: 700; font-family: 'Cinzel',serif; margin-bottom: 4px; }
-        .swm-rdesc { font-size: 0.62em; color: rgba(255,255,255,0.3); line-height: 1.4; }
-
-        /* Pi Redeem Card — special */
-        .swm-pi-card { background: rgba(124,58,237,0.08); border: 1px solid rgba(124,58,237,0.25); border-radius: 14px; padding: 16px; margin-bottom: 10px; }
-        .swm-pi-card-header { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
-        .swm-pi-badge { background: rgba(124,58,237,0.2); border: 1px solid rgba(124,58,237,0.35); border-radius: 8px; padding: 4px 10px; font-size: 0.65em; color: #c4b5fd; font-weight: 700; letter-spacing: 0.5px; }
-        .swm-pi-card h4 { color: #c4b5fd; font-size: 0.88em; font-weight: 700; }
-        .swm-pi-card p { color: rgba(255,255,255,0.4); font-size: 0.72em; line-height: 1.5; margin-bottom: 12px; }
-        .swm-pi-inp-row { display: flex; gap: 8px; align-items: center; margin-bottom: 10px; }
-        .swm-pi-inp-row .swm-inp { margin-bottom: 0; flex: 1; }
-        .swm-pi-preview { background: rgba(124,58,237,0.08); border: 1px solid rgba(124,58,237,0.18); border-radius: 9px; padding: 10px 12px; margin-bottom: 12px; font-size: 0.74em; }
-        .swm-pi-preview-row { display: flex; justify-content: space-between; align-items: center; padding: 3px 0; }
-        .swm-pi-preview-row .k { color: rgba(255,255,255,0.4); }
-        .swm-pi-preview-row .v { color: #c4b5fd; font-weight: 700; font-family: 'Cinzel',serif; }
-        .swm-btn-pi { width: 100%; padding: 11px; border-radius: 10px; border: 1px solid rgba(124,58,237,0.4); background: rgba(124,58,237,0.15); color: #c4b5fd; font-family: 'DM Sans',sans-serif; font-weight: 700; font-size: 0.84em; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; }
-        .swm-btn-pi:hover:not(:disabled) { background: rgba(124,58,237,0.25); box-shadow: 0 4px 16px rgba(124,58,237,0.25); }
-        .swm-btn-pi:disabled { opacity: 0.4; cursor: not-allowed; }
-
-        /* Pi Request Status */
-        .swm-pi-status { display: flex; align-items: center; gap: 8px; padding: 9px 12px; border-radius: 9px; font-size: 0.74em; margin-bottom: 8px; }
-        .swm-pi-status.pending { background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.25); color: #fcd34d; }
-        .swm-pi-status.diproses { background: rgba(59,130,246,0.1); border: 1px solid rgba(59,130,246,0.25); color: #93c5fd; }
-        .swm-pi-status.selesai { background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.25); color: #6ee7b7; }
-        .swm-pi-status.ditolak { background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.25); color: #fca5a5; }
-        .swm-pi-status-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
-        .swm-pi-status.pending .swm-pi-status-dot { background: #fcd34d; animation: sgt-pulse 1.5s infinite; }
-        .swm-pi-status.diproses .swm-pi-status-dot { background: #93c5fd; animation: sgt-pulse 1.5s infinite; }
-        .swm-pi-status.selesai .swm-pi-status-dot { background: #6ee7b7; }
-        .swm-pi-status.ditolak .swm-pi-status-dot { background: #fca5a5; }
+        /* Redeem */
+        .swm-redeem-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .swm-rcard { background: rgba(15,30,53,0.7); border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 16px 14px; text-align: center; cursor: pointer; transition: 0.2s; }
+        .swm-rcard:hover:not(.swm-locked) { border-color: rgba(212,160,23,0.3); transform: translateY(-2px); }
+        .swm-rcard.swm-locked { opacity: 0.38; cursor: not-allowed; }
+        .swm-remoji { font-size: 1.6em; margin-bottom: 7px; }
+        .swm-rname { font-size: 0.78em; font-weight: 700; color: #fff; margin-bottom: 5px; }
+        .swm-rcost { display: inline-flex; align-items: center; gap: 4px; background: rgba(212,160,23,0.13); border: 1px solid rgba(212,160,23,0.22); border-radius: 20px; padding: 3px 10px; font-size: 0.7em; color: #d4a017; font-weight: 700; }
+        .swm-rdesc { color: rgba(255,255,255,0.3); font-size: 0.67em; margin-top: 6px; line-height: 1.4; }
 
         /* History */
-        .swm-hitem { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .swm-hitem:last-child { border-bottom: none; }
-        .swm-hleft { display: flex; align-items: center; gap: 9px; }
-        .swm-hicon { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 0.9em; flex-shrink: 0; }
-        .swm-hdesc { font-size: 0.77em; color: rgba(255,255,255,0.75); margin-bottom: 1px; }
-        .swm-htime { font-size: 0.65em; color: rgba(255,255,255,0.28); }
-        .swm-hpts { font-family: 'Cinzel',serif; font-size: 0.78em; font-weight: 700; }
-        .swm-hpts.plus { color: #6ee7b7; }
-        .swm-hpts.minus { color: #fca5a5; }
-        .swm-hpts.pi { color: #c4b5fd; }
+        .swm-hitem { display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.05); border-radius: 10px; margin-bottom: 6px; }
+        .swm-hleft { display: flex; align-items: center; gap: 10px; }
+        .swm-hicon { width: 30px; height: 30px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 0.85em; flex-shrink: 0; }
+        .swm-hdesc { font-size: 0.78em; font-weight: 600; color: #fff; }
+        .swm-htime { font-size: 0.67em; color: rgba(255,255,255,0.28); margin-top: 1px; }
+        .swm-hpts { font-weight: 800; font-size: 0.82em; }
+        .swm-hpts.plus { color: #10b981; }
+        .swm-hpts.minus { color: #ef4444; }
 
         /* Leaderboard */
-        .swm-lbitem { display: flex; align-items: center; gap: 10px; padding: 9px 10px; border-radius: 9px; margin-bottom: 5px; background: rgba(255,255,255,0.03); transition: 0.2s; }
-        .swm-lbitem.swm-me { background: rgba(212,160,23,0.08); border: 1px solid rgba(212,160,23,0.18); }
-        .swm-lbrank { font-family: 'Cinzel',serif; font-size: 0.8em; font-weight: 700; width: 24px; text-align: center; color: rgba(255,255,255,0.35); }
-        .swm-lbrank.r1 { color: #f0c842; }
-        .swm-lbrank.r2 { color: #b0bec5; }
-        .swm-lbrank.r3 { color: #cd7f32; }
-        .swm-lbav { width: 28px; height: 28px; border-radius: 50%; background: rgba(212,160,23,0.15); color: #d4a017; font-weight: 700; font-size: 0.8em; display: flex; align-items: center; justify-content: center; }
-        .swm-lbname { flex: 1; font-size: 0.8em; color: rgba(255,255,255,0.7); }
-        .swm-lbpts { font-family: 'Cinzel',serif; font-size: 0.75em; color: #d4a017; font-weight: 700; }
+        .swm-lbitem { display: flex; align-items: center; gap: 12px; padding: 10px 14px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); border-radius: 10px; margin-bottom: 6px; }
+        .swm-lbitem.swm-me { background: rgba(212,160,23,0.08); border-color: rgba(212,160,23,0.25); }
+        .swm-lbrank { width: 26px; font-family: 'Cinzel',serif; font-size: 0.78em; font-weight: 900; text-align: center; color: rgba(255,255,255,0.3); flex-shrink: 0; }
+        .swm-lbrank.r1 { color: #ffd700; } .swm-lbrank.r2 { color: #c0c0c0; } .swm-lbrank.r3 { color: #cd7f32; }
+        .swm-lbav { width: 30px; height: 30px; border-radius: 50%; background: linear-gradient(135deg,#d4a017,#f0c842); display: flex; align-items: center; justify-content: center; color: #070d1a; font-weight: 800; font-size: 0.72em; flex-shrink: 0; }
+        .swm-lbname { flex: 1; font-size: 0.8em; font-weight: 600; color: rgba(255,255,255,0.8); }
+        .swm-lbpts { font-family: 'Playfair Display',serif; font-weight: 900; color: #d4a017; font-size: 0.88em; }
 
-        /* Confirm overlay */
-        .swm-confirm { display: none; position: absolute; inset: 0; background: rgba(7,13,26,0.95); border-radius: 20px; padding: 32px 24px; text-align: center; flex-direction: column; align-items: center; justify-content: center; }
+        /* Redeem confirm modal */
+        .swm-confirm { position: absolute; inset: 0; background: rgba(7,13,26,0.96); border-radius: 24px; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 32px 28px; z-index: 5; }
         .swm-confirm.open { display: flex; }
-        .swm-confirm h3 { font-family: 'Playfair Display',serif; font-size: 1.2em; color: #fff; margin-bottom: 6px; }
-        .swm-confirm p { color: rgba(255,255,255,0.4); font-size: 0.78em; margin-bottom: 16px; }
-        .swm-confirm-box { width: 100%; background: rgba(255,255,255,0.04); border-radius: 10px; padding: 12px 14px; margin-bottom: 18px; }
-        .swm-confirm-row { display: flex; justify-content: space-between; padding: 5px 0; font-size: 0.8em; }
+        .swm-confirm h3 { font-family: 'Playfair Display',serif; font-size: 1.3em; font-weight: 900; color: #fff; margin: 12px 0 6px; text-align: center; }
+        .swm-confirm p { color: rgba(255,255,255,0.45); font-size: 0.8em; text-align: center; margin-bottom: 18px; line-height: 1.5; }
+        .swm-confirm-box { width: 100%; background: rgba(212,160,23,0.08); border: 1px solid rgba(212,160,23,0.2); border-radius: 12px; padding: 14px 18px; margin-bottom: 20px; }
+        .swm-confirm-row { display: flex; justify-content: space-between; font-size: 0.8em; margin-bottom: 4px; }
+        .swm-confirm-row:last-child { margin-bottom: 0; }
         .swm-confirm-row .k { color: rgba(255,255,255,0.4); }
-        .swm-confirm-row .v { color: #fff; font-weight: 600; }
+        .swm-confirm-row .v { color: #fff; font-weight: 700; }
         .swm-confirm-btns { display: flex; gap: 10px; width: 100%; }
-        .swm-btn-cancel { flex: 1; padding: 10px; border-radius: 9px; border: 1px solid rgba(255,255,255,0.12); background: transparent; color: rgba(255,255,255,0.5); font-family: 'DM Sans',sans-serif; font-size: 0.84em; cursor: pointer; }
-        .swm-btn-confirm { flex: 2; padding: 10px; border-radius: 9px; border: none; background: linear-gradient(135deg,#d4a017,#f0c842); color: #070d1a; font-family: 'DM Sans',sans-serif; font-weight: 700; font-size: 0.84em; cursor: pointer; }
+        .swm-btn-cancel { flex: 1; padding: 11px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.15); background: transparent; color: rgba(255,255,255,0.6); font-family: 'DM Sans',sans-serif; font-weight: 600; font-size: 0.83em; cursor: pointer; transition: 0.2s; }
+        .swm-btn-cancel:hover { background: rgba(255,255,255,0.06); }
+        .swm-btn-confirm { flex: 1; padding: 11px; border-radius: 10px; border: none; background: linear-gradient(135deg,#d4a017,#f0c842,#d4a017); color: #070d1a; font-family: 'DM Sans',sans-serif; font-weight: 700; font-size: 0.83em; cursor: pointer; transition: 0.2s; }
+        .swm-btn-confirm:hover { box-shadow: 0 5px 18px rgba(212,160,23,0.4); }
 
-        /* Signout */
-        .swm-signout { padding-top: 14px; border-top: 1px solid rgba(255,255,255,0.06); margin-top: 4px; }
-        .swm-signout button { width: 100%; padding: 9px; border: 1px solid rgba(255,255,255,0.08); background: transparent; color: rgba(255,255,255,0.3); font-family: 'DM Sans',sans-serif; font-size: 0.76em; border-radius: 8px; cursor: pointer; transition: 0.2s; }
-        .swm-signout button:hover { color: rgba(239,68,68,0.7); border-color: rgba(239,68,68,0.2); }
+        .swm-signout { display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 16px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,0.06); }
+        .swm-signout button { background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.2); color: #fca5a5; padding: 7px 16px; border-radius: 8px; font-size: 0.75em; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: 0.2s; font-family: 'DM Sans',sans-serif; }
+        .swm-signout button:hover { background: rgba(239,68,68,0.18); }
 
-        /* Nav wallet button */
-        .nav-sgt-btn { display: flex; align-items: center; gap: 5px; background: linear-gradient(135deg,rgba(212,160,23,0.2),rgba(212,160,23,0.1)); border: 1px solid rgba(212,160,23,0.4); color: #d4a017; padding: 5px 10px; border-radius: 7px; font-family: 'DM Sans',sans-serif; font-size: 0.68em; font-weight: 700; cursor: pointer; transition: 0.25s; white-space: nowrap; letter-spacing: 0.4px; position: relative; }
+        .nav-sgt-btn { display: flex; align-items: center; gap: 5px; background: linear-gradient(135deg,rgba(212,160,23,0.2),rgba(212,160,23,0.1)); border: 1px solid rgba(212,160,23,0.4); color: #d4a017; padding: 5px 9px; border-radius: 7px; font-family: 'DM Sans',sans-serif; font-size: 0.67em; font-weight: 700; cursor: pointer; transition: 0.25s; white-space: nowrap; letter-spacing: 0.3px; position: relative; flex-shrink: 0; }
         .nav-sgt-btn:hover { background: rgba(212,160,23,0.25); box-shadow: 0 4px 16px rgba(212,160,23,0.25); }
         .nav-sgt-bal { font-family: 'Cinzel',serif; font-size: 0.88em; }
-        .nav-sgt-dot { width: 6px; height: 6px; border-radius: 50%; background: #d4a017; animation: sgt-pulse-dot 2s ease-in-out infinite; }
+        .nav-sgt-dot { width: 6px; height: 6px; border-radius: 50%; background: #d4a017; animation: sgt-pulse-dot 2s ease-in-out infinite; flex-shrink: 0; }
         @keyframes sgt-pulse-dot { 0%,100%{box-shadow:0 0 0 0 rgba(212,160,23,0.4)} 50%{box-shadow:0 0 0 5px rgba(212,160,23,0)} }
-        /* Visitor Badge Navbar */
-        .nav-visitor-badge { display: flex; align-items: center; gap: 5px; background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.3); border-radius: 7px; padding: 5px 9px; white-space: nowrap; cursor: default; transition: all 0.2s; }
-        .nav-visitor-badge:hover { background: rgba(16,185,129,0.18); border-color: rgba(16,185,129,0.5); }
-        .nav-visitor-dot { width: 6px; height: 6px; border-radius: 50%; background: #10b981; display: inline-block; flex-shrink: 0; box-shadow: 0 0 0 0 rgba(16,185,129,0.5); animation: visitor-pulse 2s ease-in-out infinite; }
-        .nav-visitor-text { color: #6ee7b7; font-size: 0.68em; font-weight: 700; letter-spacing: 0.4px; }
+        /* Visitor Badge */
+        .nav-visitor-badge { display: flex; align-items: center; gap: 5px; background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.28); border-radius: 7px; padding: 5px 9px; white-space: nowrap; flex-shrink: 0; }
+        .nav-visitor-dot { width: 6px; height: 6px; border-radius: 50%; background: #10b981; display: inline-block; flex-shrink: 0; animation: visitor-pulse 2s ease-in-out infinite; }
+        .nav-visitor-text { color: #6ee7b7; font-size: 0.66em; font-weight: 700; letter-spacing: 0.3px; }
         @keyframes visitor-pulse { 0%,100%{box-shadow:0 0 0 0 rgba(16,185,129,0.5)} 50%{box-shadow:0 0 0 4px rgba(16,185,129,0)} }
         .swm-loading { display: flex; align-items: center; justify-content: center; padding: 30px; gap: 10px; color: rgba(255,255,255,0.35); font-size: 0.82em; }
         .swm-spinner { width: 20px; height: 20px; border: 2px solid rgba(212,160,23,0.2); border-top-color: #d4a017; border-radius: 50%; animation: spin 0.8s linear infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
         .swm-empty { text-align: center; padding: 24px; color: rgba(255,255,255,0.28); font-size: 0.78em; }
     </style>
-
     <script>
     // ============================================================
     //  FIREBASE CONFIG — portal-sagatama
@@ -1819,25 +1777,17 @@
 
 <!-- ======= SGT WALLET MODAL ======= -->
 <div id="sgt-wallet-overlay" onclick="closeSGTWalletOutside(event)">
-    <div class="sgt-wallet-modal" style="position:relative;">
-
+    <div class="sgt-wallet-modal">
         <!-- HEADER -->
         <div class="swm-header">
             <div class="swm-logo">
                 <div class="swm-coin">SGT</div>
                 <div>
                     <div class="swm-title">Sagatama Token</div>
-                    <div class="swm-subtitle-hdr">Token Loyalitas Digital Yayasan</div>
+                    <div style="font-size:0.65em;color:rgba(255,255,255,0.3);margin-top:1px;">Token Loyalitas Digital Yayasan</div>
                 </div>
             </div>
             <button class="swm-close" onclick="closeSGTWallet()"><i class="fas fa-times"></i></button>
-        </div>
-
-        <!-- KURS BAR -->
-        <div class="swm-kurs-bar">
-            <div class="swm-kurs-item"><i class="fas fa-circle-nodes" style="color:#a78bfa;font-size:0.9em;"></i> <span class="swm-kurs-val" id="kurs-pi-display">500 SGT</span> <span>= 1 Pi</span></div>
-            <div class="swm-kurs-sep">|</div>
-            <div class="swm-kurs-item"><i class="fas fa-tag" style="color:#6ee7b7;font-size:0.9em;"></i> <span class="swm-kurs-val">100 SGT</span> <span>= diskon Rp 2.000</span></div>
         </div>
 
         <!-- BODY -->
@@ -1847,31 +1797,30 @@
             <div id="swm-auth" class="swm-auth">
                 <div class="swm-auth-coin">SGT</div>
                 <h3 id="swm-auth-title">Masuk ke SGT Wallet</h3>
-                <p id="swm-auth-sub">Login untuk simpan, tukar, dan gunakan poin SGT Anda secara permanen</p>
+                <p id="swm-auth-sub">Login untuk simpan & gunakan poin SGT Anda secara permanen</p>
                 <div class="swm-err" id="swm-err"></div>
                 <button class="swm-btn-google" onclick="swtSignInGoogle()">
-                    <svg width="16" height="16" viewBox="0 0 18 18" fill="none"><path d="M17.64 9.205c0-.639-.057-1.252-.164-1.841H9v3.481h4.844a4.14 4.14 0 01-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.615z" fill="#4285F4"/><path d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 009 18z" fill="#34A853"/><path d="M3.964 10.71A5.41 5.41 0 013.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 000 9c0 1.452.348 2.827.957 4.042l3.007-2.332z" fill="#FBBC05"/><path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 00.957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z" fill="#EA4335"/></svg>
+                    <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M17.64 9.205c0-.639-.057-1.252-.164-1.841H9v3.481h4.844a4.14 4.14 0 01-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.615z" fill="#4285F4"/><path d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 009 18z" fill="#34A853"/><path d="M3.964 10.71A5.41 5.41 0 013.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 000 9c0 1.452.348 2.827.957 4.042l3.007-2.332z" fill="#FBBC05"/><path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 00.957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z" fill="#EA4335"/></svg>
                     Masuk dengan Google
                 </button>
-                <div class="swm-divider"><span>atau dengan email</span></div>
+                <div class="swm-divider"><span>atau email</span></div>
                 <input class="swm-inp" type="text" id="swm-name" placeholder="Nama Lengkap" style="display:none;">
-                <input class="swm-inp" type="email" id="swm-email" placeholder="Alamat Email">
+                <input class="swm-inp" type="email" id="swm-email" placeholder="Email">
                 <input class="swm-inp" type="password" id="swm-pass" placeholder="Password (min 6 karakter)">
                 <button class="swm-btn-gold" id="swm-auth-btn" onclick="swtHandleAuth()">
                     <i class="fas fa-coins"></i> <span id="swm-auth-btn-text">Masuk</span>
                 </button>
-                <div class="swm-toggle" id="swm-toggle">Belum punya akun? <a onclick="swtToggleMode()">Daftar gratis</a></div>
+                <div class="swm-toggle" id="swm-toggle">Belum punya akun? <a onclick="swtToggleMode()">Daftar</a></div>
             </div>
 
             <!-- WALLET SCREEN -->
             <div id="swm-wallet" style="display:none;">
-
                 <!-- Balance -->
                 <div class="swm-balance">
                     <div class="swm-bal-top">
                         <div>
                             <div class="swm-bal-lbl">Saldo SGT</div>
-                            <div style="display:flex;align-items:baseline;gap:4px;">
+                            <div style="display:flex;align-items:baseline;gap:3px;">
                                 <div class="swm-bal-amt" id="swm-bal">0</div>
                                 <div class="swm-bal-unit">SGT</div>
                             </div>
@@ -1881,19 +1830,10 @@
                             <div class="swm-uname" id="swm-uname">—</div>
                         </div>
                     </div>
-                    <!-- Pi equivalent -->
-                    <div class="swm-pi-equiv">
-                        <span class="pi-lbl">Setara</span>
-                        <span class="pi-icon">π</span>
-                        <span class="pi-val" id="swm-pi-equiv-val">0</span>
-                        <span class="pi-lbl">Pi Network</span>
-                        <span style="color:rgba(255,255,255,0.15);margin:0 2px;">·</span>
-                        <span class="pi-lbl">kurs 500 SGT = 1 Pi</span>
-                    </div>
-                    <div class="swm-bal-stats" style="margin-top:10px;">
+                    <div class="swm-bal-stats">
                         <div class="swm-bstat"><div class="v" id="swm-earned">0</div><div class="l">Diperoleh</div></div>
                         <div class="swm-bstat"><div class="v" id="swm-redeemed">0</div><div class="l">Ditukar</div></div>
-                        <div class="swm-bstat"><div class="v" id="swm-streak">0</div><div class="l">Streak</div></div>
+                        <div class="swm-bstat"><div class="v" id="swm-streak">0</div><div class="l">Hari Streak</div></div>
                         <div class="swm-bstat"><div class="v" id="swm-rank">—</div><div class="l">Peringkat</div></div>
                     </div>
                 </div>
@@ -1901,7 +1841,7 @@
                 <!-- Tabs -->
                 <div class="swm-tabs">
                     <button class="swm-tab active" onclick="swtTab('misi',this)">🎯 Misi</button>
-                    <button class="swm-tab" onclick="swtTab('tukar',this)">🔄 Tukar</button>
+                    <button class="swm-tab" onclick="swtTab('tukar',this)">🎁 Tukar</button>
                     <button class="swm-tab" onclick="swtTab('riwayat',this)">📋 Riwayat</button>
                     <button class="swm-tab" onclick="swtTab('papan',this)">🏆 Papan</button>
                 </div>
@@ -1909,80 +1849,39 @@
                 <!-- Tab: Misi -->
                 <div id="swm-tab-misi">
                     <div id="swm-tasks"></div>
-                    <div style="background:rgba(212,160,23,0.05);border:1px solid rgba(212,160,23,0.1);border-radius:9px;padding:10px 13px;font-size:0.7em;color:rgba(255,255,255,0.35);line-height:1.6;">
-                        💡 Misi harian direset tiap tengah malam. Streak 7+ hari = +20 SGT/hari!
+                    <div style="background:rgba(212,160,23,0.05);border:1px solid rgba(212,160,23,0.12);border-radius:10px;padding:12px 14px;font-size:0.72em;color:rgba(255,255,255,0.4);line-height:1.6;">
+                        💡 <strong style="color:rgba(212,160,23,0.7);">Info:</strong> Misi harian direset tiap tengah malam. Streak 7+ hari = bonus +20 SGT/hari!
                     </div>
                 </div>
 
                 <!-- Tab: Tukar -->
                 <div id="swm-tab-tukar" style="display:none;">
-
-                    <!-- TUKAR KE PI — utama -->
-                    <div class="swm-pi-card">
-                        <div class="swm-pi-card-header">
-                            <div class="swm-pi-badge"><i class="fas fa-circle-nodes"></i> PI NETWORK</div>
-                            <h4>Tukar SGT → Pi</h4>
-                        </div>
-                        <p>Masukkan jumlah SGT yang ingin ditukar dan alamat Pi Wallet kamu. Admin yayasan akan memproses transfer Pi dalam 1×24 jam.</p>
-
-                        <!-- Status request aktif (jika ada) -->
-                        <div id="swm-pi-active-req" style="display:none;margin-bottom:12px;"></div>
-
-                        <div id="swm-pi-form">
-                            <div style="display:flex;gap:8px;margin-bottom:9px;">
-                                <div style="flex:1;">
-                                    <div style="font-size:0.68em;color:rgba(255,255,255,0.35);margin-bottom:4px;">Jumlah SGT (min. 500)</div>
-                                    <input class="swm-inp" type="number" id="swm-pi-sgt-amt" placeholder="500" min="500" step="500" style="margin-bottom:0;" oninput="swtUpdatePiPreview()">
-                                </div>
-                                <div style="flex:1;">
-                                    <div style="font-size:0.68em;color:rgba(255,255,255,0.35);margin-bottom:4px;">Kamu dapat</div>
-                                    <div style="background:rgba(124,58,237,0.1);border:1px solid rgba(124,58,237,0.2);border-radius:9px;padding:10px 13px;font-family:'Cinzel',serif;font-weight:700;color:#c4b5fd;font-size:0.9em;" id="swm-pi-result">0 Pi</div>
-                                </div>
-                            </div>
-                            <div style="font-size:0.68em;color:rgba(255,255,255,0.35);margin-bottom:4px;">Alamat Pi Wallet kamu</div>
-                            <input class="swm-inp" type="text" id="swm-pi-wallet-addr" placeholder="Contoh: @username atau alamat wallet Pi" style="margin-bottom:10px;">
-                            <div class="swm-pi-preview" id="swm-pi-preview" style="display:none;">
-                                <div class="swm-pi-preview-row"><span class="k">SGT dikurangi</span><span class="v" id="prev-sgt">0 SGT</span></div>
-                                <div class="swm-pi-preview-row"><span class="k">Pi diterima</span><span class="v" id="prev-pi">0 Pi</span></div>
-                                <div class="swm-pi-preview-row"><span class="k">Saldo setelah</span><span class="v" id="prev-sisa">0 SGT</span></div>
-                                <div class="swm-pi-preview-row"><span class="k">Estimasi proses</span><span class="v" style="color:#6ee7b7;">1×24 jam</span></div>
-                            </div>
-                            <button class="swm-btn-pi" id="swm-pi-submit-btn" onclick="swtRequestPi()">
-                                <i class="fas fa-circle-nodes"></i> Ajukan Penukaran Pi
-                            </button>
-                        </div>
+                    <div style="background:rgba(16,185,129,0.07);border:1px solid rgba(16,185,129,0.18);border-radius:9px;padding:11px 14px;margin-bottom:12px;font-size:0.75em;color:#5eead4;display:flex;align-items:center;gap:8px;">
+                        <i class="fas fa-info-circle"></i> Saldo: <strong id="swm-redeem-bal">0 SGT</strong>. Admin WA akan dikonfirmasi otomatis.
                     </div>
-
-                    <!-- TUKAR KE RUPIAH / DISKON -->
-                    <div style="background:rgba(16,185,129,0.06);border:1px solid rgba(16,185,129,0.16);border-radius:14px;padding:14px;margin-bottom:10px;">
-                        <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
-                            <div style="background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.25);border-radius:7px;padding:3px 9px;font-size:0.65em;color:#6ee7b7;font-weight:700;">DISKON & HADIAH</div>
-                            <div style="font-size:0.86em;font-weight:700;color:#6ee7b7;">Tukar SGT → Rupiah</div>
-                        </div>
-                        <div class="swm-redeem-grid" id="swm-redeem"></div>
-                    </div>
+                    <div class="swm-redeem-grid" id="swm-redeem"></div>
                 </div>
 
                 <!-- Tab: Riwayat -->
                 <div id="swm-tab-riwayat" style="display:none;">
-                    <div id="swm-history"><div class="swm-loading"><div class="swm-spinner"></div> Memuat riwayat...</div></div>
+                    <div id="swm-history"><div class="swm-loading"><div class="swm-spinner"></div> Memuat...</div></div>
                 </div>
 
                 <!-- Tab: Papan -->
                 <div id="swm-tab-papan" style="display:none;">
-                    <div id="swm-lb"><div class="swm-loading"><div class="swm-spinner"></div> Memuat papan...</div></div>
+                    <div id="swm-lb"><div class="swm-loading"><div class="swm-spinner"></div> Memuat...</div></div>
                 </div>
 
-                <!-- Signout -->
+                <!-- Sign out -->
                 <div class="swm-signout">
                     <button onclick="swtSignOut()"><i class="fas fa-sign-out-alt"></i> Keluar dari Wallet</button>
                 </div>
             </div>
         </div>
 
-        <!-- Confirm Overlay (untuk redeem rupiah) -->
-        <div class="swm-confirm" id="swm-confirm" style="position:absolute;">
-            <div style="font-size:2em;margin-bottom:10px;" id="swm-c-emoji">🎁</div>
+        <!-- Redeem Confirm Overlay -->
+        <div class="swm-confirm" id="swm-confirm">
+            <div style="font-size:2.2em;" id="swm-c-emoji">🎁</div>
             <h3 id="swm-c-title">Tukar Poin</h3>
             <p id="swm-c-desc">—</p>
             <div class="swm-confirm-box">
@@ -1994,10 +1893,8 @@
                 <button class="swm-btn-confirm" onclick="swtDoRedeem()">✓ Konfirmasi</button>
             </div>
         </div>
-
     </div>
 </div>
-
 
 <!-- ======= NAVIGATION ======= -->
 <nav id="main-nav">
@@ -2010,8 +1907,8 @@
             </div>
         </a>
 
-        <!-- Desktop Nav -->
-        <div class="nav-desktop" style="display: flex; gap: 6px; align-items: center;">
+        <!-- Desktop Nav - tengah -->
+        <div class="nav-desktop" style="display: flex; gap: 3px; align-items: center; flex: 1; justify-content: center; overflow: visible;">
 
             <!-- 3 PILAR -->
             <div class="dropdown">
@@ -2119,6 +2016,9 @@
             </div>
         </div>
 
+        <!-- Grup kanan: SGT + Visitor -->
+        <div style="display:flex;align-items:center;gap:5px;flex-shrink:0;margin-left:4px;">
+
         <!-- SGT WALLET BUTTON -->
         <button class="nav-sgt-btn" onclick="openSGTWallet()" id="navSgtBtn" title="SGT Wallet Anda">
             <div class="nav-sgt-dot"></div>
@@ -2127,9 +2027,11 @@
         </button>
 
         <!-- Live Visitor Badge -->
-        <div style="display:flex;align-items:center;gap:6px;background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.3);border-radius:20px;padding:6px 12px;white-space:nowrap;flex-shrink:0;" title="Pengunjung aktif">
-            <span style="width:7px;height:7px;border-radius:50%;background:#10b981;display:inline-block;animation:pulse-green 1.5s ease-in-out infinite;"></span>
-            <span style="color:#6ee7b7;font-size:0.68em;font-weight:700;letter-spacing:0.5px;"><span class="live-visitor-count">—</span> pengunjung</span>
+        <div class="nav-visitor-badge" title="Total pengunjung">
+            <span class="nav-visitor-dot"></span>
+            <span class="nav-visitor-text"><span class="live-visitor-count">—</span> 👁</span>
+        </div>
+
         </div>
 
         <button class="hamburger" id="hamburgerBtn" onclick="toggleMobileMenu()">
@@ -4247,530 +4149,604 @@ window.addEventListener('scroll', () => {
 </script>
 
 <!-- ======= SGT TOKEN FLOATING WIDGET ======= -->
-<div class="sgt-floating" id="sgt-floating-btn" onclick="openSGTWallet()" title="Buka SGT Wallet">
-    <div style="font-family:'Cinzel',serif;font-weight:900;font-size:0.8em;color:#070d1a;">SGT</div>
-    <div id="sgt-float-notif" style="position:absolute;top:-4px;right:-4px;background:#ef4444;color:#fff;border-radius:50%;width:18px;height:18px;font-size:0.58em;font-weight:700;display:none;align-items:center;justify-content:center;">!</div>
+<div class="sgt-floating" id="sgtFloating">
+    <div class="sgt-panel" id="sgtPanel">
+        <div class="sgt-panel-title"><span>SGT</span> Sagatama Token</div>
+        <div class="sgt-panel-sub">Token loyalitas digital Yayasan Sagatama</div>
+        <div class="sgt-balance">
+            <div class="amount" id="sgtBalance">0</div>
+            <div class="label">SGT Points Anda</div>
+        </div>
+        <div class="sgt-tasks">
+            <div class="sgt-task" id="task-visit" onclick="claimSGT('visit',10,this)">
+                <div class="sgt-task-icon" style="background:rgba(16,185,129,0.15);color:#5eead4;"><i class="fas fa-eye"></i></div>
+                <div class="sgt-task-text">
+                    <div class="t">Kunjungi Portal</div>
+                    <div class="s">Bonus harian untuk setiap kunjungan</div>
+                </div>
+                <div class="sgt-task-pts">+10 SGT</div>
+            </div>
+            <div class="sgt-task" id="task-share" onclick="claimSGT('share',25,this)">
+                <div class="sgt-task-icon" style="background:rgba(212,160,23,0.15);color:var(--accent);"><i class="fab fa-whatsapp"></i></div>
+                <div class="sgt-task-text">
+                    <div class="t">Share ke WhatsApp</div>
+                    <div class="s">Bagikan portal Sagatama</div>
+                </div>
+                <div class="sgt-task-pts">+25 SGT</div>
+            </div>
+            <div class="sgt-task" id="task-mart" onclick="claimSGT('mart',50,this)">
+                <div class="sgt-task-icon" style="background:rgba(13,148,136,0.15);color:#5eead4;"><i class="fas fa-store"></i></div>
+                <div class="sgt-task-text">
+                    <div class="t">Kunjungi Sagatama Mart</div>
+                    <div class="s">Buka toko dan lihat produk</div>
+                </div>
+                <div class="sgt-task-pts">+50 SGT</div>
+            </div>
+            <div class="sgt-task" id="task-psb" onclick="claimSGT('psb',100,this)">
+                <div class="sgt-task-icon" style="background:rgba(124,58,237,0.15);color:#c4b5fd;"><i class="fas fa-user-plus"></i></div>
+                <div class="sgt-task-text">
+                    <div class="t">Isi Form Pendaftaran</div>
+                    <div class="s">Daftar sebagai calon santri</div>
+                </div>
+                <div class="sgt-task-pts">+100 SGT</div>
+            </div>
+            <div class="sgt-task" id="task-donasi" onclick="claimSGT('donasi',200,this)">
+                <div class="sgt-task-icon" style="background:rgba(212,160,23,0.15);color:var(--accent);"><i class="fas fa-hand-holding-heart"></i></div>
+                <div class="sgt-task-text">
+                    <div class="t">Lakukan Donasi</div>
+                    <div class="s">Dukung pembangunan yayasan</div>
+                </div>
+                <div class="sgt-task-pts">+200 SGT</div>
+            </div>
+        </div>
+        <button class="sgt-cta" onclick="claimSGT('share',25,document.getElementById('task-share'))">
+            <i class="fab fa-whatsapp"></i> Share & Dapatkan 25 SGT
+        </button>
+        <div class="sgt-disclaimer">SGT = poin loyalitas digital, dapat ditukar diskon produk & merchandise Sagatama</div>
+        <div style="margin-top:10px;background:rgba(212,160,23,0.07);border-radius:8px;padding:8px 12px;display:flex;align-items:center;justify-content:space-between;">
+            <span style="color:rgba(255,255,255,0.35);font-size:0.68em;"><i class="fas fa-users" style="margin-right:4px;color:rgba(212,160,23,0.5);"></i>Total SGT komunitas:</span>
+            <span style="color:var(--accent);font-weight:800;font-size:0.75em;" class="sgt-community-total">—</span>
+        </div>
+    </div>
+    <button class="sgt-fab" onclick="toggleSGTPanel()" title="Klaim Token SGT">
+        SGT
+        <span class="sgt-badge-count" id="sgtNotif">5</span>
+    </button>
 </div>
 
 <!-- ======= SGT WALLET SYSTEM — Firebase Auth Powered ======= -->
 <script>
-// ═══════════════════════════════════════════════════════════
-//  SGT WALLET — Lengkap: Misi · Tukar Pi · Diskon · Riwayat
-//  Kurs: 500 SGT = 1 Pi  |  100 SGT = diskon Rp 2.000
-// ═══════════════════════════════════════════════════════════
+// ============================================================
+//  SGT WALLET — Menggunakan Firebase Auth dari portal-sagatama
+//  Data tersimpan di: sgt_users/{uid} dan sgt_leaderboard/{uid}
+// ============================================================
 
-const SGT_KURS_PI   = 500;   // SGT per 1 Pi
-const SGT_KURS_RP   = 100;   // SGT per Rp 2.000 diskon
-const SGT_KURS_RP_V = 2000;  // nilai rupiah per 100 SGT
-
-// ── Misi yang tersedia ──────────────────────────────────────
 const SGT_TASKS = [
-    { id:'visit',     name:'Kunjungi Portal',      desc:'Login & buka portal hari ini',            pts:10,  icon:'🌐', bg:'rgba(15,52,96,0.3)',   daily:true },
-    { id:'share_wa',  name:'Share ke WhatsApp',    desc:'Bagikan halaman portal ke WA',            pts:25,  icon:'📲', bg:'rgba(37,211,102,0.2)', daily:false },
-    { id:'donasi',    name:'Donasi Yayasan',       desc:'Lakukan donasi berapapun',                pts:200, icon:'💝', bg:'rgba(212,160,23,0.2)', daily:false },
-    { id:'santri',    name:'Daftarkan Santri',     desc:'Isi formulir pendaftaran santri',         pts:100, icon:'📚', bg:'rgba(124,58,237,0.2)', daily:false },
-    { id:'mart',      name:'Kunjungi Sagatama Mart',desc:'Buka halaman Sagatama Mart',             pts:50,  icon:'🛒', bg:'rgba(13,148,136,0.2)', daily:true },
-    { id:'profile',   name:'Lengkapi Profil',      desc:'Tambahkan nama & foto profil',            pts:50,  icon:'👤', bg:'rgba(59,130,246,0.2)', daily:false },
+    { key:'visit', name:'Kunjungi Portal Harian', desc:'Bonus otomatis tiap hari hadir', pts:10, icon:'👁️', bg:'rgba(16,185,129,0.15)', c:'#5eead4', daily:true },
+    { key:'share', name:'Share ke WhatsApp', desc:'Bagikan portal Sagatama ke kontak Anda', pts:25, icon:'📱', bg:'rgba(212,160,23,0.15)', c:'#d4a017' },
+    { key:'mart', name:'Kunjungi Sagatama Mart', desc:'Buka toko dan lihat produk unggulan', pts:50, icon:'🛍️', bg:'rgba(13,148,136,0.15)', c:'#5eead4' },
+    { key:'psb', name:'Isi Form Pendaftaran', desc:'Daftar sebagai calon santri baru', pts:100, icon:'📝', bg:'rgba(124,58,237,0.15)', c:'#c4b5fd' },
+    { key:'donasi', name:'Lakukan Donasi', desc:'Dukung pembangunan yayasan Sagatama', pts:200, icon:'❤️', bg:'rgba(212,160,23,0.15)', c:'#d4a017' },
+];
+const SGT_REDEEM = [
+    { key:'disc5', name:'Diskon 5% Mart', emoji:'🏷️', cost:200, desc:'Kupon diskon 5% di Sagatama Mart' },
+    { key:'disc10', name:'Diskon 10% Mart', emoji:'🎫', cost:400, desc:'Kupon diskon 10% di Sagatama Mart' },
+    { key:'stiker', name:'Stiker Eksklusif', emoji:'🌟', cost:150, desc:'Stiker eksklusif Yayasan Sagatama' },
+    { key:'kaos', name:'Kaos Sagatama', emoji:'👕', cost:1000, desc:'Kaos edisi terbatas yayasan' },
+    { key:'buku', name:'Buku Pesantren', emoji:'📖', cost:500, desc:'Buku pembelajaran santri pilihan' },
+    { key:'sertif', name:'Sertifikat Digital', emoji:'📜', cost:300, desc:'Sertifikat kontribusi komunitas' },
 ];
 
-// ── Hadiah / Diskon (rupiah) ────────────────────────────────
-const SGT_REWARDS = [
-    { id:'disc2k',  name:'Diskon Rp 2.000',  cost:100,  emoji:'🏷️',  desc:'Di Sagatama Mart' },
-    { id:'disc5k',  name:'Diskon Rp 5.000',  cost:250,  emoji:'🎫',  desc:'Di Sagatama Mart' },
-    { id:'disc10k', name:'Diskon Rp 10.000', cost:500,  emoji:'💳',  desc:'Di Sagatama Mart' },
-    { id:'disc25k', name:'Diskon Rp 25.000', cost:1250, emoji:'🎟️', desc:'Di Sagatama Mart' },
-];
+let _swtUser = null;
+let _swtData = { balance:0, totalEarned:0, totalRedeemed:0, claimed:[], lastVisit:'', streak:0, history:[] };
+let _swtPendingRedeem = null;
+let _swtIsRegister = false;
 
-// ── State ───────────────────────────────────────────────────
-let _swtUser = null, _swtData = {}, _swtIsRegister = false;
-let _swtConfirmItem = null, _swtHistUnsubscribe = null, _swtLbUnsubscribe = null;
-let _swtPiUnsubscribe = null;
-
-// ── Helpers ─────────────────────────────────────────────────
-function _swtErrMsg(m) {
-    const el = document.getElementById('swm-err');
-    if (!el) return;
-    el.textContent = m; el.style.display = m ? 'block' : 'none';
-}
+// ── Tunggu Firebase siap ──────────────────────────────────
 function _swtWhenReady(fn, n) {
     n = n||0;
-    if (window.db && typeof firebase.auth === 'function') { fn(); return; }
-    if (n>50) { console.warn('[SGT] Firebase tidak siap'); return; }
+    if (window.db && firebase.auth) { fn(); return; }
+    if (n>30) return;
     setTimeout(()=>_swtWhenReady(fn, n+1), 100);
 }
-function _fmtTime(ts) {
-    if (!ts) return '—';
-    const d = ts.toDate ? ts.toDate() : new Date(ts);
-    return d.toLocaleDateString('id-ID',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
-}
-function _fmtNum(n) { return (n||0).toLocaleString('id-ID'); }
 
-// ── Open / Close ────────────────────────────────────────────
+_swtWhenReady(function() {
+    firebase.auth().onAuthStateChanged(user => {
+        _swtUser = user;
+        if (user) {
+            _swtShowWallet(user);
+        } else {
+            _swtShowAuth();
+        }
+        _swtUpdateNavBtn();
+    });
+});
+
+// ── Modal Open/Close ─────────────────────────────────────
 function openSGTWallet() {
     document.getElementById('sgt-wallet-overlay').classList.add('open');
-    document.body.style.overflow = 'hidden';
 }
 function closeSGTWallet() {
     document.getElementById('sgt-wallet-overlay').classList.remove('open');
-    document.body.style.overflow = '';
 }
 function closeSGTWalletOutside(e) {
     if (e.target.id === 'sgt-wallet-overlay') closeSGTWallet();
 }
 
-// ── Auth ─────────────────────────────────────────────────────
+// ── Auth Screens ─────────────────────────────────────────
+function _swtShowAuth() {
+    document.getElementById('swm-auth').style.display = 'block';
+    document.getElementById('swm-wallet').style.display = 'none';
+}
+function _swtShowWallet(user) {
+    document.getElementById('swm-auth').style.display = 'none';
+    document.getElementById('swm-wallet').style.display = 'block';
+    const name = user.displayName || user.email?.split('@')[0] || 'Pengguna';
+    document.getElementById('swm-uname').textContent = name;
+    document.getElementById('swm-avatar').textContent = (name[0]||'U').toUpperCase();
+    _swtLoadData(user.uid);
+}
+function _swtUpdateNavBtn() {
+    const btn = document.getElementById('navSgtBtn');
+    const bal = document.getElementById('navSgtBal');
+    if (!btn||!bal) return;
+    if (_swtUser) {
+        bal.textContent = (_swtData.balance||0).toLocaleString('id-ID') + ' SGT';
+    } else {
+        bal.textContent = 'Login';
+    }
+}
+
 function swtToggleMode() {
     _swtIsRegister = !_swtIsRegister;
-    document.getElementById('swm-auth-title').textContent    = _swtIsRegister ? 'Buat Akun SGT' : 'Masuk ke SGT Wallet';
-    document.getElementById('swm-auth-sub').textContent      = _swtIsRegister ? 'Daftar dan mulai kumpulkan SGT sekarang' : 'Login untuk simpan dan tukar poin SGT Anda';
-    document.getElementById('swm-auth-btn-text').textContent = _swtIsRegister ? 'Daftar Sekarang' : 'Masuk';
-    document.getElementById('swm-name').style.display        = _swtIsRegister ? 'block' : 'none';
-    document.getElementById('swm-toggle').innerHTML          = _swtIsRegister
+    document.getElementById('swm-auth-title').textContent = _swtIsRegister ? 'Buat Akun Baru' : 'Masuk ke SGT Wallet';
+    document.getElementById('swm-auth-sub').textContent = _swtIsRegister ? 'Daftarkan diri untuk mulai kumpulkan SGT' : 'Login untuk simpan & gunakan poin SGT Anda secara permanen';
+    document.getElementById('swm-auth-btn-text').textContent = _swtIsRegister ? 'Daftar' : 'Masuk';
+    document.getElementById('swm-name').style.display = _swtIsRegister ? 'block' : 'none';
+    document.getElementById('swm-toggle').innerHTML = _swtIsRegister
         ? 'Sudah punya akun? <a onclick="swtToggleMode()">Masuk</a>'
-        : 'Belum punya akun? <a onclick="swtToggleMode()">Daftar gratis</a>';
+        : 'Belum punya akun? <a onclick="swtToggleMode()">Daftar</a>';
     _swtErrMsg('');
+}
+function _swtErrMsg(m) {
+    const el = document.getElementById('swm-err');
+    el.textContent = m; el.style.display = m ? 'block' : 'none';
 }
 
 async function swtSignInGoogle() {
     try {
         _swtErrMsg('');
-        if (typeof firebase.auth !== 'function') { _swtErrMsg('Firebase Auth belum siap. Refresh halaman.'); return; }
-        if (!firebase.auth.GoogleAuthProvider) { _swtErrMsg('Google Auth tidak tersedia.'); return; }
-        const provider = new firebase.auth.GoogleAuthProvider();
-        provider.addScope('email'); provider.addScope('profile');
-        await firebase.auth().signInWithPopup(provider);
-    } catch(e) {
-        const m = {'auth/popup-blocked':'Popup diblokir browser. Izinkan popup.','auth/popup-closed-by-user':'Login dibatalkan.','auth/unauthorized-domain':'Domain belum diizinkan di Firebase Console.'};
-        _swtErrMsg(m[e.code]||e.message);
-    }
+        const p = new firebase.auth.GoogleAuthProvider();
+        await firebase.auth().signInWithPopup(p);
+        closeSGTWallet(); setTimeout(openSGTWallet, 300);
+    } catch(e) { _swtErrMsg(e.message); }
 }
 
 async function swtHandleAuth() {
     const email = (document.getElementById('swm-email').value||'').trim();
-    const pass  = document.getElementById('swm-pass').value||'';
-    const name  = (document.getElementById('swm-name').value||'').trim();
+    const pass = document.getElementById('swm-pass').value||'';
+    const name = (document.getElementById('swm-name').value||'').trim();
     if (!email||!pass) { _swtErrMsg('Email dan password wajib diisi.'); return; }
-    if (typeof firebase.auth !== 'function') { _swtErrMsg('Firebase Auth belum siap. Refresh halaman.'); return; }
-    const btn = document.getElementById('swm-auth-btn'); btn.disabled = true;
+    const btn = document.getElementById('swm-auth-btn');
+    btn.disabled = true;
     try {
         _swtErrMsg('');
         if (_swtIsRegister) {
-            if (!name) { _swtErrMsg('Nama wajib diisi.'); btn.disabled=false; return; }
+            if (!name) { _swtErrMsg('Nama wajib diisi.'); return; }
             const c = await firebase.auth().createUserWithEmailAndPassword(email, pass);
             await c.user.updateProfile({ displayName: name });
         } else {
             await firebase.auth().signInWithEmailAndPassword(email, pass);
         }
     } catch(e) {
-        const m = {'auth/user-not-found':'Akun tidak ditemukan.','auth/wrong-password':'Password salah.','auth/invalid-credential':'Email atau password salah.','auth/email-already-in-use':'Email sudah terdaftar.','auth/weak-password':'Password min 6 karakter.','auth/invalid-email':'Format email salah.','auth/too-many-requests':'Terlalu banyak percobaan, coba lagi nanti.','auth/unauthorized-domain':'Domain belum diizinkan di Firebase Console.'};
-        _swtErrMsg(m[e.code]||e.message);
+        const msgs = { 'auth/user-not-found':'Akun tidak ditemukan.', 'auth/wrong-password':'Password salah.', 'auth/email-already-in-use':'Email sudah terdaftar.', 'auth/weak-password':'Password min 6 karakter.', 'auth/invalid-email':'Format email salah.' };
+        _swtErrMsg(msgs[e.code]||e.message);
     } finally { btn.disabled = false; }
 }
 
 async function swtSignOut() {
-    if (typeof firebase.auth !== 'function') return;
-    if (_swtHistUnsubscribe) { _swtHistUnsubscribe(); _swtHistUnsubscribe=null; }
-    if (_swtLbUnsubscribe)   { _swtLbUnsubscribe();   _swtLbUnsubscribe=null; }
-    if (_swtPiUnsubscribe)   { _swtPiUnsubscribe();   _swtPiUnsubscribe=null; }
     await firebase.auth().signOut();
+    _swtData = { balance:0, totalEarned:0, totalRedeemed:0, claimed:[], lastVisit:'', streak:0, history:[] };
+    _swtUpdateNavBtn();
 }
 
-// ── Auth State Listener ─────────────────────────────────────
-_swtWhenReady(function() {
-    firebase.auth().onAuthStateChanged(async user => {
-        _swtUser = user;
-        if (user) {
-            document.getElementById('swm-auth').style.display   = 'none';
-            document.getElementById('swm-wallet').style.display = 'block';
-            await _swtLoadUser();
-            _swtGrantDailyVisit();
-            _swtUpdateNav();
-            _swtRenderTasks();
-            _swtRenderRedeemList();
-            _swtWatchPiRequests();
+// ── Data ─────────────────────────────────────────────────
+async function _swtLoadData(uid) {
+    try {
+        const doc = await window.db.collection('sgt_users').doc(uid).get();
+        if (doc.exists) {
+            _swtData = { ..._swtData, ...doc.data() };
         } else {
-            document.getElementById('swm-auth').style.display   = 'block';
-            document.getElementById('swm-wallet').style.display = 'none';
-            _swtData = {};
-            _swtUpdateNav();
-            if (_swtHistUnsubscribe) { _swtHistUnsubscribe(); _swtHistUnsubscribe=null; }
-            if (_swtLbUnsubscribe)   { _swtLbUnsubscribe();   _swtLbUnsubscribe=null; }
-            if (_swtPiUnsubscribe)   { _swtPiUnsubscribe();   _swtPiUnsubscribe=null; }
+            // Cek localStorage lama (migrasi)
+            try {
+                const old = JSON.parse(localStorage.getItem('sgt_data')||'{}');
+                _swtData = { balance: old.balance||10, totalEarned: old.balance||10, totalRedeemed:0, claimed: old.claimed||[], lastVisit: new Date().toDateString(), streak:1, history:[{ key:'visit', pts:10, ts:Date.now(), label:'Kunjungan Pertama' }] };
+            } catch(e) {
+                _swtData = { balance:10, totalEarned:10, totalRedeemed:0, claimed:[], lastVisit: new Date().toDateString(), streak:1, history:[{ key:'visit', pts:10, ts:Date.now(), label:'Kunjungan Pertama' }] };
+            }
+            await _swtSave(uid);
+            showToast('🎉 Selamat datang di SGT Wallet! +10 SGT bonus pertama!');
         }
-    });
-});
-
-// ── Load / Init User Data ───────────────────────────────────
-async function _swtLoadUser() {
-    const ref = window.db.collection('sgt_wallets').doc(_swtUser.uid);
-    const snap = await ref.get();
-    if (!snap.exists) {
-        const init = { balance:0, totalEarned:0, totalRedeemed:0, streak:0, lastVisit:null, completedTasks:{}, createdAt: firebase.firestore.FieldValue.serverTimestamp() };
-        await ref.set(init);
-        _swtData = init;
-    } else {
-        _swtData = snap.data();
+        await _swtAutoVisit(uid);
+        _swtRender();
+        _swtUpdateNavBtn();
+        _swtLoadLB(uid);
+    } catch(e) {
+        console.warn('[SGT Wallet]', e);
+        _swtRender();
     }
-    _swtRenderBalance();
-    ref.onSnapshot(snap2 => { _swtData = snap2.data()||{}; _swtRenderBalance(); _swtUpdateNav(); });
 }
 
-// ── Render Balance ──────────────────────────────────────────
-function _swtRenderBalance() {
-    const bal = _swtData.balance||0;
-    document.getElementById('swm-bal').textContent       = _fmtNum(bal);
-    document.getElementById('swm-earned').textContent    = _fmtNum(_swtData.totalEarned);
-    document.getElementById('swm-redeemed').textContent  = _fmtNum(_swtData.totalRedeemed);
-    document.getElementById('swm-streak').textContent    = (_swtData.streak||0) + 'h';
-    const piEquiv = Math.floor(bal / SGT_KURS_PI);
-    document.getElementById('swm-pi-equiv-val').textContent = piEquiv.toLocaleString('id-ID', {minimumFractionDigits:0, maximumFractionDigits:4});
-    const av = _swtUser?.displayName?.[0]?.toUpperCase() || '?';
-    document.getElementById('swm-avatar').textContent = av;
-    document.getElementById('swm-uname').textContent  = _swtUser?.displayName || _swtUser?.email?.split('@')[0] || '—';
+async function _swtSave(uid) {
+    try {
+        await window.db.collection('sgt_users').doc(uid).set(_swtData, { merge:true });
+        const name = _swtUser?.displayName || _swtUser?.email?.split('@')[0] || 'Anonim';
+        await window.db.collection('sgt_leaderboard').doc(uid).set({ name, balance: _swtData.balance, uid }, { merge:true });
+        // Update nav
+        _swtUpdateNavBtn();
+        // Sync ke SGT lama (backward compat)
+        try { localStorage.setItem('sgt_data', JSON.stringify({ balance:_swtData.balance, claimed:_swtData.claimed, lastVisit:_swtData.lastVisit })); } catch(e){}
+    } catch(e) {
+        console.warn('[SGT save]', e);
+    }
 }
 
-function _swtUpdateNav() {
-    const bal = _swtData.balance||0;
-    const btn = document.getElementById('navSgtBtn');
-    if (!btn) return;
-    const balEl = document.getElementById('navSgtBal');
-    if (_swtUser) { if (balEl) balEl.textContent = _fmtNum(bal)+' SGT'; }
-    else { if (balEl) balEl.textContent = 'Wallet'; }
+async function _swtAutoVisit(uid) {
+    const today = new Date().toDateString();
+    if (_swtData.lastVisit === today) return;
+    const yest = new Date(Date.now()-86400000).toDateString();
+    const ns = _swtData.lastVisit === yest ? (_swtData.streak||0)+1 : 1;
+    const pts = ns >= 7 ? 20 : 10;
+    _swtData.lastVisit = today;
+    _swtData.streak = ns;
+    _swtData.balance = (_swtData.balance||0) + pts;
+    _swtData.totalEarned = (_swtData.totalEarned||0) + pts;
+    _swtData.history = [{ key:'visit', pts, ts:Date.now(), label:`Kunjungan Harian${ns>1?' · Streak '+ns+' hari':''}` }, ...(_swtData.history||[])].slice(0,60);
+    await _swtSave(uid);
+    setTimeout(()=> showToast(`🪙 +${pts} SGT kunjungan harian! Streak: ${ns} hari${ns>=7?' 🔥':''}`), 2000);
 }
 
-// ── Add SGT ─────────────────────────────────────────────────
-async function _swtAddSGT(amount, desc, type='earn') {
-    if (!_swtUser||!window.db) return;
-    const ref  = window.db.collection('sgt_wallets').doc(_swtUser.uid);
-    const hRef = ref.collection('history').doc();
-    const batch = window.db.batch();
-    batch.update(ref, {
-        balance:      firebase.firestore.FieldValue.increment(amount),
-        totalEarned:  firebase.firestore.FieldValue.increment(type==='earn'?amount:0),
-        totalRedeemed:firebase.firestore.FieldValue.increment(type==='redeem'?amount:0),
-    });
-    batch.set(hRef, { amount, desc, type, ts: firebase.firestore.FieldValue.serverTimestamp() });
-    await batch.commit();
+// ── Render ────────────────────────────────────────────────
+function _swtRender() {
+    _swtAnimNum(document.getElementById('swm-bal'), _swtData.balance||0);
+    _swtAnimNum(document.getElementById('swm-earned'), _swtData.totalEarned||0);
+    _swtAnimNum(document.getElementById('swm-redeemed'), _swtData.totalRedeemed||0);
+    if (document.getElementById('swm-streak')) document.getElementById('swm-streak').textContent = _swtData.streak||0;
+    if (document.getElementById('swm-redeem-bal')) document.getElementById('swm-redeem-bal').textContent = (_swtData.balance||0)+' SGT';
+    _swtRenderTasks();
+    _swtRenderRedeem();
 }
 
-// ── Daily Visit ─────────────────────────────────────────────
-async function _swtGrantDailyVisit() {
-    if (!_swtUser||!window.db) return;
-    const today = new Date().toISOString().slice(0,10);
-    const tasks = _swtData.completedTasks||{};
-    if (tasks['visit'] === today) return;
-    const ref = window.db.collection('sgt_wallets').doc(_swtUser.uid);
-    // Streak logic
-    const last = _swtData.lastVisit;
-    const yesterday = new Date(); yesterday.setDate(yesterday.getDate()-1);
-    const yStr = yesterday.toISOString().slice(0,10);
-    const newStreak = (last && (last.toDate?last.toDate():new Date(last)).toISOString().slice(0,10)===yStr)
-        ? (_swtData.streak||0)+1 : 1;
-    const bonus = newStreak>=7 ? 20 : 0;
-    const pts   = 10 + bonus;
-    await ref.update({ 'completedTasks.visit': today, lastVisit: firebase.firestore.FieldValue.serverTimestamp(), streak: newStreak });
-    await _swtAddSGT(pts, '🌐 Kunjungan harian' + (bonus?` + streak bonus ${bonus} SGT`:''));
-}
-
-// ── Tasks ────────────────────────────────────────────────────
 function _swtRenderTasks() {
-    const el = document.getElementById('swm-tasks');
-    if (!el) return;
-    const today = new Date().toISOString().slice(0,10);
-    const done  = _swtData.completedTasks||{};
-    el.innerHTML = SGT_TASKS.map(t => {
-        const isDone = t.daily ? done[t.id]===today : !!done[t.id];
-        return `<div class="swm-task ${isDone?'swm-done':''}" onclick="${isDone?'':'swtDoTask(\''+t.id+'\')'}">
-            <div class="swm-ticon" style="background:${t.bg}">${t.icon}</div>
-            <div>
-                <div class="swm-tname">${t.name} ${isDone?'<span style="color:#6ee7b7;font-size:0.8em;">✓ Selesai</span>':''}</div>
-                <div class="swm-tdesc">${t.desc}</div>
-            </div>
-            <div class="swm-tpts">+${t.pts} SGT</div>
+    const today = new Date().toDateString();
+    const box = document.getElementById('swm-tasks');
+    if (!box) return;
+    box.innerHTML = SGT_TASKS.map(t => {
+        const done = t.daily ? _swtData.lastVisit===today : (_swtData.claimed||[]).includes(t.key);
+        return `<div class="swm-task ${done?'swm-done':''}" id="swmt-${t.key}" ${!done?`onclick="_swtClaimTask('${t.key}',${t.pts},this)"`:''}>
+            <div class="swm-ticon" style="background:${t.bg};color:${t.c};">${t.icon}</div>
+            <div class="swm-tinfo"><div class="swm-tname">${t.name}</div><div class="swm-tdesc">${t.desc}</div></div>
+            ${done ? '<i class="fas fa-check-circle" style="color:#10b981;font-size:1.1em;"></i>' : `<div class="swm-tpts">+${t.pts} SGT</div>`}
         </div>`;
     }).join('');
 }
 
-async function swtDoTask(id) {
-    if (!_swtUser) return;
-    const task = SGT_TASKS.find(t=>t.id===id);
-    if (!task) return;
-    const today = new Date().toISOString().slice(0,10);
-    const done  = _swtData.completedTasks||{};
-    const isDone = task.daily ? done[id]===today : !!done[id];
-    if (isDone) return;
-
-    // Special: share WA
-    if (id==='share_wa') {
-        window.open('https://wa.me/?text='+encodeURIComponent('✨ Portal Sagatama — Yayasan Hidayatul Amin Sagatama\nEkosistem digital pesantren modern: Spiritual, Teknologi & Ekonomi\nhttps://website-sagatama.vercel.app'), '_blank');
-    }
-    // Special: kunjungi mart
-    if (id==='mart') {
-        document.querySelector('[onclick*="sagatama-mart"], [href*="mart"]')?.click();
-    }
-
-    const ref = window.db.collection('sgt_wallets').doc(_swtUser.uid);
-    const upd = {}; upd[`completedTasks.${id}`] = task.daily ? today : true;
-    await ref.update(upd);
-    await _swtAddSGT(task.pts, task.icon+' '+task.name);
-    _swtRenderTasks();
-}
-
-// ── Redeem (Rupiah) ──────────────────────────────────────────
-function _swtRenderRedeemList() {
-    const el = document.getElementById('swm-redeem');
-    if (!el) return;
+function _swtRenderRedeem() {
+    const box = document.getElementById('swm-redeem');
+    if (!box) return;
     const bal = _swtData.balance||0;
-    el.innerHTML = SGT_REWARDS.map(r => {
+    box.innerHTML = SGT_REDEEM.map(r => {
         const locked = bal < r.cost;
-        return `<div class="swm-rcard ${locked?'swm-locked':''}" onclick="${locked?'':'swtOpenConfirm(\''+r.id+'\')'}">
+        return `<div class="swm-rcard ${locked?'swm-locked':''}" ${!locked?`onclick="_swtOpenConfirm('${r.key}')"`:''} title="${locked?'SGT tidak cukup':'Tukar '+r.name}">
             <div class="swm-remoji">${r.emoji}</div>
             <div class="swm-rname">${r.name}</div>
-            <div class="swm-rcost">${_fmtNum(r.cost)} SGT</div>
+            <div class="swm-rcost">🪙 ${r.cost} SGT</div>
             <div class="swm-rdesc">${r.desc}</div>
-            ${locked?`<div style="font-size:0.62em;color:rgba(239,68,68,0.6);margin-top:3px;">Kurang ${_fmtNum(r.cost-bal)} SGT</div>`:''}
         </div>`;
     }).join('');
 }
 
-let _swtConfirmId = null;
-function swtOpenConfirm(rewardId) {
-    const r = SGT_REWARDS.find(x=>x.id===rewardId);
+// ── Task Claim ────────────────────────────────────────────
+async function _swtClaimTask(key, pts, el) {
+    if (!_swtUser||el.classList.contains('swm-done')) return;
+    if (key === 'share') {
+        const txt = encodeURIComponent('Assalamualaikum! Temukan Portal Sagatama — ekosistem digital pesantren modern berbasis Firebase 🕌\n\n🌐 https://portal-sagatama.web.app\n\n🌟 Yayasan Hidayatul Amin Sagatama — Spiritual · Teknologi AI · Ekonomi Mandiri');
+        window.open('https://wa.me/?text='+txt,'_blank');
+        el.querySelector('.swm-tpts').innerHTML = `<button onclick="_swtConfirmShare(event)" style="background:#d4a017;color:#070d1a;border:none;border-radius:6px;padding:4px 8px;font-size:0.7em;font-weight:800;cursor:pointer;">Sudah ✓</button>`;
+        return;
+    }
+    if (key==='mart') window.open('https://sagatama-mart.vercel.app','_blank');
+    if (key==='psb') { closeSGTWallet(); setTimeout(()=>scrollToSection('psb'),300); }
+    if (key==='donasi') { closeSGTWallet(); setTimeout(()=>scrollToSection('donasi'),300); }
+    await _swtAddPts(key, pts, SGT_TASKS.find(t=>t.key===key)?.name||key);
+}
+
+async function _swtConfirmShare(e) {
+    e.stopPropagation();
+    const el = document.getElementById('swmt-share');
+    if (!el||!_swtUser||(_swtData.claimed||[]).includes('share')) { _swtRenderTasks(); return; }
+    await _swtAddPts('share', 25, 'Share ke WhatsApp');
+}
+
+async function _swtAddPts(key, pts, label) {
+    if (!_swtUser) return;
+    const today = new Date().toDateString();
+    if (key==='visit'&&_swtData.lastVisit===today) return;
+    if (key!=='visit'&&(_swtData.claimed||[]).includes(key)) return;
+    if (key!=='visit') _swtData.claimed = [...(_swtData.claimed||[]), key];
+    _swtData.balance = (_swtData.balance||0)+pts;
+    _swtData.totalEarned = (_swtData.totalEarned||0)+pts;
+    _swtData.history = [{ key, pts, ts:Date.now(), label }, ...(_swtData.history||[])].slice(0,60);
+    await _swtSave(_swtUser.uid);
+    _swtRender();
+    showToast(`🪙 +${pts} SGT dari "${label}"! Total: ${_swtData.balance} SGT`);
+}
+
+// ── Redeem ────────────────────────────────────────────────
+function _swtOpenConfirm(key) {
+    const r = SGT_REDEEM.find(x=>x.key===key);
     if (!r) return;
-    const bal = _swtData.balance||0;
-    if (bal < r.cost) return;
-    _swtConfirmId = rewardId;
+    _swtPendingRedeem = r;
     document.getElementById('swm-c-emoji').textContent = r.emoji;
     document.getElementById('swm-c-title').textContent = r.name;
-    document.getElementById('swm-c-desc').textContent  = r.desc;
-    document.getElementById('swm-c-cost').textContent  = _fmtNum(r.cost)+' SGT';
-    document.getElementById('swm-c-after').textContent = _fmtNum(bal - r.cost)+' SGT';
+    document.getElementById('swm-c-desc').textContent = r.desc;
+    document.getElementById('swm-c-cost').textContent = r.cost+' SGT';
+    document.getElementById('swm-c-after').textContent = ((_swtData.balance||0)-r.cost)+' SGT';
     document.getElementById('swm-confirm').classList.add('open');
 }
-function swtCloseConfirm() { document.getElementById('swm-confirm').classList.remove('open'); _swtConfirmId=null; }
-
+function swtCloseConfirm() {
+    document.getElementById('swm-confirm').classList.remove('open');
+    _swtPendingRedeem = null;
+}
 async function swtDoRedeem() {
-    const r = SGT_REWARDS.find(x=>x.id===_swtConfirmId);
-    if (!r||!_swtUser) return;
-    const bal = _swtData.balance||0;
-    if (bal < r.cost) { alert('Saldo SGT tidak cukup.'); swtCloseConfirm(); return; }
-    const ref = window.db.collection('sgt_wallets').doc(_swtUser.uid);
-    await ref.update({ balance: firebase.firestore.FieldValue.increment(-r.cost) });
-    const code = 'SGT-'+Date.now().toString(36).toUpperCase();
-    await ref.collection('history').add({
-        amount: -r.cost, desc: r.emoji+' Redeem '+r.name+' | Kode: '+code,
-        type:'redeem', ts: firebase.firestore.FieldValue.serverTimestamp()
-    });
-    await ref.update({ totalRedeemed: firebase.firestore.FieldValue.increment(r.cost) });
+    if (!_swtPendingRedeem||!_swtUser) return;
+    const r = _swtPendingRedeem;
+    _swtData.balance = (_swtData.balance||0) - r.cost;
+    _swtData.totalRedeemed = (_swtData.totalRedeemed||0) + r.cost;
+    _swtData.history = [{ key:'redeem', pts:-r.cost, ts:Date.now(), label:'Tukar: '+r.name }, ...(_swtData.history||[])].slice(0,60);
+    await _swtSave(_swtUser.uid);
     swtCloseConfirm();
-    alert(`✅ Berhasil!\nKode diskon kamu: ${code}\nTunjukkan ke admin Sagatama Mart.`);
+    _swtRender();
+    _swtRenderHistory();
+    showToast(`🎁 Berhasil! Admin WA akan segera dihubungi untuk klaim "${r.name}"`);
+    setTimeout(()=>{
+        const name = _swtUser.displayName||_swtUser.email;
+        const txt = encodeURIComponent(`Assalamualaikum Admin Sagatama,\n\nSaya ingin menukar poin SGT:\n\n*Nama:* ${name}\n*Email:* ${_swtUser.email}\n*Hadiah:* ${r.name} ${r.emoji}\n*Biaya:* ${r.cost} SGT\n\nMohon konfirmasi penukaran. Jazakallah.`);
+        window.open('https://wa.me/6285213346061?text='+txt,'_blank');
+    }, 800);
 }
 
-// ── Tukar ke Pi ──────────────────────────────────────────────
-function swtUpdatePiPreview() {
-    const sgt = parseInt(document.getElementById('swm-pi-sgt-amt').value)||0;
-    const pi  = sgt / SGT_KURS_PI;
-    document.getElementById('swm-pi-result').textContent = pi > 0 ? pi.toFixed(4)+' Pi' : '0 Pi';
-    const preview = document.getElementById('swm-pi-preview');
-    if (sgt >= SGT_KURS_PI) {
-        preview.style.display = 'block';
-        document.getElementById('prev-sgt').textContent  = _fmtNum(sgt)+' SGT';
-        document.getElementById('prev-pi').textContent   = pi.toFixed(4)+' Pi';
-        document.getElementById('prev-sisa').textContent = _fmtNum((_swtData.balance||0)-sgt)+' SGT';
-    } else {
-        preview.style.display = 'none';
-    }
+// ── History ───────────────────────────────────────────────
+function _swtRenderHistory() {
+    const box = document.getElementById('swm-history');
+    if (!box) return;
+    const hist = _swtData.history||[];
+    if (!hist.length) { box.innerHTML = '<div class="swm-empty">Belum ada transaksi</div>'; return; }
+    const ICONS = { visit:'👁️', share:'📱', mart:'🛍️', psb:'📝', donasi:'❤️', redeem:'🎁' };
+    const BGAS = { visit:'rgba(16,185,129,0.15)', share:'rgba(212,160,23,0.15)', mart:'rgba(13,148,136,0.15)', psb:'rgba(124,58,237,0.15)', donasi:'rgba(212,160,23,0.15)', redeem:'rgba(239,68,68,0.15)' };
+    box.innerHTML = hist.slice(0,20).map(h=>{
+        const d = new Date(h.ts);
+        const tgl = d.toLocaleDateString('id-ID',{day:'numeric',month:'short'}) + ' ' + d.toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'});
+        return `<div class="swm-hitem">
+            <div class="swm-hleft">
+                <div class="swm-hicon" style="background:${BGAS[h.key]||'rgba(255,255,255,0.07)'};">${ICONS[h.key]||'📦'}</div>
+                <div><div class="swm-hdesc">${h.label||h.key}</div><div class="swm-htime">${tgl}</div></div>
+            </div>
+            <div class="swm-hpts ${h.pts>0?'plus':'minus'}">${h.pts>0?'+':''}${h.pts} SGT</div>
+        </div>`;
+    }).join('');
 }
 
-async function swtRequestPi() {
-    if (!_swtUser||!window.db) return;
-    const sgt  = parseInt(document.getElementById('swm-pi-sgt-amt').value)||0;
-    const addr = (document.getElementById('swm-pi-wallet-addr').value||'').trim();
-    const bal  = _swtData.balance||0;
-
-    if (sgt < SGT_KURS_PI) return alert('Minimal penukaran adalah '+SGT_KURS_PI+' SGT (= 1 Pi).');
-    if (sgt % SGT_KURS_PI !== 0) return alert('Jumlah SGT harus kelipatan '+SGT_KURS_PI+'.');
-    if (sgt > bal) return alert('Saldo SGT tidak mencukupi. Saldo kamu: '+_fmtNum(bal)+' SGT.');
-    if (!addr) return alert('Masukkan alamat Pi Wallet kamu.');
-
-    const pi = sgt / SGT_KURS_PI;
-    const btn = document.getElementById('swm-pi-submit-btn');
-    btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Memproses...';
-
+// ── Leaderboard ───────────────────────────────────────────
+async function _swtLoadLB(myUid) {
     try {
-        // Cek apakah masih ada request pending
-        const existing = await window.db.collection('sgt_pi_requests')
-            .where('uid','==',_swtUser.uid).where('status','in',['pending','diproses']).get();
-        if (!existing.empty) {
-            alert('Kamu masih memiliki permintaan penukaran yang sedang diproses. Tunggu hingga selesai.');
-            btn.disabled=false; btn.innerHTML='<i class="fas fa-circle-nodes"></i> Ajukan Penukaran Pi';
-            return;
-        }
-
-        const batch = window.db.batch();
-        // Kurangi saldo
-        const walletRef = window.db.collection('sgt_wallets').doc(_swtUser.uid);
-        batch.update(walletRef, { balance: firebase.firestore.FieldValue.increment(-sgt) });
-
-        // Catat riwayat
-        const hRef = walletRef.collection('history').doc();
-        batch.set(hRef, { amount:-sgt, desc:`π Tukar ke Pi: ${pi.toFixed(4)} Pi → ${addr}`, type:'pi', ts: firebase.firestore.FieldValue.serverTimestamp() });
-
-        // Buat request untuk admin
-        const reqRef = window.db.collection('sgt_pi_requests').doc();
-        batch.set(reqRef, {
-            uid:        _swtUser.uid,
-            userName:   _swtUser.displayName || _swtUser.email,
-            userEmail:  _swtUser.email,
-            sgtAmount:  sgt,
-            piAmount:   pi,
-            piWallet:   addr,
-            status:     'pending',
-            createdAt:  firebase.firestore.FieldValue.serverTimestamp(),
-            updatedAt:  firebase.firestore.FieldValue.serverTimestamp(),
-            note:       '',
-        });
-
-        await batch.commit();
-
-        // Reset form
-        document.getElementById('swm-pi-sgt-amt').value    = '';
-        document.getElementById('swm-pi-wallet-addr').value = '';
-        document.getElementById('swm-pi-preview').style.display = 'none';
-        document.getElementById('swm-pi-result').textContent = '0 Pi';
-        alert(`✅ Permintaan dikirim!\n\n• ${_fmtNum(sgt)} SGT dikurangi dari saldo\n• ${pi.toFixed(4)} Pi akan dikirim ke: ${addr}\n• Estimasi: 1×24 jam\n\nPantau statusnya di tab Tukar.`);
+        const snap = await window.db.collection('sgt_leaderboard').orderBy('balance','desc').limit(10).get();
+        const box = document.getElementById('swm-lb');
+        if (!box) return;
+        if (snap.empty) { box.innerHTML = '<div class="swm-empty">Belum ada data</div>'; return; }
+        let myRank = '—';
+        box.innerHTML = snap.docs.map((doc,i)=>{
+            const d = doc.data();
+            const isMe = doc.id === myUid;
+            if (isMe) myRank = '#'+(i+1);
+            const rc = i===0?'r1':i===1?'r2':i===2?'r3':'';
+            const ri = i===0?'🥇':i===1?'🥈':i===2?'🥉':'#'+(i+1);
+            return `<div class="swm-lbitem ${isMe?'swm-me':''}">
+                <div class="swm-lbrank ${rc}">${ri}</div>
+                <div class="swm-lbav">${(d.name||'?')[0].toUpperCase()}</div>
+                <div class="swm-lbname">${d.name||'Anonim'}${isMe?' <span style="font-size:0.7em;color:#d4a017;">(Anda)</span>':''}</div>
+                <div class="swm-lbpts">${(d.balance||0).toLocaleString('id-ID')} SGT</div>
+            </div>`;
+        }).join('');
+        if (document.getElementById('swm-rank')) document.getElementById('swm-rank').textContent = myRank;
     } catch(e) {
-        alert('Gagal: '+e.message);
-    } finally {
-        btn.disabled=false; btn.innerHTML='<i class="fas fa-circle-nodes"></i> Ajukan Penukaran Pi';
+        const box = document.getElementById('swm-lb');
+        if (box) box.innerHTML = '<div class="swm-empty">Gagal memuat data</div>';
     }
 }
 
-// ── Watch Pi Requests (realtime) ─────────────────────────────
-function _swtWatchPiRequests() {
-    if (!_swtUser||!window.db) return;
-    if (_swtPiUnsubscribe) { _swtPiUnsubscribe(); _swtPiUnsubscribe=null; }
-    _swtPiUnsubscribe = window.db.collection('sgt_pi_requests')
-        .where('uid','==',_swtUser.uid)
-        .orderBy('createdAt','desc').limit(5)
-        .onSnapshot(snap => {
-            const el = document.getElementById('swm-pi-active-req');
-            if (!el) return;
-            const reqs = snap.docs.map(d=>({id:d.id,...d.data()}));
-            const active = reqs.filter(r=>['pending','diproses'].includes(r.status));
-            if (active.length > 0) {
-                el.style.display = 'block';
-                el.innerHTML = active.map(r => {
-                    const statusMap = { pending:{cls:'pending',label:'Menunggu konfirmasi admin',icon:'⏳'}, diproses:{cls:'diproses',label:'Sedang diproses admin',icon:'🔄'}, selesai:{cls:'selesai',label:'Pi sudah terkirim! ✓',icon:'✅'}, ditolak:{cls:'ditolak',label:'Ditolak: '+r.note,icon:'❌'} };
-                    const s = statusMap[r.status]||statusMap.pending;
-                    return `<div class="swm-pi-status ${s.cls}">
-                        <div class="swm-pi-status-dot"></div>
-                        <div style="flex:1;">
-                            <div style="font-weight:700;margin-bottom:2px;">${s.icon} ${s.label}</div>
-                            <div style="opacity:0.7;font-size:0.9em;">${_fmtNum(r.sgtAmount)} SGT → ${r.piAmount?.toFixed?.(4)||r.piAmount} Pi ke ${r.piWallet}</div>
-                            ${r.createdAt ? `<div style="opacity:0.5;font-size:0.85em;margin-top:2px;">${_fmtTime(r.createdAt)}</div>` : ''}
-                        </div>
-                    </div>`;
-                }).join('');
-                // Sembunyikan form jika ada pending/diproses
-                document.getElementById('swm-pi-form').style.display = 'none';
-            } else {
-                el.style.display = 'none';
-                document.getElementById('swm-pi-form').style.display = 'block';
-
-                // Tampilkan riwayat request selesai/ditolak
-                const done = reqs.filter(r=>['selesai','ditolak'].includes(r.status)).slice(0,3);
-                if (done.length) {
-                    el.style.display = 'block';
-                    const statusMap = { selesai:{cls:'selesai',label:'Pi terkirim ✓',icon:'✅'}, ditolak:{cls:'ditolak',label:'Ditolak',icon:'❌'} };
-                    el.innerHTML = '<div style="font-size:0.68em;color:rgba(255,255,255,0.3);margin-bottom:6px;">Riwayat penukaran Pi terakhir:</div>' +
-                        done.map(r => {
-                            const s = statusMap[r.status];
-                            return `<div class="swm-pi-status ${s.cls}" style="margin-bottom:5px;">
-                                <div class="swm-pi-status-dot"></div>
-                                <div style="flex:1;font-size:0.9em;">${s.icon} ${_fmtNum(r.sgtAmount)} SGT → ${r.piAmount?.toFixed?.(4)||r.piAmount} Pi <span style="opacity:0.5;">${_fmtTime(r.createdAt)}</span></div>
-                            </div>`;
-                        }).join('');
-                }
-            }
-        }, err => console.warn('[SGT Pi Watch]', err.message));
-}
-
-// ── History Tab ──────────────────────────────────────────────
-function _swtLoadHistory() {
-    if (!_swtUser||!window.db) return;
-    const el = document.getElementById('swm-history');
-    if (!el) return;
-    if (_swtHistUnsubscribe) { _swtHistUnsubscribe(); _swtHistUnsubscribe=null; }
-    _swtHistUnsubscribe = window.db.collection('sgt_wallets').doc(_swtUser.uid)
-        .collection('history').orderBy('ts','desc').limit(40)
-        .onSnapshot(snap => {
-            if (snap.empty) { el.innerHTML='<div class="swm-empty">Belum ada riwayat</div>'; return; }
-            el.innerHTML = snap.docs.map(d => {
-                const h = d.data();
-                const plus = h.amount > 0;
-                const isPi = h.type === 'pi';
-                const icons = { earn:'🟢', redeem:'🎁', pi:'🟣', default:'📋' };
-                const bg = plus ? 'rgba(16,185,129,0.12)' : isPi ? 'rgba(124,58,237,0.12)' : 'rgba(239,68,68,0.1)';
-                return `<div class="swm-hitem">
-                    <div class="swm-hleft">
-                        <div class="swm-hicon" style="background:${bg}">${icons[h.type]||icons.default}</div>
-                        <div>
-                            <div class="swm-hdesc">${h.desc||'Transaksi'}</div>
-                            <div class="swm-htime">${_fmtTime(h.ts)}</div>
-                        </div>
-                    </div>
-                    <div class="swm-hpts ${plus?'plus':isPi?'pi':'minus'}">${plus?'+':''} ${_fmtNum(Math.abs(h.amount))} SGT</div>
-                </div>`;
-            }).join('');
-        }, err => { el.innerHTML='<div class="swm-empty">Gagal memuat riwayat</div>'; console.warn(err); });
-}
-
-// ── Leaderboard ──────────────────────────────────────────────
-function _swtLoadLeaderboard() {
-    if (!window.db) return;
-    const el = document.getElementById('swm-lb');
-    if (!el) return;
-    if (_swtLbUnsubscribe) { _swtLbUnsubscribe(); _swtLbUnsubscribe=null; }
-    _swtLbUnsubscribe = window.db.collection('sgt_wallets').orderBy('totalEarned','desc').limit(20)
-        .onSnapshot(snap => {
-            if (snap.empty) { el.innerHTML='<div class="swm-empty">Belum ada data</div>'; return; }
-            const ranks = ['🥇','🥈','🥉'];
-            let myRank = '—';
-            let html = snap.docs.map((d,i) => {
-                const data = d.data();
-                const isMe = _swtUser && d.id===_swtUser.uid;
-                if (isMe) myRank = i+1;
-                const name = data.displayName || data.email?.split('@')[0] || 'Anonim';
-                return `<div class="swm-lbitem ${isMe?'swm-me':''}">
-                    <div class="swm-lbrank ${i<3?'r'+(i+1):''}">${ranks[i]||i+1}</div>
-                    <div class="swm-lbav">${name[0]?.toUpperCase()||'?'}</div>
-                    <div class="swm-lbname">${name}${isMe?' <span style="color:#d4a017;font-size:0.8em;">(Kamu)</span>':''}</div>
-                    <div class="swm-lbpts">${_fmtNum(data.totalEarned)} SGT</div>
-                </div>`;
-            }).join('');
-            el.innerHTML = html;
-            // Update rank di balance card
-            if (myRank!=='—') document.getElementById('swm-rank').textContent = '#'+myRank;
-        }, err => { el.innerHTML='<div class="swm-empty">Gagal memuat data</div>'; console.warn(err); });
-}
-
-// ── Tab Switcher ─────────────────────────────────────────────
-function swtTab(name, btn) {
-    ['misi','tukar','riwayat','papan'].forEach(t => {
+// ── Tabs ──────────────────────────────────────────────────
+function swtTab(id, btn) {
+    document.querySelectorAll('.swm-tab').forEach(b=>b.classList.remove('active'));
+    ['misi','tukar','riwayat','papan'].forEach(t=>{
         const el = document.getElementById('swm-tab-'+t);
-        if (el) el.style.display = t===name ? 'block' : 'none';
+        if (el) el.style.display = t===id ? 'block' : 'none';
     });
-    document.querySelectorAll('.swm-tab').forEach(b => b.classList.remove('active'));
-    if (btn) btn.classList.add('active');
-    if (name==='riwayat') _swtLoadHistory();
-    if (name==='papan')   _swtLoadLeaderboard();
-    if (name==='tukar')   _swtRenderRedeemList();
+    btn.classList.add('active');
+    if (id==='riwayat') _swtRenderHistory();
+    if (id==='papan'&&_swtUser) _swtLoadLB(_swtUser.uid);
+    if (id==='tukar') _swtRenderRedeem();
 }
 
-// ── Keyboard close ───────────────────────────────────────────
-document.addEventListener('keydown', e => { if (e.key==='Escape') closeSGTWallet(); });
+// ── Number animate ────────────────────────────────────────
+function _swtAnimNum(el, target) {
+    if (!el) return;
+    const start = parseInt(el.textContent.replace(/\D/g,''))||0;
+    const diff = target - start;
+    if (diff===0) return;
+    let s=0; const steps=20;
+    const t = setInterval(()=>{
+        s++;
+        el.textContent = Math.round(start + diff*(s/steps)).toLocaleString('id-ID');
+        if (s>=steps) clearInterval(t);
+    }, 20);
+}
+
+// ── Backward compat: old panel still works ────────────────
+function toggleSGTPanel() { openSGTWallet(); }
+</script>
+
+<script>
+// LIVE PI PRICE (CoinGecko)
+async function fetchPiPrice() {
+    try {
+        const res = await fetch(
+            'https://api.coingecko.com/api/v3/simple/price?ids=pi-network&vs_currencies=usd&include_24hr_change=true',
+            { signal: AbortSignal.timeout(5000) }
+        );
+        const d = await res.json();
+        const price  = d['pi-network']?.usd;
+        const change = d['pi-network']?.usd_24h_change;
+        if (!price) throw new Error('no data');
+        updatePiUI(price, change);
+    } catch(e) {
+        updatePiUI(3.14, 5.22);
+    }
+}
+
+function updatePiUI(price, change) {
+    const priceStr  = '$' + price.toFixed(2);
+    const changeAbs = Math.abs(change || 0).toFixed(2);
+    const isUp = (change || 0) >= 0;
+    const changeClr = isUp ? '#86efac' : '#fca5a5';
+
+    const tp = document.getElementById('piTickerPrice');
+    const tc = document.getElementById('piTickerChange');
+    if (tp) tp.textContent = priceStr;
+    if (tc) {
+        tc.textContent = (isUp ? '+' : '-') + changeAbs + '%';
+        tc.className = 'change ' + (isUp ? 'up' : 'down');
+        tc.innerHTML = (isUp ? '<i class="fas fa-caret-up"></i> +' : '<i class="fas fa-caret-down"></i> -') + changeAbs + '%';
+    }
+
+    const pv = document.getElementById('piPriceVal');
+    const pc = document.getElementById('piPriceChange');
+    if (pv) pv.textContent = priceStr;
+    if (pc) { pc.textContent = (isUp ? '▲ +' : '▼ -') + changeAbs + '%'; pc.style.color = changeClr; }
+}
+
+fetchPiPrice();
+setInterval(fetchPiPrice, 300000);
+
+// ======= FIREBASE LIVE COUNTERS =======
+(function initFirebaseLive() {
+    // Tunggu Firebase siap (max 3 detik)
+    function whenReady(fn, tries) {
+        tries = tries || 0;
+        if (window.db) { fn(window.db); return; }
+        if (tries > 30) { console.warn('[Firebase Live] db not ready'); return; }
+        setTimeout(() => whenReady(fn, tries + 1), 100);
+    }
+
+    whenReady(function(db) {
+        try {
+            // --- Visitor Counter ---
+            const visitorRef = db.collection('siteStats').doc('visitors');
+            const visited = sessionStorage.getItem('sg_visited');
+            if (!visited) {
+                sessionStorage.setItem('sg_visited', '1');
+                visitorRef.set(
+                    { count: firebase.firestore.FieldValue.increment(1), lastSeen: firebase.firestore.FieldValue.serverTimestamp() },
+                    { merge: true }
+                );
+            }
+            visitorRef.onSnapshot(snap => {
+                const count = snap.data()?.count || 0;
+                document.querySelectorAll('.live-visitor-count').forEach(el => {
+                    el.textContent = count.toLocaleString('id-ID');
+                });
+            });
+
+            // --- Donasi Realtime ---
+            db.collection('siteStats').doc('donasi').onSnapshot(snap => {
+                const total = snap.data()?.total || 0;
+                document.querySelectorAll('.live-donasi-total').forEach(el => {
+                    el.textContent = 'Rp ' + total.toLocaleString('id-ID');
+                });
+            });
+
+            // --- Jumlah Santri Realtime ---
+            db.collection('siteStats').doc('santri').onSnapshot(snap => {
+                const jml = snap.data()?.jumlah || 0;
+                document.querySelectorAll('.live-santri-count').forEach(el => {
+                    el.textContent = jml.toLocaleString('id-ID');
+                });
+            });
+
+            // --- Warta/Berita terbaru di marquee ---
+            db.collection('warta').orderBy('tanggal', 'desc').limit(5).onSnapshot(snap => {
+                if (snap.empty) return;
+                const items = snap.docs.map(d => d.data().judul || '').filter(Boolean);
+                const marqueeEl = document.getElementById('marquee-warta');
+                if (marqueeEl && items.length) {
+                    marqueeEl.textContent = items.map(t => '📰 ' + t).join('  |  ');
+                }
+                // Update news cards jika ada
+                const newsGrid = document.querySelector('.news-grid');
+                if (newsGrid && snap.docs.length >= 1) {
+                    snap.docs.slice(0, 3).forEach((doc, i) => {
+                        const data = doc.data();
+                        const cards = newsGrid.querySelectorAll('.news-card');
+                        if (cards[i] && data.judul) {
+                            const titleEl = cards[i].querySelector('.news-title');
+                            const excerptEl = cards[i].querySelector('.news-excerpt');
+                            const metaEl = cards[i].querySelector('.news-meta');
+                            if (titleEl) titleEl.textContent = data.judul;
+                            if (excerptEl && data.isi) excerptEl.textContent = data.isi.slice(0, 120) + '...';
+                            if (metaEl && data.tanggal?.toDate) {
+                                const tgl = data.tanggal.toDate();
+                                metaEl.innerHTML = '<i class="fas fa-calendar"></i> ' + tgl.toLocaleDateString('id-ID', {day:'numeric', month:'long', year:'numeric'});
+                            }
+                        }
+                    });
+                }
+            });
+
+            // --- Progress Pembangunan Realtime ---
+            db.collection('siteStats').doc('pembangunan').onSnapshot(snap => {
+                if (!snap.exists) return;
+                const data = snap.data();
+                const map = {
+                    'progress-masjid': data.masjid,
+                    'progress-kelas':  data.kelas,
+                    'progress-asrama': data.asrama,
+                    'progress-lab':    data.lab
+                };
+                Object.entries(map).forEach(([id, val]) => {
+                    if (val === undefined) return;
+                    const el = document.getElementById(id);
+                    if (el) {
+                        el.style.width = val + '%';
+                        const pct = el.closest('.card')?.querySelector('[data-pct]');
+                        if (pct) pct.textContent = val + '%';
+                    }
+                });
+            });
+
+            // --- Saldo Donasi Target ---
+            db.collection('siteStats').doc('donasiTarget').onSnapshot(snap => {
+                if (!snap.exists) return;
+                const { terkumpul, target } = snap.data();
+                const pct = target ? Math.min(100, Math.round((terkumpul / target) * 100)) : 0;
+                document.querySelectorAll('.donasi-progress-bar').forEach(el => el.style.width = pct + '%');
+                document.querySelectorAll('.donasi-pct').forEach(el => el.textContent = pct + '%');
+            });
+
+        } catch(e) {
+            console.warn('[Firebase Live]', e.message);
+        }
+    });
+})();
 </script>
 </body>
-
 </html>
