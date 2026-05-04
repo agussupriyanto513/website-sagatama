@@ -4551,7 +4551,7 @@ window.addEventListener('scroll', () => {
                             <div class="swm-exc-title">SGT → Pi Network</div>
                             <div class="swm-exc-sub">Tukar poin ke koin Pi · Belanja di Sagatama Mart</div>
                         </div>
-                        <div class="swm-exc-badge">TESTNET</div>
+                        <div class="swm-exc-badge">TESTNET 10π</div>
                     </div>
                     <div class="swm-kurs-info">
                         <span class="k">Kurs</span>
@@ -4579,7 +4579,7 @@ window.addEventListener('scroll', () => {
                     </button>
                     <div class="swm-note">
                         <i class="fas fa-info-circle"></i>
-                        <p>Pi masih di fase <strong style="color:rgba(212,160,23,0.7)">Testnet (10 π)</strong>. Setelah tukar, Pi dikirim ke dompet Pi Anda. Gunakan untuk belanja di <a href="https://sagatama-mart.vercel.app" target="_blank">Sagatama Mart</a>.</p>
+                        <p>Pi masih di fase <strong style="color:rgba(212,160,23,0.7)">Testnet (10 π)</strong>. Setelah klik tukar, notifikasi dikirim ke admin via WhatsApp. Pi dikirim ke akun Pi Anda (<strong style="color:#a78bfa">@sagatama_pi</strong>) dalam 1×24 jam. Gunakan untuk belanja di <a href="https://sagatama-mart.vercel.app" target="_blank">Sagatama Mart</a>. Saat Mainnet, nilai Pi otomatis lebih tinggi.</p>
                     </div>
                 </div>
 
@@ -4969,8 +4969,8 @@ function _swtRenderHistory() {
     if (!box) return;
     const hist = _swtData.history||[];
     if (!hist.length) { box.innerHTML = '<div class="swm-empty">Belum ada transaksi</div>'; return; }
-    const ICONS = { visit:'👁️', share:'📱', mart:'🛍️', psb:'📝', donasi:'❤️', redeem:'🎁' };
-    const BGAS = { visit:'rgba(16,185,129,0.15)', share:'rgba(212,160,23,0.15)', mart:'rgba(13,148,136,0.15)', psb:'rgba(124,58,237,0.15)', donasi:'rgba(212,160,23,0.15)', redeem:'rgba(239,68,68,0.15)' };
+    const ICONS = { visit:'👁️', share:'📱', mart:'🛍️', psb:'📝', donasi:'❤️', redeem:'🎁', pi_out:'🟣', rp_out:'💵' };
+    const BGAS = { visit:'rgba(16,185,129,0.15)', share:'rgba(212,160,23,0.15)', mart:'rgba(13,148,136,0.15)', psb:'rgba(124,58,237,0.15)', donasi:'rgba(212,160,23,0.15)', redeem:'rgba(239,68,68,0.15)', pi_out:'rgba(124,58,237,0.15)', rp_out:'rgba(220,38,38,0.15)' };
     box.innerHTML = hist.slice(0,20).map(h=>{
         const d = new Date(h.ts);
         const tgl = d.toLocaleDateString('id-ID',{day:'numeric',month:'short'}) + ' ' + d.toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'});
@@ -5041,6 +5041,299 @@ function _swtAnimNum(el, target) {
 
 // ── Backward compat: old panel still works ────────────────
 function toggleSGTPanel() { openSGTWallet(); }
+
+// ══════════════════════════════════════════════════════════
+//  SGT ↔ PI ↔ RUPIAH — EXCHANGE ENGINE (FIXED & COMPLETE)
+//  Kurs: 500 SGT = 1 π Pi | Harga Pi live dari CoinGecko
+// ══════════════════════════════════════════════════════════
+
+// Harga Pi live (diperbarui dari fetchPiPrice)
+window._sgtPiUsd = 3.14;   // fallback harga Pi USD
+window._sgtUsdIdr = 16000; // fallback kurs USD→IDR
+
+// Ambil kurs USD/IDR live
+async function _sgtFetchUsdIdr() {
+    try {
+        const r = await fetch('https://api.exchangerate-api.com/v4/latest/USD', { signal: AbortSignal.timeout(5000) });
+        const d = await r.json();
+        if (d.rates?.IDR) window._sgtUsdIdr = d.rates.IDR;
+    } catch(e) { /* fallback 16000 */ }
+}
+_sgtFetchUsdIdr();
+
+// Sync harga Pi dari ticker yang sudah ada ke engine ini
+function _sgtSyncPiPrice() {
+    const el = document.getElementById('piTickerPrice');
+    if (el) {
+        const txt = el.textContent.replace('$','').trim();
+        const parsed = parseFloat(txt);
+        if (!isNaN(parsed) && parsed > 0) window._sgtPiUsd = parsed;
+    }
+}
+
+// Hitung Rupiah dari SGT
+function _sgtSGTtoRp(sgt) {
+    _sgtSyncPiPrice();
+    const pi = sgt / 500;
+    return pi * window._sgtPiUsd * window._sgtUsdIdr;
+}
+
+// Hitung Pi dari SGT
+function _sgtSGTtoPi(sgt) {
+    return sgt / 500;
+}
+
+// Format Rupiah Indonesia
+function _fmtRp(val) {
+    return 'Rp ' + Math.floor(val).toLocaleString('id-ID');
+}
+
+// Update equivalent di header saldo wallet
+function _swtUpdateEquiv() {
+    const bal = _swtData.balance || 0;
+    const piEq = (bal / 500).toFixed(3);
+    const rpEq = _sgtSGTtoRp(bal);
+    const piEl = document.getElementById('swm-pi-equiv');
+    const rpEl = document.getElementById('swm-rp-equiv');
+    const rateEl = document.getElementById('swm-pi-rp-rate');
+    if (piEl) piEl.textContent = piEq + ' π';
+    if (rpEl) rpEl.textContent = _fmtRp(rpEq);
+    if (rateEl) rateEl.textContent = _fmtRp(window._sgtPiUsd * window._sgtUsdIdr);
+}
+
+// ── Hitung realtime input Pi ────────────────────────────
+function hitungPi() {
+    const sgt = parseFloat(document.getElementById('pi-sgt-in')?.value) || 0;
+    const pi = _sgtSGTtoPi(sgt);
+    const outEl = document.getElementById('pi-out');
+    const sisaEl = document.getElementById('pi-sisa');
+    const btn = document.getElementById('pi-tukar-btn');
+    const bal = _swtData.balance || 0;
+
+    if (outEl) outEl.value = pi > 0 ? pi.toFixed(4) : '';
+    if (sisaEl) sisaEl.textContent = (bal - sgt >= 0 ? (bal - sgt).toLocaleString('id-ID') : '—') + ' SGT';
+
+    const valid = sgt >= 500 && sgt % 500 === 0 && sgt <= bal;
+    if (btn) {
+        btn.disabled = !valid || !_swtUser;
+        btn.innerHTML = valid
+            ? '<i class="fas fa-exchange-alt"></i> Tukar ' + sgt.toLocaleString('id-ID') + ' SGT → ' + pi.toFixed(2) + ' π'
+            : '<i class="fas fa-exchange-alt"></i> Tukar ke Pi Network';
+    }
+}
+
+// ── Hitung realtime input Rupiah ────────────────────────
+function hitungRp() {
+    const sgt = parseFloat(document.getElementById('rp-sgt-in')?.value) || 0;
+    const rp = _sgtSGTtoRp(sgt);
+    const outEl = document.getElementById('rp-out');
+    const sisaEl = document.getElementById('rp-sisa');
+    const kursEl = document.getElementById('rp-kurs-display');
+    const btn = document.getElementById('rp-tukar-btn');
+    const bal = _swtData.balance || 0;
+
+    if (outEl) outEl.value = sgt > 0 ? _fmtRp(rp) : '';
+    if (sisaEl) sisaEl.textContent = (bal - sgt >= 0 ? (bal - sgt).toLocaleString('id-ID') : '—') + ' SGT';
+    if (kursEl) kursEl.textContent = '1 π ≈ ' + _fmtRp(window._sgtPiUsd * window._sgtUsdIdr);
+
+    const valid = sgt >= 500 && sgt % 500 === 0 && sgt <= bal;
+    if (btn) {
+        btn.disabled = !valid || !_swtUser;
+        btn.innerHTML = valid
+            ? '<i class="fas fa-hand-holding-usd"></i> Cairkan ' + sgt.toLocaleString('id-ID') + ' SGT → ' + _fmtRp(rp)
+            : '<i class="fas fa-hand-holding-usd"></i> Ajukan Pencairan Rupiah';
+    }
+}
+
+// ── State konfirmasi penukaran ───────────────────────────
+let _sgtPendingType = null;   // 'pi' | 'rp'
+let _sgtPendingAmt  = 0;      // jumlah SGT
+
+// ── Buka modal konfirmasi ────────────────────────────────
+function konfirmasiTukar(type) {
+    if (!_swtUser) { showToast('⚠️ Silakan login terlebih dahulu!'); openSGTWallet(); return; }
+
+    const inputId = type === 'pi' ? 'pi-sgt-in' : 'rp-sgt-in';
+    const sgt = parseFloat(document.getElementById(inputId)?.value) || 0;
+    const bal = _swtData.balance || 0;
+
+    if (sgt < 500)        { showToast('⚠️ Minimal 500 SGT untuk ditukarkan!'); return; }
+    if (sgt % 500 !== 0)  { showToast('⚠️ Jumlah SGT harus kelipatan 500!'); return; }
+    if (sgt > bal)        { showToast('⚠️ Saldo SGT tidak mencukupi!'); return; }
+
+    _sgtPendingType = type;
+    _sgtPendingAmt  = sgt;
+
+    // Isi modal konfirmasi
+    const pi  = _sgtSGTtoPi(sgt);
+    const rp  = _sgtSGTtoRp(sgt);
+    const sisa = bal - sgt;
+
+    const emojiEl  = document.getElementById('swm-c-emoji');
+    const titleEl  = document.getElementById('swm-c-title');
+    const descEl   = document.getElementById('swm-c-desc');
+    const costEl   = document.getElementById('swm-c-cost');
+    const afterEl  = document.getElementById('swm-c-after');
+    const destRow  = document.getElementById('swm-c-row-dest');
+    const destLbl  = document.getElementById('swm-c-dest-label');
+    const destVal  = document.getElementById('swm-c-dest-val');
+    const okBtn    = document.getElementById('swm-c-ok');
+
+    if (type === 'pi') {
+        if (emojiEl)  emojiEl.textContent  = '🟣';
+        if (titleEl)  titleEl.textContent  = 'Konfirmasi Tukar ke Pi';
+        if (descEl)   descEl.textContent   = 'SGT Anda akan dikonversi ke Pi Network dan dikirim ke dompet Pi Anda via admin.';
+        if (destLbl)  destLbl.textContent  = 'Dapat Pi';
+        if (destVal)  destVal.textContent  = pi.toFixed(4) + ' π';
+        if (okBtn)  { okBtn.className = 'swm-c-ok pi-ok'; okBtn.textContent = 'Ya, Tukar ke Pi!'; }
+    } else {
+        if (emojiEl)  emojiEl.textContent  = '💵';
+        if (titleEl)  titleEl.textContent  = 'Ajukan Pencairan Rupiah';
+        if (descEl)   descEl.textContent   = 'Admin akan menghubungi Anda via WhatsApp untuk proses pencairan ke rekening/e-wallet.';
+        if (destLbl)  destLbl.textContent  = 'Estimasi Rupiah';
+        if (destVal)  destVal.textContent  = _fmtRp(rp);
+        if (okBtn)  { okBtn.className = 'swm-c-ok rp-ok'; okBtn.textContent = 'Ya, Ajukan Cairkan!'; }
+    }
+
+    if (costEl)  costEl.textContent  = sgt.toLocaleString('id-ID') + ' SGT';
+    if (afterEl) afterEl.textContent = sisa.toLocaleString('id-ID') + ' SGT';
+    if (destRow) destRow.style.display = 'flex';
+
+    document.getElementById('swm-confirm').classList.add('open');
+}
+
+// ── Eksekusi tukar setelah konfirmasi ────────────────────
+async function swtDoConfirm() {
+    // Jika ada pending redeem (hadiah/diskon), delegasikan ke handler lama
+    if (_swtPendingRedeem) { await swtDoRedeem(); return; }
+    if (!_sgtPendingType || !_swtUser) return;
+
+    const type   = _sgtPendingType;
+    const sgt    = _sgtPendingAmt;
+    const pi     = _sgtSGTtoPi(sgt);
+    const rp     = _sgtSGTtoRp(sgt);
+    const bal    = _swtData.balance || 0;
+
+    if (sgt > bal) { showToast('⚠️ Saldo tidak mencukupi!'); swtCloseConfirm(); return; }
+
+    // Kurangi saldo & catat riwayat
+    _swtData.balance        = bal - sgt;
+    _swtData.totalRedeemed  = (_swtData.totalRedeemed || 0) + sgt;
+
+    const histLabel = type === 'pi'
+        ? `Tukar SGT → ${pi.toFixed(4)} π Pi`
+        : `Cairkan SGT → ${_fmtRp(rp)}`;
+
+    _swtData.history = [
+        { key: type === 'pi' ? 'pi_out' : 'rp_out', pts: -sgt, ts: Date.now(), label: histLabel },
+        ...(_swtData.history || [])
+    ].slice(0, 60);
+
+    // Tambah counter π klaim jika pi
+    if (type === 'pi') {
+        _swtData.piEarned = ((_swtData.piEarned || 0) + pi);
+    }
+
+    await _swtSave(_swtUser.uid);
+    swtCloseConfirm();
+    _swtRender();
+    _swtUpdateEquiv();
+    _swtRenderHistory();
+
+    // Reset input
+    const inEl = document.getElementById(type === 'pi' ? 'pi-sgt-in' : 'rp-sgt-in');
+    if (inEl) inEl.value = '';
+    if (type === 'pi') hitungPi(); else hitungRp();
+
+    // Notifikasi & WhatsApp ke admin
+    if (type === 'pi') {
+        showToast(`✅ Permintaan ${pi.toFixed(4)} π dikirim! Admin segera konfirmasi via WA.`);
+        setTimeout(() => {
+            const name = _swtUser.displayName || _swtUser.email;
+            const txt  = encodeURIComponent(
+                `Assalamualaikum Admin Sagatama 🕌\n\n` +
+                `*📤 PERMINTAAN TUKAR SGT → Pi Network*\n\n` +
+                `👤 Nama   : ${name}\n` +
+                `📧 Email  : ${_swtUser.email}\n` +
+                `🪙 SGT    : ${sgt.toLocaleString('id-ID')} SGT\n` +
+                `π  Pi     : ${pi.toFixed(4)} π\n\n` +
+                `*(Testnet — harap kirim ke dompet Pi saya)*\n` +
+                `Mohon konfirmasi. Jazakallah! 🙏`
+            );
+            window.open('https://wa.me/6285213346061?text=' + txt, '_blank');
+        }, 800);
+    } else {
+        showToast(`✅ Pengajuan pencairan ${_fmtRp(rp)} dikirim! Admin segera memproses.`);
+        setTimeout(() => {
+            const name = _swtUser.displayName || _swtUser.email;
+            const txt  = encodeURIComponent(
+                `Assalamualaikum Admin Sagatama 🕌\n\n` +
+                `*💵 PERMINTAAN PENCAIRAN SGT → RUPIAH*\n\n` +
+                `👤 Nama      : ${name}\n` +
+                `📧 Email     : ${_swtUser.email}\n` +
+                `🪙 SGT       : ${sgt.toLocaleString('id-ID')} SGT\n` +
+                `π  Pi setara : ${pi.toFixed(4)} π\n` +
+                `💰 Est. Rp   : ${_fmtRp(rp)}\n\n` +
+                `Harga Pi saat ini: $${window._sgtPiUsd.toFixed(2)}\n` +
+                `Kurs IDR: ${_fmtRp(window._sgtUsdIdr)}/USD\n\n` +
+                `Mohon info rekening/e-wallet tujuan. Jazakallah! 🙏`
+            );
+            window.open('https://wa.me/6285213346061?text=' + txt, '_blank');
+        }, 800);
+    }
+
+    _sgtPendingType = null;
+    _sgtPendingAmt  = 0;
+}
+
+// ── Inisialisasi input exchange saat tab tukar dibuka ───
+const _origSwtTab = swtTab;
+swtTab = function(id, btn) {
+    _origSwtTab(id, btn);
+    if (id === 'tukar') {
+        _sgtFetchUsdIdr().then(() => {
+            hitungPi();
+            hitungRp();
+            _swtUpdateEquiv();
+            // Update kurs display
+            const kursEl = document.getElementById('rp-kurs-display');
+            if (kursEl) kursEl.textContent = '1 π ≈ ' + _fmtRp(window._sgtPiUsd * window._sgtUsdIdr);
+        });
+    }
+};
+
+// ── Override _swtRender agar update equiv juga ───────────
+const _origSwtRender = _swtRender;
+_swtRender = function() {
+    _origSwtRender();
+    _swtUpdateEquiv();
+    // Update swm-pi-earned jika ada
+    const piEarnEl = document.getElementById('swm-pi-earned');
+    if (piEarnEl) piEarnEl.textContent = (_swtData.piEarned || 0).toFixed(3);
+};
+
+// ── Show tabs after login ─────────────────────────────
+const _origShowWallet = _swtShowWallet;
+_swtShowWallet = function(user) {
+    _origShowWallet(user);
+    const tabs = document.getElementById('swm-tabs');
+    const content = document.getElementById('swm-wallet-content');
+    if (tabs) tabs.style.display = 'flex';
+    if (content) content.style.display = 'block';
+    // Render misi tab aktif default
+    const misiTab = document.getElementById('swm-tab-misi');
+    if (misiTab) misiTab.style.display = 'block';
+};
+
+// ── Sign out reset tabs ───────────────────────────────
+const _origSignOut = swtSignOut;
+swtSignOut = async function() {
+    await _origSignOut();
+    const tabs = document.getElementById('swm-tabs');
+    const content = document.getElementById('swm-wallet-content');
+    if (tabs) tabs.style.display = 'none';
+    if (content) content.style.display = 'none';
+};
 </script>
 
 <script>
@@ -5062,6 +5355,11 @@ async function fetchPiPrice() {
 }
 
 function updatePiUI(price, change) {
+    // Sync ke SGT exchange engine
+    if (price > 0) {
+        window._sgtPiUsd = price;
+        if (typeof _swtUpdateEquiv === 'function') _swtUpdateEquiv();
+    }
     const priceStr  = '$' + price.toFixed(2);
     const changeAbs = Math.abs(change || 0).toFixed(2);
     const isUp = (change || 0) >= 0;
