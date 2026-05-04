@@ -176,14 +176,27 @@
         .dropdown-content {
             display: none; position: absolute;
             background: var(--dark); min-width: 280px;
-            border-radius: 14px; top: calc(100% + 12px);
+            border-radius: 14px; top: calc(100% + 4px);
             left: 50%; transform: translateX(-50%);
             z-index: 1100; border: 1px solid rgba(212,160,23,0.2);
             box-shadow: 0 20px 60px rgba(0,0,0,0.6);
-            overflow: hidden; animation: dropIn 0.2s ease;
+            overflow: hidden;
+            opacity: 0; pointer-events: none;
+            transition: opacity 0.18s ease, transform 0.18s ease;
+            transform: translateX(-50%) translateY(-6px);
+        }
+        /* Bridge invisible: menutup gap antara button dan dropdown agar mouse tidak keluar */
+        .dropdown::after {
+            content: ''; position: absolute;
+            top: 100%; left: 0; width: 100%; height: 12px;
+            background: transparent;
+        }
+        .dropdown-content.open {
+            display: block;
+            opacity: 1; pointer-events: all;
+            transform: translateX(-50%) translateY(0);
         }
         @keyframes dropIn { from { opacity: 0; transform: translateX(-50%) translateY(-8px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
-        .dropdown:hover .dropdown-content { display: block; }
         .dropdown-header { padding: 12px 18px 8px; font-size: 0.65em; color: var(--accent); letter-spacing: 2px; text-transform: uppercase; font-weight: 700; border-bottom: 1px solid rgba(255,255,255,0.07); }
         .dropdown-content a {
             color: rgba(255,255,255,0.75); padding: 11px 18px;
@@ -1083,6 +1096,10 @@
             animation: blink 1s step-end infinite;
         }
         @keyframes blink { 50% { opacity: 0; } }
+        @keyframes pulse-green {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(16,185,129,0.5); }
+            50% { box-shadow: 0 0 0 5px rgba(16,185,129,0); }
+        }
 
         /* ======= COUNTER ANIMASI ======= */
         .counter-num { display: inline-block; }
@@ -1503,6 +1520,12 @@
             </div>
         </div>
 
+        <!-- Live Visitor Badge -->
+        <div style="display:flex;align-items:center;gap:6px;background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.3);border-radius:20px;padding:6px 12px;white-space:nowrap;flex-shrink:0;" title="Pengunjung aktif">
+            <span style="width:7px;height:7px;border-radius:50%;background:#10b981;display:inline-block;animation:pulse-green 1.5s ease-in-out infinite;"></span>
+            <span style="color:#6ee7b7;font-size:0.68em;font-weight:700;letter-spacing:0.5px;"><span class="live-visitor-count">—</span> pengunjung</span>
+        </div>
+
         <button class="hamburger" id="hamburgerBtn" onclick="toggleMobileMenu()">
             <span></span><span></span><span></span>
         </button>
@@ -1594,7 +1617,10 @@
             ⬡ Portal Hidayatulamin (Pilar 2) — Portal Akademik Santri &nbsp;|&nbsp;
             ⬡ Yayasan Hidayatulamin Sagatama (Pilar 3) — Dashboard Resmi Yayasan &nbsp;|&nbsp;
             Niatkan 513: 5x Istighfar · 1x Al-Fatihah · 3x Al-Ikhlas Utama &nbsp;|&nbsp;
-            Berbasis Firebase Project: portal-sagatama &nbsp;|&nbsp;
+            🟢 Pengunjung: <span class="live-visitor-count">—</span> &nbsp;|&nbsp;
+            💰 Total Donasi: <span class="live-donasi-total">memuat...</span> &nbsp;|&nbsp;
+            🎓 Santri: <span class="live-santri-count">—</span> santri &nbsp;|&nbsp;
+            <span id="marquee-warta">Berbasis Firebase Project: portal-sagatama</span> &nbsp;|&nbsp;
         </marquee>
     </div>
 </div>
@@ -3367,7 +3393,58 @@ window.addEventListener('scroll', () => {
     function toggleMobileSub(id) {
         const el = document.getElementById(id);
         el.classList.toggle('open');
+        // rotate chevron
+        const parent = el.previousElementSibling;
+        if (parent) parent.querySelector('i:last-child')?.classList.toggle('fa-rotate-180');
     }
+
+    // ======= DROPDOWN MANAGER (fix hilang saat hover) =======
+    (function() {
+        let activeDropdown = null;
+        let closeTimer = null;
+
+        function openDropdown(dropdown) {
+            if (closeTimer) { clearTimeout(closeTimer); closeTimer = null; }
+            if (activeDropdown && activeDropdown !== dropdown) closeNow(activeDropdown);
+            const content = dropdown.querySelector('.dropdown-content');
+            if (!content) return;
+            content.classList.add('open');
+            activeDropdown = dropdown;
+        }
+
+        function scheduleClose(dropdown) {
+            closeTimer = setTimeout(() => {
+                closeNow(dropdown);
+                closeTimer = null;
+            }, 120);
+        }
+
+        function closeNow(dropdown) {
+            const content = dropdown.querySelector('.dropdown-content');
+            if (content) content.classList.remove('open');
+            if (activeDropdown === dropdown) activeDropdown = null;
+        }
+
+        document.querySelectorAll('.dropdown').forEach(dd => {
+            dd.addEventListener('mouseenter', () => openDropdown(dd));
+            dd.addEventListener('mouseleave', () => scheduleClose(dd));
+            const content = dd.querySelector('.dropdown-content');
+            if (content) {
+                content.addEventListener('mouseenter', () => {
+                    if (closeTimer) { clearTimeout(closeTimer); closeTimer = null; }
+                });
+                content.addEventListener('mouseleave', () => scheduleClose(dd));
+            }
+        });
+
+        // Klik di luar tutup semua
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.dropdown')) {
+                document.querySelectorAll('.dropdown-content.open').forEach(c => c.classList.remove('open'));
+                activeDropdown = null;
+            }
+        });
+    })();
 
     // PAGE NAVIGATION
     function pindahHalaman(page, targetId = null) {
@@ -3514,6 +3591,59 @@ function updatePiUI(price, change) {
 
 fetchPiPrice();
 setInterval(fetchPiPrice, 300000);
+
+// ======= FIREBASE LIVE COUNTERS =======
+(function initFirebaseLive() {
+    try {
+        const db = firebase.firestore();
+
+        // --- Visitor Counter ---
+        const visitorRef = db.collection('siteStats').doc('visitors');
+        // Increment setiap kunjungan sesi baru
+        const visited = sessionStorage.getItem('sg_visited');
+        if (!visited) {
+            sessionStorage.setItem('sg_visited', '1');
+            visitorRef.set({ count: firebase.firestore.FieldValue.increment(1) }, { merge: true });
+        }
+        // Listen realtime
+        visitorRef.onSnapshot(snap => {
+            const count = snap.data()?.count || 0;
+            document.querySelectorAll('.live-visitor-count').forEach(el => {
+                el.textContent = count.toLocaleString('id-ID');
+            });
+        });
+
+        // --- Donasi Realtime ---
+        const donasiRef = db.collection('siteStats').doc('donasi');
+        donasiRef.onSnapshot(snap => {
+            const total = snap.data()?.total || 0;
+            document.querySelectorAll('.live-donasi-total').forEach(el => {
+                el.textContent = 'Rp ' + total.toLocaleString('id-ID');
+            });
+        });
+
+        // --- Jumlah Santri Realtime ---
+        db.collection('siteStats').doc('santri').onSnapshot(snap => {
+            const jml = snap.data()?.jumlah || 0;
+            document.querySelectorAll('.live-santri-count').forEach(el => {
+                el.textContent = jml.toLocaleString('id-ID');
+            });
+        });
+
+        // --- Warta/Berita terbaru di marquee ---
+        db.collection('warta').orderBy('tanggal', 'desc').limit(3).onSnapshot(snap => {
+            if (snap.empty) return;
+            const items = snap.docs.map(d => d.data().judul || '').filter(Boolean);
+            const marqueeEl = document.getElementById('marquee-warta');
+            if (marqueeEl && items.length) {
+                marqueeEl.textContent = items.map(t => '📰 ' + t).join('  |  ');
+            }
+        });
+
+    } catch(e) {
+        console.warn('[Firebase Live]', e.message);
+    }
+})();
 </script>
 </body>
 </html>
