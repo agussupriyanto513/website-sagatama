@@ -54,7 +54,7 @@
 
         /* ======= SGT TOKEN SYSTEM ======= */
         .sgt-floating {
-            position: fixed; bottom: 28px; right: 28px;
+            position: fixed; bottom: 28px; right: 100px;
             z-index: 9999; display: flex; flex-direction: column; align-items: flex-end; gap: 12px;
         }
         .sgt-fab {
@@ -1149,6 +1149,8 @@
             .newsletter-form { flex-direction: column; }
             .zakat-form { grid-template-columns: 1fr; }
             #quick-menu { display: none; }
+            .sgt-floating { bottom: 20px; right: 88px; }
+            .sgt-panel { width: 280px; }
         }
 
         #loading-screen {
@@ -1601,11 +1603,12 @@
 <div id="quick-menu">
     <button class="quick-toggle" onclick="toggleQuickMenu()" title="Menu Cepat"><i class="fas fa-bolt"></i></button>
     <div class="quick-links">
-        <button class="quick-link-btn" style="background: var(--accent); color: var(--dark);" onclick="pindahHalaman('home'); scrollToSection('psb')" data-tip="Daftar Santri"><i class="fas fa-user-plus"></i></button>
-        <button class="quick-link-btn" style="background: var(--emerald);" onclick="pindahHalaman('home'); scrollToSection('donasi')" data-tip="Donasi"><i class="fas fa-hand-holding-heart"></i></button>
-        <button class="quick-link-btn" style="background: var(--secondary);" onclick="pindahHalaman('hidayat')" data-tip="Portal Santri"><i class="fas fa-graduation-cap"></i></button>
-        <button class="quick-link-btn" style="background: var(--pi-color);" onclick="pindahHalaman('market')" data-tip="Sagatama Mart"><i class="fas fa-store"></i></button>
-        <button class="quick-link-btn" style="background: #1e3a5f;" onclick="openSearch()" data-tip="Cari Konten"><i class="fas fa-search"></i></button>
+        <button class="quick-link-btn" style="background: var(--accent); color: var(--dark);" onclick="scrollToSection('psb')" data-tip="Daftar Santri"><i class="fas fa-user-plus"></i></button>
+        <button class="quick-link-btn" style="background: var(--emerald);" onclick="scrollToSection('donasi')" data-tip="Donasi"><i class="fas fa-hand-holding-heart"></i></button>
+        <button class="quick-link-btn" style="background: var(--secondary);" onclick="window.open('https://hidayatulamin.vercel.app','_blank')" data-tip="Portal Santri"><i class="fas fa-graduation-cap"></i></button>
+        <button class="quick-link-btn" style="background: #0d9488;" onclick="window.open('https://sagatama-mart.vercel.app','_blank')" data-tip="Sagatama Mart"><i class="fas fa-store"></i></button>
+        <button class="quick-link-btn" style="background: #d4a017; color: var(--dark);" onclick="toggleQuickMenu(); toggleSGTPanel();" data-tip="Token SGT"><span style="font-family:'Cinzel',serif;font-weight:900;font-size:0.7em;">SGT</span></button>
+        <button class="quick-link-btn" style="background: #1e3a5f;" onclick="scrollToSection('warta')" data-tip="Berita Terkini"><i class="fas fa-newspaper"></i></button>
     </div>
 </div>
 
@@ -1645,21 +1648,21 @@
                         </div>
                         <div class="pilar-desc">Beranda utama yayasan — berita, donasi, produk, digital</div>
                     </div>
-                    <div class="dropdown-pilar-card" onclick="pindahHalaman('hidayat'); closeMobileMenu();" style="cursor:pointer;">
+                    <div class="dropdown-pilar-card" onclick="window.open('https://hidayatulamin.vercel.app','_blank')" style="cursor:pointer;">
                         <div class="pilar-name">
                             <i class="fas fa-graduation-cap" style="color: #5eead4;"></i>
                             Portal Hidayatulamin
                             <span class="pilar-badge" style="background:rgba(13,148,136,0.2);color:#5eead4;">PILAR 2</span>
                         </div>
-                        <div class="pilar-desc">Portal akademik & kesantrian — absensi, nilai, jadwal santri</div>
+                        <div class="pilar-desc">Portal akademik & kesantrian — absensi, nilai, jadwal santri <i class="fas fa-external-link-alt" style="font-size:0.7em;opacity:0.5;margin-left:4px;"></i></div>
                     </div>
-                    <div class="dropdown-pilar-card" onclick="pindahHalaman('yayasan'); closeMobileMenu();" style="cursor:pointer;">
+                    <div class="dropdown-pilar-card" onclick="window.open('https://hidayatulamin.vercel.app','_blank')" style="cursor:pointer;">
                         <div class="pilar-name">
                             <i class="fas fa-university" style="color: #c4b5fd;"></i>
                             Yayasan Hidayatulamin Sagatama
                             <span class="pilar-badge" style="background:rgba(124,58,237,0.2);color:#c4b5fd;">PILAR 3</span>
                         </div>
-                        <div class="pilar-desc">Dashboard yayasan — keuangan, program, laporan resmi</div>
+                        <div class="pilar-desc">Dashboard yayasan — keuangan, program, laporan resmi <i class="fas fa-external-link-alt" style="font-size:0.7em;opacity:0.5;margin-left:4px;"></i></div>
                     </div>
                     <a href="#" style="padding: 10px 18px; font-size: 0.75em; color: rgba(255,165,0,0.7); justify-content: center; border-top: 1px solid rgba(255,255,255,0.06);">
                         <i class="fas fa-fire" style="color: #fbbf24;"></i> Semua ditenagai Firebase · portal-sagatama
@@ -1691,7 +1694,7 @@
                     <a href="#jadwal" onclick="pindahHalaman('home')"><i class="fas fa-calendar-days"></i> Jadwal & Rutinitas</a>
                     <a href="#testimoni" onclick="pindahHalaman('home')"><i class="fas fa-star"></i> Testimoni Santri</a>
                     <a href="#faq" onclick="pindahHalaman('home')"><i class="fas fa-question-circle"></i> FAQ</a>
-                    <a onclick="pindahHalaman('hidayat')"><i class="fas fa-graduation-cap"></i> Portal Akademik Santri</a>
+                    <a href="https://hidayatulamin.vercel.app" target="_blank"><i class="fas fa-graduation-cap"></i> Portal Akademik Santri <i class="fas fa-external-link-alt" style="font-size:0.75em;opacity:0.5;"></i></a>
                 </div>
             </div>
 
@@ -1758,9 +1761,9 @@
             <i class="fas fa-chevron-down"></i>
         </button>
         <div class="mobile-submenu" id="sub-pilar">
-            <a onclick="pindahHalaman('home'); closeMobileMenu()">⬡ Portal Sagatama (Pilar 1)</a>
-            <a onclick="pindahHalaman('hidayat'); closeMobileMenu()">⬡ Portal Hidayatulamin (Pilar 2)</a>
-            <a onclick="pindahHalaman('yayasan'); closeMobileMenu()">⬡ Yayasan Hidayatulamin Sagatama (Pilar 3)</a>
+            <a onclick="pindahHalaman('home'); closeMobileMenu()">⬡ Portal Sagatama (Pilar 1) — Anda di sini</a>
+            <a href="https://hidayatulamin.vercel.app" target="_blank" onclick="closeMobileMenu()">⬡ Portal Hidayatulamin (Pilar 2) <i class="fas fa-external-link-alt" style="font-size:0.8em;opacity:0.6;"></i></a>
+            <a href="https://dashboard-sagatama.vercel.app" target="_blank" onclick="closeMobileMenu()">⬡ Yayasan Hidayatulamin Sagatama (Pilar 3) <i class="fas fa-external-link-alt" style="font-size:0.8em;opacity:0.6;"></i></a>
         </div>
     </div>
     <div class="mobile-menu-item">
@@ -1786,7 +1789,7 @@
             <a href="#prestasi" onclick="pindahHalaman('home'); closeMobileMenu()">Santri Berprestasi</a>
             <a href="#wasiat" onclick="pindahHalaman('home'); closeMobileMenu()">Wasiat & Naskah Jumat</a>
             <a href="#jadwal" onclick="pindahHalaman('home'); closeMobileMenu()">Jadwal & Rutinitas</a>
-            <a onclick="pindahHalaman('hidayat'); closeMobileMenu()">Portal Akademik Santri</a>
+            <a href="https://hidayatulamin.vercel.app" target="_blank" onclick="closeMobileMenu()">Portal Akademik Santri <i class="fas fa-external-link-alt" style="font-size:0.8em;opacity:0.6;"></i></a>
         </div>
     </div>
     <div class="mobile-menu-item">
@@ -1977,8 +1980,8 @@
                             <li><i class="fas fa-check-circle"></i> Komunikasi Wali Santri</li>
                             <li><i class="fas fa-check-circle"></i> Pengumuman & Agenda</li>
                         </ul>
-                        <button onclick="pindahHalaman('hidayat')" class="btn-pilar btn-pilar-teal">
-                            <i class="fas fa-arrow-right"></i> Masuk Portal Hidayatulamin
+                        <button onclick="window.open('https://hidayatulamin.vercel.app','_blank')" class="btn-pilar btn-pilar-teal">
+                            <i class="fas fa-external-link-alt"></i> Buka Portal Hidayatulamin
                         </button>
                     </div>
 
@@ -2001,8 +2004,8 @@
                             <li><i class="fas fa-check-circle"></i> Manajemen SDM & Pengajar</li>
                             <li><i class="fas fa-check-circle"></i> Rapat & Notulensi Online</li>
                         </ul>
-                        <button onclick="pindahHalaman('yayasan')" class="btn-pilar btn-pilar-purple">
-                            <i class="fas fa-arrow-right"></i> Masuk Portal Yayasan
+                        <button onclick="window.open('https://hidayatulamin.vercel.app','_blank')" class="btn-pilar btn-pilar-purple">
+                            <i class="fas fa-external-link-alt"></i> Buka Portal Yayasan
                         </button>
                     </div>
                 </div>
@@ -3709,6 +3712,16 @@ window.addEventListener('scroll', () => {
 
     // PAGE NAVIGATION
     function pindahHalaman(page, targetId = null) {
+        // Halaman eksternal langsung buka tab baru
+        const externalMap = {
+            'hidayat':  'https://hidayatulamin.vercel.app',
+            'yayasan':  'https://hidayatulamin.vercel.app', // ganti URL yayasan jika beda
+            'market-ext': 'https://sagatama-mart.vercel.app'
+        };
+        if (externalMap[page]) {
+            window.open(externalMap[page], '_blank');
+            return;
+        }
         document.querySelectorAll('.page-view').forEach(v => v.classList.remove('active-view'));
         const target = document.getElementById(page + '-view');
         if (target) target.classList.add('active-view');
@@ -3724,6 +3737,43 @@ window.addEventListener('scroll', () => {
             }, 350);
         } else {
             window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    }
+
+    // scrollToSection — dipakai quick-menu
+    function scrollToSection(id) {
+        // Pastikan home-view aktif dulu
+        const homeView = document.getElementById('home-view');
+        if (homeView && !homeView.classList.contains('active-view')) {
+            document.querySelectorAll('.page-view').forEach(v => v.classList.remove('active-view'));
+            homeView.classList.add('active-view');
+        }
+        setTimeout(() => {
+            const el = document.getElementById(id);
+            if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 300);
+        // Tutup quick menu setelah navigasi
+        const qm = document.getElementById('quick-menu');
+        if (qm) qm.classList.remove('open');
+    }
+
+    // toggleQuickMenu
+    function toggleQuickMenu() {
+        const qm = document.getElementById('quick-menu');
+        if (qm) qm.classList.toggle('open');
+    }
+
+    // openSearch — minimal: scroll ke warta / focus search jika ada
+    function openSearch() {
+        const qm = document.getElementById('quick-menu');
+        if (qm) qm.classList.remove('open');
+        // Coba fokus ke search input jika ada, jika tidak scroll ke warta
+        const searchInput = document.getElementById('searchInput');
+        if (searchInput) {
+            searchInput.focus();
+            searchInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        } else {
+            scrollToSection('warta');
         }
     }
 
@@ -3862,7 +3912,7 @@ window.addEventListener('scroll', () => {
                 <div class="sgt-task-pts">+200 SGT</div>
             </div>
         </div>
-        <button class="sgt-cta" onclick="shareToWhatsApp()">
+        <button class="sgt-cta" onclick="claimSGT('share',25,document.getElementById('task-share'))">
             <i class="fab fa-whatsapp"></i> Share & Dapatkan 25 SGT
         </button>
         <div class="sgt-disclaimer">SGT = poin loyalitas digital, dapat ditukar diskon produk & merchandise Sagatama</div>
@@ -3925,6 +3975,19 @@ function claimSGT(key, pts, el) {
     if (el.classList.contains('done')) return;
     const d = getSGTData();
     const today = new Date().toDateString();
+
+    // Share — buka WA dulu, minta konfirmasi
+    if (key === 'share') {
+        shareToWhatsApp();
+        // Tampilkan tombol konfirmasi di dalam task
+        const ptsEl = el.querySelector('.sgt-task-pts');
+        if (ptsEl && !el.dataset.waiting) {
+            el.dataset.waiting = '1';
+            ptsEl.innerHTML = '<button onclick="confirmShare(event)" style="background:var(--accent);color:var(--dark);border:none;border-radius:6px;padding:4px 8px;font-size:0.7em;font-weight:800;cursor:pointer;white-space:nowrap;">Sudah Share ✓</button>';
+        }
+        return;
+    }
+
     if (key === 'visit') {
         if (d.lastVisit === today) return;
         d.lastVisit = today;
@@ -3935,14 +3998,25 @@ function claimSGT(key, pts, el) {
     d.balance = (d.balance || 0) + pts;
     saveSGTData(d);
 
-    // Special action for share
-    if (key === 'share') shareToWhatsApp();
     if (key === 'mart') window.open('https://sagatama-mart.vercel.app', '_blank');
-    if (key === 'psb') { pindahHalaman('home'); setTimeout(()=>{ document.getElementById('psb')?.scrollIntoView({behavior:'smooth'}); }, 300); }
-    if (key === 'donasi') { pindahHalaman('home'); setTimeout(()=>{ document.getElementById('donasi')?.scrollIntoView({behavior:'smooth'}); }, 300); }
+    if (key === 'psb') { scrollToSection('psb'); toggleSGTPanel(); }
+    if (key === 'donasi') { scrollToSection('donasi'); toggleSGTPanel(); }
 
-    // Show toast
     showToast('🪙 +' + pts + ' SGT berhasil diklaim! Total: ' + d.balance + ' SGT');
+    renderSGT();
+}
+
+function confirmShare(e) {
+    e.stopPropagation();
+    const taskEl = document.getElementById('task-share');
+    if (!taskEl) return;
+    const d = getSGTData();
+    if (d.claimed.includes('share')) { renderSGT(); return; }
+    d.claimed.push('share');
+    d.balance = (d.balance || 0) + 25;
+    saveSGTData(d);
+    delete taskEl.dataset.waiting;
+    showToast('🪙 +25 SGT diklaim! Terima kasih sudah share Portal Sagatama 🎉');
     renderSGT();
 }
 function toggleSGTPanel() {
