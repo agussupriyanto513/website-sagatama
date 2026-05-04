@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel — Portal Sagatama</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%230f3460'/><text y='.9em' font-size='70' x='50%' text-anchor='middle' fill='%23d4a017' font-family='serif' font-weight='bold'>A</text></svg>">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Cinzel:wght@700;900&display=swap" rel="stylesheet">
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+    <style>
+        :root {
+            --dark:    #070d1a;
+            --dark2:   #0a1220;
+            --dark3:   #0f1e35;
+            --accent:  #d4a017;
+            --accent2: #f0c842;
+            --pi:      #7c3aed;
+            --pi2:     #a78bfa;
+            --green:   #10b981;
+            --red:     #ef4444;
+            --blue:    #3b82f6;
+            --yellow:  #f59e0b;
+            --white:   #ffffff;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background: var(--dark); color: var(--white); font-family: 'DM Sans', sans-serif; min-height: 100vh; }
+
+        /* ── LOGIN SCREEN ── */
+        #login-screen {
+            min-height: 100vh; display: flex; align-items: center; justify-content: center;
+            background: radial-gradient(ellipse at 50% 0%, rgba(124,58,237,0.15) 0%, transparent 60%),
+                        radial-gradient(ellipse at 80% 80%, rgba(212,160,23,0.08) 0%, transparent 50%), var(--dark);
+        }
+        .login-box {
+            background: var(--dark2); border: 1px solid rgba(212,160,23,0.2);
+            border-radius: 20px; padding: 40px 36px; width: 100%; max-width: 380px;
+            box-shadow: 0 32px 80px rgba(0,0,0,0.6);
+        }
+        .login-logo { text-align: center; margin-bottom: 28px; }
+        .login-logo .badge { display: inline-flex; align-items: center; justify-content: center; width: 56px; height: 56px; border-radius: 14px; background: linear-gradient(135deg, #0f3460, #16427a); border: 2px solid var(--accent); font-family: 'Cinzel', serif; font-weight: 900; font-size: 1.2em; color: var(--accent); margin-bottom: 12px; }
+        .login-logo h2 { font-family: 'Cinzel', serif; font-size: 1em; color: var(--accent); letter-spacing: 1px; }
+        .login-logo p { font-size: 0.75em; color: rgba(255,255,255,0.3); margin-top: 4px; }
+        .login-inp { width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: var(--white); padding: 12px 16px; border-radius: 10px; font-family: 'DM Sans', sans-serif; font-size: 0.9em; outline: none; margin-bottom: 12px; transition: 0.2s; }
+        .login-inp:focus { border-color: rgba(212,160,23,0.5); background: rgba(212,160,23,0.04); }
+        .login-btn { width: 100%; padding: 12px; border-radius: 10px; border: none; background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #070d1a; font-family: 'DM Sans', sans-serif; font-weight: 700; font-size: 0.92em; cursor: pointer; transition: 0.2s; margin-bottom: 10px; }
+        .login-btn:hover { box-shadow: 0 6px 20px rgba(212,160,23,0.35); transform: translateY(-1px); }
+        .login-err { background: rgba(239,68,68,0.12); border: 1px solid rgba(239,68,68,0.25); color: #fca5a5; font-size: 0.78em; padding: 9px 12px; border-radius: 8px; display: none; }
+        .login-hint { font-size: 0.7em; color: rgba(255,255,255,0.2); text-align: center; margin-top: 12px; }
+
+        /* ── DASHBOARD ── */
+        #dashboard { display: none; }
+
+        /* Topbar */
+        .topbar {
+            background: var(--dark2); border-bottom: 1px solid rgba(212,160,23,0.15);
+            padding: 0 24px; height: 58px; display: flex; align-items: center;
+            justify-content: space-between; position: sticky; top: 0; z-index: 100;
+        }
+        .topbar-left { display: flex; align-items: center; gap: 12px; }
+        .topbar-badge { width: 34px; height: 34px; border-radius: 9px; background: linear-gradient(135deg,#0f3460,#16427a); border: 1.5px solid var(--accent); display: flex; align-items: center; justify-content: center; font-family: 'Cinzel',serif; font-weight: 900; font-size: 0.75em; color: var(--accent); }
+        .topbar-title { font-family: 'Cinzel', serif; font-size: 0.88em; color: var(--accent); }
+        .topbar-sub { font-size: 0.65em; color: rgba(255,255,255,0.3); margin-top: 1px; }
+        .topbar-right { display: flex; align-items: center; gap: 10px; }
+        .topbar-time { font-size: 0.72em; color: rgba(255,255,255,0.3); }
+        .btn-logout { background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.2); color: rgba(239,68,68,0.7); padding: 6px 14px; border-radius: 8px; font-size: 0.74em; cursor: pointer; font-family: 'DM Sans',sans-serif; transition: 0.2s; }
+        .btn-logout:hover { background: rgba(239,68,68,0.2); }
+
+        /* Main layout */
+        .main { padding: 24px; max-width: 1200px; margin: 0 auto; }
+
+        /* Stats row */
+        .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 24px; }
+        .stat-card { background: var(--dark2); border: 1px solid rgba(255,255,255,0.06); border-radius: 14px; padding: 18px; }
+        .stat-card.accent { border-color: rgba(212,160,23,0.2); background: rgba(212,160,23,0.06); }
+        .stat-card.pi { border-color: rgba(124,58,237,0.2); background: rgba(124,58,237,0.06); }
+        .stat-card.green { border-color: rgba(16,185,129,0.2); background: rgba(16,185,129,0.06); }
+        .stat-card.yellow { border-color: rgba(245,158,11,0.2); background: rgba(245,158,11,0.06); }
+        .stat-icon { font-size: 1.4em; margin-bottom: 10px; }
+        .stat-val { font-family: 'Cinzel',serif; font-size: 1.8em; font-weight: 900; line-height: 1; margin-bottom: 4px; }
+        .stat-card.accent .stat-val { color: var(--accent); }
+        .stat-card.pi .stat-val { color: var(--pi2); }
+        .stat-card.green .stat-val { color: #6ee7b7; }
+        .stat-card.yellow .stat-val { color: #fcd34d; }
+        .stat-lbl { font-size: 0.72em; color: rgba(255,255,255,0.4); }
+
+        /* Tabs */
+        .tabs { display: flex; gap: 4px; margin-bottom: 20px; background: rgba(255,255,255,0.03); border-radius: 12px; padding: 5px; width: fit-content; }
+        .tab-btn { padding: 8px 18px; border: none; background: transparent; color: rgba(255,255,255,0.45); font-family: 'DM Sans',sans-serif; font-size: 0.8em; font-weight: 600; border-radius: 8px; cursor: pointer; transition: 0.2s; display: flex; align-items: center; gap: 7px; }
+        .tab-btn.active { background: rgba(212,160,23,0.15); color: var(--accent); }
+        .tab-btn .badge-cnt { background: rgba(239,68,68,0.8); color: #fff; font-size: 0.75em; font-weight: 700; padding: 1px 6px; border-radius: 10px; min-width: 18px; text-align: center; }
+
+        /* Table */
+        .card { background: var(--dark2); border: 1px solid rgba(255,255,255,0.06); border-radius: 16px; overflow: hidden; }
+        .card-header { padding: 16px 20px; border-bottom: 1px solid rgba(255,255,255,0.06); display: flex; align-items: center; justify-content: space-between; }
+        .card-title { font-size: 0.86em; font-weight: 700; color: rgba(255,255,255,0.8); display: flex; align-items: center; gap: 8px; }
+        .btn-refresh { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); color: rgba(255,255,255,0.4); padding: 6px 12px; border-radius: 8px; font-size: 0.74em; cursor: pointer; font-family: 'DM Sans',sans-serif; transition: 0.2s; display: flex; align-items: center; gap: 6px; }
+        .btn-refresh:hover { background: rgba(255,255,255,0.09); }
+        .tbl-wrap { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.82em; }
+        th { padding: 11px 16px; text-align: left; color: rgba(255,255,255,0.3); font-weight: 600; font-size: 0.85em; letter-spacing: 0.5px; text-transform: uppercase; border-bottom: 1px solid rgba(255,255,255,0.05); white-space: nowrap; }
+        td { padding: 13px 16px; border-bottom: 1px solid rgba(255,255,255,0.04); vertical-align: middle; }
+        tr:last-child td { border-bottom: none; }
+        tr:hover td { background: rgba(255,255,255,0.02); }
+
+        /* Status badge */
+        .status-badge { display: inline-flex; align-items: center; gap: 5px; padding: 4px 10px; border-radius: 20px; font-size: 0.82em; font-weight: 600; white-space: nowrap; }
+        .status-badge.pending  { background: rgba(245,158,11,0.15); color: #fcd34d; border: 1px solid rgba(245,158,11,0.25); }
+        .status-badge.diproses { background: rgba(59,130,246,0.15); color: #93c5fd; border: 1px solid rgba(59,130,246,0.25); }
+        .status-badge.selesai  { background: rgba(16,185,129,0.15); color: #6ee7b7; border: 1px solid rgba(16,185,129,0.25); }
+        .status-badge.ditolak  { background: rgba(239,68,68,0.15); color: #fca5a5; border: 1px solid rgba(239,68,68,0.25); }
+        .status-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+        .status-badge.pending  .status-dot { background: #fcd34d; animation: pulse-dot 1.5s infinite; }
+        .status-badge.diproses .status-dot { background: #93c5fd; animation: pulse-dot 1.5s infinite; }
+        .status-badge.selesai  .status-dot { background: #6ee7b7; }
+        .status-badge.ditolak  .status-dot { background: #fca5a5; }
+        @keyframes pulse-dot { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+        /* Action buttons */
+        .act-btn { padding: 5px 11px; border-radius: 7px; font-size: 0.78em; font-weight: 600; cursor: pointer; font-family: 'DM Sans',sans-serif; transition: 0.2s; border: 1px solid; margin-right: 4px; white-space: nowrap; }
+        .act-btn.proses { background: rgba(59,130,246,0.12); color: #93c5fd; border-color: rgba(59,130,246,0.3); }
+        .act-btn.proses:hover { background: rgba(59,130,246,0.22); }
+        .act-btn.selesai { background: rgba(16,185,129,0.12); color: #6ee7b7; border-color: rgba(16,185,129,0.3); }
+        .act-btn.selesai:hover { background: rgba(16,185,129,0.22); }
+        .act-btn.tolak { background: rgba(239,68,68,0.1); color: #fca5a5; border-color: rgba(239,68,68,0.2); }
+        .act-btn.tolak:hover { background: rgba(239,68,68,0.2); }
+        .act-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+        /* Pi amount display */
+        .pi-amt { font-family: 'Cinzel',serif; font-weight: 700; color: var(--pi2); }
+        .sgt-amt { font-family: 'Cinzel',serif; font-weight: 700; color: var(--accent); }
+        .user-cell { display: flex; flex-direction: column; gap: 2px; }
+        .user-name { font-weight: 600; color: rgba(255,255,255,0.85); }
+        .user-email { font-size: 0.82em; color: rgba(255,255,255,0.35); }
+        .wallet-addr { font-family: monospace; font-size: 0.85em; color: var(--pi2); background: rgba(124,58,237,0.1); padding: 3px 8px; border-radius: 5px; }
+
+        /* Empty / loading */
+        .tbl-empty { text-align: center; padding: 40px; color: rgba(255,255,255,0.25); font-size: 0.84em; }
+        .spinner { width: 22px; height: 22px; border: 2px solid rgba(212,160,23,0.2); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite; display: inline-block; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Modal */
+        #modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); z-index: 1000; display: none; align-items: center; justify-content: center; padding: 16px; }
+        #modal-overlay.open { display: flex; }
+        .modal-box { background: var(--dark2); border: 1px solid rgba(212,160,23,0.2); border-radius: 18px; padding: 28px; width: 100%; max-width: 440px; box-shadow: 0 32px 80px rgba(0,0,0,0.6); }
+        .modal-title { font-family: 'Cinzel',serif; font-size: 1em; color: var(--accent); margin-bottom: 6px; }
+        .modal-sub { font-size: 0.78em; color: rgba(255,255,255,0.35); margin-bottom: 20px; line-height: 1.5; }
+        .modal-info { background: rgba(255,255,255,0.04); border-radius: 10px; padding: 14px; margin-bottom: 16px; }
+        .modal-row { display: flex; justify-content: space-between; padding: 5px 0; font-size: 0.82em; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .modal-row:last-child { border-bottom: none; }
+        .modal-row .k { color: rgba(255,255,255,0.4); }
+        .modal-row .v { font-weight: 600; color: rgba(255,255,255,0.85); }
+        .modal-inp { width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: var(--white); padding: 10px 14px; border-radius: 9px; font-family: 'DM Sans',sans-serif; font-size: 0.85em; outline: none; margin-bottom: 14px; }
+        .modal-inp:focus { border-color: rgba(212,160,23,0.4); }
+        .modal-btns { display: flex; gap: 10px; }
+        .modal-btn-cancel { flex: 1; padding: 10px; border-radius: 9px; border: 1px solid rgba(255,255,255,0.1); background: transparent; color: rgba(255,255,255,0.4); font-family: 'DM Sans',sans-serif; font-size: 0.84em; cursor: pointer; }
+        .modal-btn-confirm { flex: 2; padding: 10px; border-radius: 9px; border: none; font-family: 'DM Sans',sans-serif; font-weight: 700; font-size: 0.84em; cursor: pointer; transition: 0.2s; }
+        .modal-btn-confirm.green { background: linear-gradient(135deg,#10b981,#059669); color: #fff; }
+        .modal-btn-confirm.blue  { background: linear-gradient(135deg,#3b82f6,#2563eb); color: #fff; }
+        .modal-btn-confirm.red   { background: linear-gradient(135deg,#ef4444,#dc2626); color: #fff; }
+
+        /* Wallet stats table */
+        .wallet-chip { display: inline-flex; align-items: center; gap: 5px; background: rgba(212,160,23,0.1); border: 1px solid rgba(212,160,23,0.2); border-radius: 6px; padding: 3px 9px; font-family: 'Cinzel',serif; font-size: 0.82em; color: var(--accent); font-weight: 700; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .stats-row { grid-template-columns: repeat(2,1fr); }
+            .main { padding: 16px; }
+        }
+        @media (max-width: 480px) {
+            .stats-row { grid-template-columns: 1fr 1fr; }
+            .topbar { padding: 0 14px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ══ LOGIN SCREEN ══════════════════════════════════════════ -->
+<div id="login-screen">
+    <div class="login-box">
+        <div class="login-logo">
+            <div class="badge">SG</div>
+            <h2>ADMIN PANEL</h2>
+            <p>Portal Sagatama — SGT Wallet Manager</p>
+        </div>
+        <input class="login-inp" type="password" id="adm-pass" placeholder="Password Admin" onkeydown="if(event.key==='Enter')adminLogin()">
+        <button class="login-btn" onclick="adminLogin()"><i class="fas fa-shield-halved"></i> Masuk ke Panel Admin</button>
+        <div class="login-err" id="adm-err">Password salah. Coba lagi.</div>
+        <div class="login-hint">Hanya untuk administrator yayasan</div>
+    </div>
+</div>
+
+<!-- ══ DASHBOARD ═════════════════════════════════════════════ -->
+<div id="dashboard">
+
+    <!-- Topbar -->
+    <div class="topbar">
+        <div class="topbar-left">
+            <div class="topbar-badge">SG</div>
+            <div>
+                <div class="topbar-title">Admin Panel — Sagatama</div>
+                <div class="topbar-sub">SGT Wallet Management System</div>
+            </div>
+        </div>
+        <div class="topbar-right">
+            <div class="topbar-time" id="topbar-time"></div>
+            <button class="btn-logout" onclick="adminLogout()"><i class="fas fa-right-from-bracket"></i> Keluar</button>
+        </div>
+    </div>
+
+    <div class="main">
+
+        <!-- Stats -->
+        <div class="stats-row">
+            <div class="stat-card yellow">
+                <div class="stat-icon">⏳</div>
+                <div class="stat-val" id="stat-pending">—</div>
+                <div class="stat-lbl">Request Pending</div>
+            </div>
+            <div class="stat-card pi">
+                <div class="stat-icon">π</div>
+                <div class="stat-val" id="stat-pi-total">—</div>
+                <div class="stat-lbl">Total Pi Dikirim</div>
+            </div>
+            <div class="stat-card green">
+                <div class="stat-icon">✅</div>
+                <div class="stat-val" id="stat-selesai">—</div>
+                <div class="stat-lbl">Request Selesai</div>
+            </div>
+            <div class="stat-card accent">
+                <div class="stat-icon">👥</div>
+                <div class="stat-val" id="stat-users">—</div>
+                <div class="stat-lbl">Total Pengguna</div>
+            </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('pi',this)">
+                <i class="fas fa-circle-nodes"></i> Penukaran Pi
+                <span class="badge-cnt" id="tab-pending-cnt" style="display:none">0</span>
+            </button>
+            <button class="tab-btn" onclick="switchTab('wallets',this)">
+                <i class="fas fa-wallet"></i> Semua Wallet
+            </button>
+        </div>
+
+        <!-- Tab: Pi Requests -->
+        <div id="tab-pi">
+            <!-- Filter -->
+            <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;">
+                <button class="btn-refresh" onclick="setFilter('semua')"   id="f-semua"   style="border-color:rgba(212,160,23,0.3);color:var(--accent);">Semua</button>
+                <button class="btn-refresh" onclick="setFilter('pending')"  id="f-pending">⏳ Pending</button>
+                <button class="btn-refresh" onclick="setFilter('diproses')" id="f-diproses">🔄 Diproses</button>
+                <button class="btn-refresh" onclick="setFilter('selesai')"  id="f-selesai">✅ Selesai</button>
+                <button class="btn-refresh" onclick="setFilter('ditolak')"  id="f-ditolak">❌ Ditolak</button>
+                <button class="btn-refresh" onclick="loadPiRequests()" style="margin-left:auto;"><i class="fas fa-rotate-right"></i> Refresh</button>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title"><i class="fas fa-circle-nodes" style="color:var(--pi2)"></i> Request Penukaran SGT → Pi</div>
+                    <div style="font-size:0.72em;color:rgba(255,255,255,0.3);" id="pi-last-update">—</div>
+                </div>
+                <div class="tbl-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Waktu</th>
+                                <th>Pengguna</th>
+                                <th>SGT</th>
+                                <th>Pi</th>
+                                <th>Wallet Tujuan</th>
+                                <th>Status</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="pi-tbody">
+                            <tr><td colspan="7" class="tbl-empty"><div class="spinner"></div><br><br>Memuat data...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab: All Wallets -->
+        <div id="tab-wallets" style="display:none;">
+            <div style="display:flex;justify-content:flex-end;margin-bottom:14px;">
+                <button class="btn-refresh" onclick="loadWallets()"><i class="fas fa-rotate-right"></i> Refresh</button>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title"><i class="fas fa-wallet" style="color:var(--accent)"></i> Semua Pengguna SGT Wallet</div>
+                    <div style="font-size:0.72em;color:rgba(255,255,255,0.3);" id="wallets-count">—</div>
+                </div>
+                <div class="tbl-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Pengguna</th>
+                                <th>Saldo SGT</th>
+                                <th>Total Diperoleh</th>
+                                <th>Total Ditukar</th>
+                                <th>Streak</th>
+                                <th>Bergabung</th>
+                            </tr>
+                        </thead>
+                        <tbody id="wallets-tbody">
+                            <tr><td colspan="7" class="tbl-empty"><div class="spinner"></div><br><br>Memuat data...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- ══ ACTION MODAL ══════════════════════════════════════════ -->
+<div id="modal-overlay" onclick="if(event.target.id==='modal-overlay')closeModal()">
+    <div class="modal-box">
+        <div class="modal-title" id="modal-title">Konfirmasi Aksi</div>
+        <div class="modal-sub" id="modal-sub">—</div>
+        <div class="modal-info" id="modal-info"></div>
+        <div id="modal-note-wrap" style="display:none;">
+            <div style="font-size:0.74em;color:rgba(255,255,255,0.35);margin-bottom:5px;">Catatan untuk pengguna (opsional):</div>
+            <input class="modal-inp" type="text" id="modal-note" placeholder="Misal: Transfer berhasil / Wallet tidak valid">
+        </div>
+        <div class="modal-btns">
+            <button class="modal-btn-cancel" onclick="closeModal()">Batal</button>
+            <button class="modal-btn-confirm green" id="modal-confirm-btn" onclick="executeAction()">Konfirmasi</button>
+        </div>
+    </div>
+</div>
+
+<script>
+// ════════════════════════════════════════════════════════════
+//  ADMIN PANEL — SGT Wallet Manager
+//  Password: hardcoded (ganti sebelum deploy!)
+// ════════════════════════════════════════════════════════════
+
+const ADMIN_PASSWORD = 'Admin513'; // ← GANTI PASSWORD INI
+const FIREBASE_CONFIG = {
+    apiKey:            'AIzaSyDNWOochfAyHjBYUNyq2IAYhA9p7Ie834M',
+    authDomain:        'portal-sagatama.firebaseapp.com',
+    projectId:         'portal-sagatama',
+    storageBucket:     'portal-sagatama.firebasestorage.app',
+    messagingSenderId: '372845954028',
+    appId:             '1:372845954028:web:189f2a3127ea8189b9f6c9'
+};
+
+// ── Init Firebase ────────────────────────────────────────────
+if (!firebase.apps.length) firebase.initializeApp(FIREBASE_CONFIG);
+const db = firebase.firestore();
+
+// ── State ─────────────────────────────────────────────────────
+let _allRequests  = [];
+let _filterStatus = 'semua';
+let _pendingAction = null;
+let _unsubPi = null;
+
+// ── Clock ─────────────────────────────────────────────────────
+function _updateClock() {
+    const el = document.getElementById('topbar-time');
+    if (el) el.textContent = new Date().toLocaleString('id-ID',{weekday:'short',day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit',second:'2-digit'});
+}
+setInterval(_updateClock, 1000); _updateClock();
+
+// ── Auth ──────────────────────────────────────────────────────
+function adminLogin() {
+    const pass = document.getElementById('adm-pass').value;
+    const err  = document.getElementById('adm-err');
+    if (pass === ADMIN_PASSWORD) {
+        sessionStorage.setItem('adm_ok', '1');
+        document.getElementById('login-screen').style.display = 'none';
+        document.getElementById('dashboard').style.display    = 'block';
+        initDashboard();
+    } else {
+        err.style.display = 'block';
+        document.getElementById('adm-pass').value = '';
+        document.getElementById('adm-pass').focus();
+        setTimeout(() => err.style.display='none', 3000);
+    }
+}
+function adminLogout() {
+    sessionStorage.removeItem('adm_ok');
+    if (_unsubPi) { _unsubPi(); _unsubPi=null; }
+    document.getElementById('login-screen').style.display = 'flex';
+    document.getElementById('dashboard').style.display    = 'none';
+    document.getElementById('adm-pass').value = '';
+}
+// Auto-login jika session masih aktif
+window.addEventListener('load', () => {
+    if (sessionStorage.getItem('adm_ok')==='1') {
+        document.getElementById('login-screen').style.display = 'none';
+        document.getElementById('dashboard').style.display    = 'block';
+        initDashboard();
+    }
+});
+
+// ── Init Dashboard ────────────────────────────────────────────
+function initDashboard() {
+    loadPiRequests();
+    loadStats();
+}
+
+// ── Load Pi Requests (realtime) ───────────────────────────────
+function loadPiRequests() {
+    if (_unsubPi) { _unsubPi(); _unsubPi=null; }
+    const tbody = document.getElementById('pi-tbody');
+    tbody.innerHTML = `<tr><td colspan="7" class="tbl-empty"><div class="spinner"></div><br><br>Memuat data realtime...</td></tr>`;
+
+    _unsubPi = db.collection('sgt_pi_requests')
+        .orderBy('createdAt','desc').limit(200)
+        .onSnapshot(snap => {
+            _allRequests = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+            document.getElementById('pi-last-update').textContent = 'Update: ' + new Date().toLocaleTimeString('id-ID');
+            renderPiTable();
+            updateStats();
+        }, err => {
+            tbody.innerHTML = `<tr><td colspan="7" class="tbl-empty">❌ Gagal memuat: ${err.message}</td></tr>`;
+        });
+}
+
+// ── Render Pi Table ───────────────────────────────────────────
+function renderPiTable() {
+    const tbody = document.getElementById('pi-tbody');
+    let rows = _allRequests;
+    if (_filterStatus !== 'semua') rows = rows.filter(r => r.status === _filterStatus);
+
+    if (rows.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" class="tbl-empty">Tidak ada request dengan status "<b>${_filterStatus}</b>"</td></tr>`;
+        return;
+    }
+
+    tbody.innerHTML = rows.map(r => {
+        const statusHtml = `<span class="status-badge ${r.status}"><span class="status-dot"></span>${_statusLabel(r.status)}</span>`;
+        const time = r.createdAt ? _fmtTime(r.createdAt) : '—';
+        const actions = _buildActions(r);
+        return `<tr>
+            <td style="white-space:nowrap;color:rgba(255,255,255,0.45);font-size:0.82em;">${time}</td>
+            <td><div class="user-cell"><div class="user-name">${_esc(r.userName||'—')}</div><div class="user-email">${_esc(r.userEmail||'—')}</div></div></td>
+            <td><span class="sgt-amt">${_fmt(r.sgtAmount)}</span> <span style="color:rgba(255,255,255,0.3);font-size:0.8em;">SGT</span></td>
+            <td><span class="pi-amt">π ${r.piAmount?.toFixed?.(4)||r.piAmount}</span></td>
+            <td><span class="wallet-addr">${_esc(r.piWallet||'—')}</span></td>
+            <td>${statusHtml}${r.note?`<div style="font-size:0.7em;color:rgba(255,255,255,0.3);margin-top:3px;">${_esc(r.note)}</div>`:''}</td>
+            <td>${actions}</td>
+        </tr>`;
+    }).join('');
+}
+
+function _statusLabel(s) {
+    return { pending:'Menunggu', diproses:'Diproses', selesai:'Selesai', ditolak:'Ditolak' }[s] || s;
+}
+
+function _buildActions(r) {
+    if (r.status === 'pending') return `
+        <button class="act-btn proses"  onclick="openModal('diproses','${r.id}')">🔄 Proses</button>
+        <button class="act-btn tolak"   onclick="openModal('ditolak','${r.id}')">❌ Tolak</button>`;
+    if (r.status === 'diproses') return `
+        <button class="act-btn selesai" onclick="openModal('selesai','${r.id}')">✅ Selesai</button>
+        <button class="act-btn tolak"   onclick="openModal('ditolak','${r.id}')">❌ Tolak</button>`;
+    return `<span style="color:rgba(255,255,255,0.2);font-size:0.78em;">${r.status==='selesai'?'✓ Terkirim':'✗ Ditolak'}</span>`;
+}
+
+// ── Filter ─────────────────────────────────────────────────────
+function setFilter(status) {
+    _filterStatus = status;
+    ['semua','pending','diproses','selesai','ditolak'].forEach(s => {
+        const el = document.getElementById('f-'+s);
+        if (!el) return;
+        const isActive = s === status;
+        el.style.borderColor = isActive ? 'rgba(212,160,23,0.5)' : '';
+        el.style.color = isActive ? 'var(--accent)' : '';
+        el.style.background = isActive ? 'rgba(212,160,23,0.08)' : '';
+    });
+    renderPiTable();
+}
+
+// ── Stats ──────────────────────────────────────────────────────
+function updateStats() {
+    const pending  = _allRequests.filter(r=>r.status==='pending').length;
+    const selesai  = _allRequests.filter(r=>r.status==='selesai').length;
+    const totalPi  = _allRequests.filter(r=>r.status==='selesai').reduce((s,r)=>s+(r.piAmount||0),0);
+    document.getElementById('stat-pending').textContent  = pending;
+    document.getElementById('stat-selesai').textContent  = selesai;
+    document.getElementById('stat-pi-total').textContent = totalPi.toFixed(2);
+    // Badge di tab
+    const badge = document.getElementById('tab-pending-cnt');
+    if (pending > 0) { badge.style.display='inline-block'; badge.textContent=pending; }
+    else badge.style.display = 'none';
+}
+
+async function loadStats() {
+    try {
+        const snap = await db.collection('sgt_wallets').get();
+        document.getElementById('stat-users').textContent = snap.size;
+    } catch(e) { document.getElementById('stat-users').textContent = '—'; }
+}
+
+// ── Load All Wallets ───────────────────────────────────────────
+async function loadWallets() {
+    const tbody = document.getElementById('wallets-tbody');
+    tbody.innerHTML = `<tr><td colspan="7" class="tbl-empty"><div class="spinner"></div><br><br>Memuat data...</td></tr>`;
+    try {
+        const snap = await db.collection('sgt_wallets').orderBy('totalEarned','desc').get();
+        document.getElementById('wallets-count').textContent = `Total: ${snap.size} pengguna`;
+        if (snap.empty) { tbody.innerHTML='<tr><td colspan="7" class="tbl-empty">Belum ada pengguna</td></tr>'; return; }
+        tbody.innerHTML = snap.docs.map((d,i) => {
+            const w = d.data();
+            const name  = w.displayName || w.email?.split('@')[0] || 'Anonim';
+            const email = w.email || '—';
+            const joined = w.createdAt ? _fmtTime(w.createdAt) : '—';
+            return `<tr>
+                <td style="color:rgba(255,255,255,0.3);font-size:0.85em;">${i+1}</td>
+                <td><div class="user-cell"><div class="user-name">${_esc(name)}</div><div class="user-email">${_esc(email)}</div></div></td>
+                <td><span class="wallet-chip">${_fmt(w.balance||0)} SGT</span></td>
+                <td style="color:#6ee7b7;font-weight:600;">${_fmt(w.totalEarned||0)}</td>
+                <td style="color:#fca5a5;font-weight:600;">${_fmt(w.totalRedeemed||0)}</td>
+                <td style="text-align:center;">${w.streak||0} hari</td>
+                <td style="color:rgba(255,255,255,0.4);font-size:0.8em;">${joined}</td>
+            </tr>`;
+        }).join('');
+    } catch(e) {
+        tbody.innerHTML = `<tr><td colspan="7" class="tbl-empty">❌ Gagal: ${e.message}</td></tr>`;
+    }
+}
+
+// ── Modal ──────────────────────────────────────────────────────
+function openModal(action, reqId) {
+    const r = _allRequests.find(x=>x.id===reqId);
+    if (!r) return;
+    _pendingAction = { action, reqId };
+
+    const cfg = {
+        diproses: { title:'Tandai Sedang Diproses', sub:'Request akan ditandai sebagai sedang diproses. Pengguna akan melihat statusnya berubah secara realtime.', btn:'blue', btnText:'🔄 Tandai Diproses', note:false },
+        selesai:  { title:'Konfirmasi Pi Terkirim', sub:'Tandai bahwa Pi sudah berhasil dikirim ke wallet pengguna. Pastikan transfer sudah dilakukan sebelum mengkonfirmasi.', btn:'green', btnText:'✅ Konfirmasi Terkirim', note:true },
+        ditolak:  { title:'Tolak Request', sub:'Request akan ditolak dan saldo SGT TIDAK dikembalikan otomatis. Jika perlu, kembalikan saldo secara manual.', btn:'red', btnText:'❌ Tolak Request', note:true },
+    };
+    const c = cfg[action];
+    document.getElementById('modal-title').textContent = c.title;
+    document.getElementById('modal-sub').textContent   = c.sub;
+    document.getElementById('modal-info').innerHTML    = `
+        <div class="modal-row"><span class="k">Pengguna</span><span class="v">${_esc(r.userName||'—')}</span></div>
+        <div class="modal-row"><span class="k">SGT</span><span class="v sgt-amt">${_fmt(r.sgtAmount)} SGT</span></div>
+        <div class="modal-row"><span class="k">Pi</span><span class="v pi-amt">π ${r.piAmount?.toFixed?.(4)||r.piAmount}</span></div>
+        <div class="modal-row"><span class="k">Wallet</span><span class="v" style="font-family:monospace;font-size:0.9em;">${_esc(r.piWallet)}</span></div>
+    `;
+    document.getElementById('modal-note-wrap').style.display = c.note ? 'block' : 'none';
+    document.getElementById('modal-note').value = '';
+    const btn = document.getElementById('modal-confirm-btn');
+    btn.className = `modal-btn-confirm ${c.btn}`;
+    btn.textContent = c.btnText;
+    document.getElementById('modal-overlay').classList.add('open');
+}
+
+function closeModal() {
+    document.getElementById('modal-overlay').classList.remove('open');
+    _pendingAction = null;
+}
+
+async function executeAction() {
+    if (!_pendingAction) return;
+    const { action, reqId } = _pendingAction;
+    const note = document.getElementById('modal-note').value.trim();
+    const btn  = document.getElementById('modal-confirm-btn');
+    btn.disabled = true; btn.textContent = 'Memproses...';
+    try {
+        await db.collection('sgt_pi_requests').doc(reqId).update({
+            status:    action,
+            note:      note,
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+            ...(action==='selesai' ? { completedAt: firebase.firestore.FieldValue.serverTimestamp() } : {}),
+            ...(action==='ditolak' ? { rejectedAt:  firebase.firestore.FieldValue.serverTimestamp() } : {}),
+        });
+        closeModal();
+    } catch(e) {
+        alert('Gagal update: '+e.message);
+    } finally {
+        btn.disabled = false;
+    }
+}
+
+// ── Tab Switcher ──────────────────────────────────────────────
+function switchTab(name, btn) {
+    document.getElementById('tab-pi').style.display      = name==='pi'      ? 'block' : 'none';
+    document.getElementById('tab-wallets').style.display = name==='wallets'  ? 'block' : 'none';
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+    if (name==='wallets') loadWallets();
+}
+
+// ── Helpers ───────────────────────────────────────────────────
+function _fmt(n) { return (n||0).toLocaleString('id-ID'); }
+function _esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function _fmtTime(ts) {
+    if (!ts) return '—';
+    const d = ts.toDate ? ts.toDate() : new Date(ts);
+    return d.toLocaleDateString('id-ID',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
+}
+
+// Enter key untuk login
+document.getElementById('adm-pass').addEventListener('keydown', e => { if(e.key==='Enter') adminLogin(); });
+</script>
+</body>
+</html>
