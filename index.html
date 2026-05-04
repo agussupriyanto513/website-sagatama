@@ -81,50 +81,299 @@
             display: flex; align-items: center; justify-content: center;
             border: 2px solid var(--dark); font-family: 'DM Sans', sans-serif;
         }
-        .sgt-panel {
-            background: rgba(7,13,26,0.97); border: 1px solid rgba(212,160,23,0.35);
-            border-radius: 20px; padding: 24px; width: 320px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.6);
-            display: none; animation: sgt-slide-in 0.3s ease;
-            backdrop-filter: blur(20px);
+        /* panel lama — tetap ada untuk backward compat, tapi tersembunyi */
+        .sgt-panel { display: none !important; }
+        .sgt-disclaimer { color: rgba(255,255,255,0.25); font-size: 0.67em; text-align: center; margin-top: 10px; }
+
+        /* ======= SGT WALLET ENHANCED CSS ======= */
+        --pi-color: #7c3aed; --pi-light: #a78bfa;
+        --rp-color: #dc2626; --rp-light: #fca5a5;
+        --pi-gradient: linear-gradient(135deg,#7c3aed,#a78bfa,#7c3aed);
+        --rp-gradient: linear-gradient(135deg,#dc2626,#fca5a5,#dc2626);
+
+        .sgt-wallet-overlay {
+            position: fixed; inset: 0;
+            background: rgba(7,13,26,0.88); backdrop-filter: blur(8px);
+            z-index: 10000; display: none;
+            align-items: center; justify-content: center; padding: 16px;
         }
-        .sgt-panel.open { display: block; }
-        @keyframes sgt-slide-in { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
-        .sgt-panel-title {
-            color: var(--accent); font-family: 'Cinzel', serif; font-size: 0.9em;
-            font-weight: 900; letter-spacing: 1px; margin-bottom: 4px;
+        .sgt-wallet-overlay.open { display: flex; }
+        .sgt-wallet-modal {
+            background: #0d1b2e; border: 1px solid rgba(212,160,23,0.25);
+            border-radius: 24px; width: 100%; max-width: 480px;
+            max-height: 90vh; overflow: hidden;
+            display: flex; flex-direction: column;
+            box-shadow: 0 40px 120px rgba(0,0,0,0.7), 0 0 0 1px rgba(212,160,23,0.1);
+            animation: walletIn 0.35s cubic-bezier(0.34,1.56,0.64,1);
+        }
+        @keyframes walletIn { from{opacity:0;transform:scale(0.92) translateY(20px)} to{opacity:1;transform:scale(1) translateY(0)} }
+        .swm-header {
+            background: linear-gradient(135deg,#0f1e35 0%,#0d1b2e 100%);
+            border-bottom: 1px solid rgba(212,160,23,0.15); padding: 20px 24px 0; flex-shrink: 0;
+        }
+        .swm-header-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+        .swm-brand { display: flex; align-items: center; gap: 10px; }
+        .swm-coin {
+            width: 42px; height: 42px; border-radius: 50%;
+            background: var(--gold-gradient);
+            display: flex; align-items: center; justify-content: center;
+            font-family: 'Cinzel', serif; font-weight: 900; color: var(--dark);
+            font-size: 0.85em; box-shadow: 0 4px 16px rgba(212,160,23,0.4);
+        }
+        .swm-brand-text .t { color: var(--accent); font-family: 'Cinzel', serif; font-weight: 900; font-size: 0.88em; letter-spacing: 1px; }
+        .swm-brand-text .s { color: rgba(255,255,255,0.4); font-size: 0.7em; margin-top: 1px; }
+        .swm-close {
+            width: 32px; height: 32px; border-radius: 50%;
+            background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+            color: rgba(255,255,255,0.5); cursor: pointer; font-size: 0.85em;
+            display: flex; align-items: center; justify-content: center; transition: 0.2s;
+        }
+        .swm-close:hover { background: rgba(239,68,68,0.2); color: #fca5a5; border-color: rgba(239,68,68,0.4); }
+        .swm-balance-card {
+            background: linear-gradient(135deg,rgba(212,160,23,0.12) 0%,rgba(212,160,23,0.04) 100%);
+            border: 1px solid rgba(212,160,23,0.2); border-radius: 16px;
+            padding: 18px 20px; margin-bottom: 16px; position: relative; overflow: hidden;
+        }
+        .swm-balance-card::before {
+            content: 'SGT'; position: absolute; right: -8px; top: 50%; transform: translateY(-50%);
+            font-family: 'Cinzel', serif; font-size: 4em; font-weight: 900;
+            color: rgba(212,160,23,0.06); line-height: 1; pointer-events: none;
+        }
+        .swm-bal-top { display: flex; align-items: flex-start; justify-content: space-between; }
+        .swm-bal-label { color: rgba(255,255,255,0.45); font-size: 0.7em; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 4px; }
+        .swm-bal-amount { font-family: 'Playfair Display', serif; font-size: 2.6em; font-weight: 900; color: var(--accent); line-height: 1; }
+        .swm-bal-unit { color: rgba(212,160,23,0.6); font-size: 0.9em; font-weight: 700; margin-left: 4px; }
+        .swm-konversi-row { display: flex; gap: 8px; margin-top: 12px; }
+        .swm-konv-badge {
+            flex: 1; background: rgba(255,255,255,0.04); border-radius: 10px;
+            padding: 8px 12px; border: 1px solid rgba(255,255,255,0.08); transition: 0.2s; cursor: pointer;
+        }
+        .swm-konv-badge:hover { border-color: rgba(124,58,237,0.4); background: rgba(124,58,237,0.08); }
+        .swm-konv-badge.rp:hover { border-color: rgba(220,38,38,0.4); background: rgba(220,38,38,0.08); }
+        .swm-konv-badge .lbl { color: rgba(255,255,255,0.4); font-size: 0.65em; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 2px; }
+        .swm-konv-badge .val { font-weight: 800; font-size: 0.82em; }
+        .swm-konv-badge.pi .val { color: #a78bfa; }
+        .swm-konv-badge.rp .val { color: #fca5a5; }
+        .swm-user-row { display: flex; align-items: center; gap: 10px; padding-bottom: 16px; }
+        .swm-avatar {
+            width: 36px; height: 36px; border-radius: 50%;
+            background: linear-gradient(135deg,var(--primary),var(--secondary));
+            border: 2px solid rgba(212,160,23,0.3);
+            display: flex; align-items: center; justify-content: center;
+            color: var(--accent); font-weight: 800; font-size: 0.85em; flex-shrink: 0;
+        }
+        .swm-uname { color: var(--white); font-weight: 600; font-size: 0.85em; }
+        .swm-ustats { color: rgba(255,255,255,0.35); font-size: 0.7em; margin-top: 1px; }
+        .swm-signout {
+            margin-left: auto; background: none; border: 1px solid rgba(255,255,255,0.1);
+            color: rgba(255,255,255,0.4); border-radius: 8px; padding: 5px 10px;
+            font-size: 0.7em; cursor: pointer; transition: 0.2s; font-family: 'DM Sans';
+        }
+        .swm-signout:hover { border-color: rgba(239,68,68,0.5); color: #fca5a5; background: rgba(239,68,68,0.08); }
+        .swm-tabs {
+            display: flex; gap: 2px; background: rgba(255,255,255,0.03);
+            border-top: 1px solid rgba(255,255,255,0.06);
+        }
+        .swm-tab {
+            flex: 1; background: none; border: none; color: rgba(255,255,255,0.4);
+            padding: 12px 6px; font-size: 0.68em; font-weight: 600; cursor: pointer;
+            font-family: 'DM Sans'; transition: 0.2s; letter-spacing: 0.3px;
+            display: flex; flex-direction: column; align-items: center; gap: 3px;
+            border-bottom: 2px solid transparent; text-transform: uppercase;
+        }
+        .swm-tab i { font-size: 1.1em; }
+        .swm-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+        .swm-tab:hover:not(.active) { color: rgba(255,255,255,0.7); }
+        .swm-body { flex: 1; overflow-y: auto; padding: 20px 24px; }
+        .swm-body::-webkit-scrollbar { width: 4px; }
+        .swm-body::-webkit-scrollbar-thumb { background: rgba(212,160,23,0.3); border-radius: 2px; }
+        .swm-body::-webkit-scrollbar-track { background: transparent; }
+        .swm-task {
+            display: flex; align-items: center; gap: 12px; padding: 12px 14px;
+            background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 12px; cursor: pointer; transition: 0.2s; margin-bottom: 8px;
+        }
+        .swm-task:hover { background: rgba(212,160,23,0.06); border-color: rgba(212,160,23,0.2); }
+        .swm-task.swm-done { opacity: 0.45; pointer-events: none; }
+        .swm-ticon { width: 36px; height: 36px; border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 1em; flex-shrink: 0; }
+        .swm-tname { font-size: 0.82em; color: var(--white); font-weight: 600; }
+        .swm-tdesc { font-size: 0.7em; color: rgba(255,255,255,0.35); margin-top: 1px; }
+        .swm-tpts { color: var(--accent); font-weight: 800; font-size: 0.8em; white-space: nowrap; flex-shrink: 0; }
+        .tukar-section-title {
+            color: rgba(255,255,255,0.45); font-size: 0.68em; letter-spacing: 2px;
+            text-transform: uppercase; font-weight: 700; margin-bottom: 12px; margin-top: 4px;
             display: flex; align-items: center; gap: 8px;
         }
-        .sgt-panel-sub { color: rgba(255,255,255,0.45); font-size: 0.75em; margin-bottom: 18px; }
-        .sgt-balance {
-            background: linear-gradient(135deg, rgba(212,160,23,0.15), rgba(240,200,66,0.08));
-            border: 1px solid rgba(212,160,23,0.25); border-radius: 14px;
-            padding: 16px 20px; text-align: center; margin-bottom: 18px;
+        .tukar-section-title::after { content: ''; flex: 1; height: 1px; background: rgba(255,255,255,0.06); }
+        .swm-exchange-card {
+            border-radius: 16px; padding: 18px 20px; margin-bottom: 16px;
+            border: 1px solid; position: relative; overflow: hidden;
         }
-        .sgt-balance .amount { font-family: 'Playfair Display', serif; font-size: 2.2em; font-weight: 900; color: var(--accent); line-height: 1; }
-        .sgt-balance .label { color: rgba(255,255,255,0.5); font-size: 0.72em; letter-spacing: 2px; text-transform: uppercase; margin-top: 4px; }
-        .sgt-tasks { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
-        .sgt-task {
-            display: flex; align-items: center; gap: 10px; padding: 10px 12px;
+        .swm-exchange-card.pi-card { background: linear-gradient(135deg,rgba(124,58,237,0.12) 0%,rgba(124,58,237,0.04) 100%); border-color: rgba(124,58,237,0.3); }
+        .swm-exchange-card.rp-card { background: linear-gradient(135deg,rgba(220,38,38,0.1) 0%,rgba(220,38,38,0.04) 100%); border-color: rgba(220,38,38,0.25); }
+        .swm-exc-header { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+        .swm-exc-icon { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.1em; flex-shrink: 0; }
+        .swm-exc-icon.pi { background: linear-gradient(135deg,#7c3aed,#a78bfa,#7c3aed); }
+        .swm-exc-icon.rp { background: linear-gradient(135deg,#dc2626,#fca5a5,#dc2626); }
+        .swm-exc-title { color: var(--white); font-weight: 700; font-size: 0.88em; }
+        .swm-exc-sub { color: rgba(255,255,255,0.4); font-size: 0.7em; margin-top: 1px; }
+        .swm-exc-badge { margin-left: auto; border-radius: 20px; padding: 3px 10px; font-size: 0.65em; font-weight: 800; letter-spacing: 0.5px; }
+        .pi-card .swm-exc-badge { background: rgba(124,58,237,0.2); color: #a78bfa; border: 1px solid rgba(124,58,237,0.3); }
+        .rp-card .swm-exc-badge { background: rgba(220,38,38,0.15); color: #fca5a5; border: 1px solid rgba(220,38,38,0.25); }
+        .swm-kurs-info {
             background: rgba(255,255,255,0.04); border-radius: 10px;
-            border: 1px solid rgba(255,255,255,0.06); transition: 0.2s; cursor: pointer;
+            padding: 10px 14px; margin-bottom: 14px;
+            display: flex; justify-content: space-between; align-items: center;
+            border: 1px solid rgba(255,255,255,0.06);
         }
-        .sgt-task:hover { background: rgba(212,160,23,0.08); border-color: rgba(212,160,23,0.2); }
-        .sgt-task.done { opacity: 0.5; pointer-events: none; }
-        .sgt-task-icon { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 0.9em; flex-shrink: 0; }
-        .sgt-task-text { flex: 1; }
-        .sgt-task-text .t { font-size: 0.8em; color: var(--white); font-weight: 600; }
-        .sgt-task-text .s { font-size: 0.7em; color: rgba(255,255,255,0.4); }
-        .sgt-task-pts { color: var(--accent); font-weight: 800; font-size: 0.82em; white-space: nowrap; }
-        .sgt-cta {
-            background: var(--gold-gradient); color: var(--dark);
-            border: none; width: 100%; padding: 11px; border-radius: 10px;
-            font-weight: 700; font-size: 0.82em; cursor: pointer;
+        .swm-kurs-info .k { color: rgba(255,255,255,0.4); font-size: 0.72em; }
+        .swm-kurs-info .v { font-weight: 800; font-size: 0.82em; }
+        .pi-card .swm-kurs-info .v { color: #a78bfa; }
+        .rp-card .swm-kurs-info .v { color: #fca5a5; }
+        .swm-input-row { display: flex; gap: 8px; align-items: center; margin-bottom: 12px; }
+        .swm-input-group { flex: 1; position: relative; }
+        .swm-input-label { color: rgba(255,255,255,0.35); font-size: 0.65em; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
+        .swm-inp {
+            width: 100%; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 10px; padding: 10px 14px; color: var(--white); font-size: 0.88em;
+            font-family: 'DM Sans'; font-weight: 600; outline: none; transition: 0.2s;
+        }
+        .swm-inp:focus { border-color: rgba(212,160,23,0.4); background: rgba(255,255,255,0.08); }
+        .swm-inp.pi-inp:focus { border-color: rgba(124,58,237,0.5); }
+        .swm-inp.rp-inp:focus { border-color: rgba(220,38,38,0.4); }
+        .swm-inp-suffix { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); color: rgba(255,255,255,0.35); font-size: 0.72em; font-weight: 700; pointer-events: none; }
+        .swm-arrow { color: rgba(255,255,255,0.25); font-size: 1em; flex-shrink: 0; margin-top: 14px; }
+        .swm-preview {
+            border-radius: 10px; padding: 10px 14px;
+            display: flex; align-items: center; justify-content: space-between;
+            margin-bottom: 12px; font-size: 0.78em;
+        }
+        .pi-card .swm-preview { background: rgba(124,58,237,0.1); border: 1px solid rgba(124,58,237,0.2); }
+        .rp-card .swm-preview { background: rgba(220,38,38,0.08); border: 1px solid rgba(220,38,38,0.18); }
+        .swm-preview .kiri { color: rgba(255,255,255,0.45); }
+        .swm-preview .kanan { font-weight: 800; }
+        .pi-card .swm-preview .kanan { color: #a78bfa; }
+        .rp-card .swm-preview .kanan { color: #fca5a5; }
+        .swm-btn-tukar {
+            width: 100%; padding: 11px; border-radius: 10px;
+            border: none; font-weight: 700; font-size: 0.82em; cursor: pointer;
             display: flex; align-items: center; justify-content: center; gap: 8px;
-            transition: 0.2s;
+            transition: all 0.25s; font-family: 'DM Sans';
         }
-        .sgt-cta:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(212,160,23,0.4); }
-        .sgt-disclaimer { color: rgba(255,255,255,0.25); font-size: 0.67em; text-align: center; margin-top: 10px; }
+        .swm-btn-tukar.pi-btn { background: linear-gradient(135deg,#7c3aed,#a78bfa,#7c3aed); color: white; box-shadow: 0 6px 20px rgba(124,58,237,0.35); }
+        .swm-btn-tukar.pi-btn:hover { transform: translateY(-1px); box-shadow: 0 10px 28px rgba(124,58,237,0.5); }
+        .swm-btn-tukar.rp-btn { background: linear-gradient(135deg,#dc2626,#fca5a5,#dc2626); color: white; box-shadow: 0 6px 20px rgba(220,38,38,0.3); }
+        .swm-btn-tukar.rp-btn:hover { transform: translateY(-1px); box-shadow: 0 10px 28px rgba(220,38,38,0.45); }
+        .swm-btn-tukar:disabled { opacity: 0.4; cursor: not-allowed; transform: none !important; }
+        .swm-note {
+            background: rgba(255,255,255,0.03); border-radius: 8px;
+            padding: 8px 12px; margin-top: 8px;
+            display: flex; align-items: flex-start; gap: 7px;
+        }
+        .swm-note i { color: rgba(255,255,255,0.25); font-size: 0.75em; margin-top: 1px; flex-shrink: 0; }
+        .swm-note p { color: rgba(255,255,255,0.3); font-size: 0.68em; line-height: 1.5; }
+        .swm-note a { color: rgba(212,160,23,0.7); text-decoration: none; font-weight: 700; }
+        .swm-note a:hover { color: var(--accent); }
+        .swm-redeem-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .swm-rcard {
+            background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 12px; padding: 14px 12px; cursor: pointer; transition: 0.2s; text-align: center;
+        }
+        .swm-rcard:hover { background: rgba(212,160,23,0.08); border-color: rgba(212,160,23,0.25); }
+        .swm-rcard.swm-locked { opacity: 0.35; cursor: not-allowed; }
+        .swm-remoji { font-size: 1.6em; margin-bottom: 6px; }
+        .swm-rname { color: var(--white); font-weight: 700; font-size: 0.76em; margin-bottom: 3px; }
+        .swm-rcost { color: var(--accent); font-weight: 800; font-size: 0.72em; margin-bottom: 4px; }
+        .swm-rdesc { color: rgba(255,255,255,0.3); font-size: 0.67em; line-height: 1.4; }
+        .swm-hitem {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 10px 12px; background: rgba(255,255,255,0.03);
+            border-radius: 10px; margin-bottom: 6px; border: 1px solid rgba(255,255,255,0.05);
+        }
+        .swm-hleft { display: flex; align-items: center; gap: 10px; }
+        .swm-hicon { width: 30px; height: 30px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 0.85em; flex-shrink: 0; }
+        .swm-hdesc { color: rgba(255,255,255,0.75); font-size: 0.76em; font-weight: 600; }
+        .swm-htime { color: rgba(255,255,255,0.28); font-size: 0.66em; margin-top: 1px; }
+        .swm-hpts { font-weight: 800; font-size: 0.8em; }
+        .swm-hpts.plus { color: var(--success); }
+        .swm-hpts.minus { color: var(--danger); }
+        .swm-hpts.pi-out { color: #a78bfa; }
+        .swm-hpts.rp-out { color: #fca5a5; }
+        .swm-lbitem {
+            display: flex; align-items: center; gap: 10px;
+            padding: 10px 12px; border-radius: 10px;
+            margin-bottom: 6px; background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.05); transition: 0.2s;
+        }
+        .swm-lbitem.swm-me { background: rgba(212,160,23,0.08); border-color: rgba(212,160,23,0.25); }
+        .swm-lbrank { font-weight: 900; font-size: 0.85em; min-width: 30px; text-align: center; }
+        .swm-lbrank.r1 { color: #FFD700; } .swm-lbrank.r2 { color: #C0C0C0; } .swm-lbrank.r3 { color: #CD7F32; }
+        .swm-lbav { width: 30px; height: 30px; border-radius: 50%; background: linear-gradient(135deg,#0f3460,#0a7abf); display: flex; align-items: center; justify-content: center; color: var(--accent); font-weight: 800; font-size: 0.78em; flex-shrink: 0; }
+        .swm-lbname { flex: 1; color: rgba(255,255,255,0.75); font-size: 0.8em; font-weight: 600; }
+        .swm-lbpts { color: var(--accent); font-weight: 800; font-size: 0.78em; }
+        .swm-empty { text-align: center; color: rgba(255,255,255,0.25); font-size: 0.78em; padding: 24px 0; }
+        .swm-auth-title { color: var(--white); font-family: 'Cinzel', serif; font-size: 1em; font-weight: 900; margin-bottom: 4px; }
+        .swm-auth-sub { color: rgba(255,255,255,0.4); font-size: 0.75em; margin-bottom: 20px; line-height: 1.5; }
+        .swm-google-btn {
+            width: 100%; padding: 12px; border-radius: 10px;
+            background: white; border: none; cursor: pointer;
+            font-weight: 700; font-size: 0.84em; font-family: 'DM Sans';
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            margin-bottom: 14px; transition: 0.2s; color: #1a1a1a;
+        }
+        .swm-google-btn:hover { background: #f0f0f0; transform: translateY(-1px); box-shadow: 0 6px 20px rgba(0,0,0,0.2); }
+        .swm-divider { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+        .swm-divider span { color: rgba(255,255,255,0.25); font-size: 0.72em; white-space: nowrap; }
+        .swm-divider::before, .swm-divider::after { content: ''; flex: 1; height: 1px; background: rgba(255,255,255,0.08); }
+        .swm-field { margin-bottom: 10px; }
+        .swm-field label { color: rgba(255,255,255,0.45); font-size: 0.7em; text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 5px; }
+        .swm-field input {
+            width: 100%; padding: 10px 14px;
+            background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 10px; color: var(--white); font-size: 0.85em;
+            font-family: 'DM Sans'; outline: none; transition: 0.2s;
+        }
+        .swm-field input:focus { border-color: rgba(212,160,23,0.4); background: rgba(255,255,255,0.08); }
+        .swm-err { background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3); color: #fca5a5; border-radius: 8px; padding: 8px 12px; font-size: 0.75em; margin-bottom: 10px; display: none; }
+        .swm-auth-btn {
+            width: 100%; padding: 12px; background: var(--gold-gradient);
+            color: var(--dark); border: none; border-radius: 10px;
+            font-weight: 800; font-size: 0.84em; cursor: pointer; font-family: 'DM Sans';
+            transition: 0.2s; margin-top: 4px;
+        }
+        .swm-auth-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(212,160,23,0.4); }
+        .swm-toggle { color: rgba(255,255,255,0.35); font-size: 0.73em; text-align: center; margin-top: 12px; }
+        .swm-toggle a { color: var(--accent); cursor: pointer; font-weight: 700; }
+        .swm-confirm-overlay {
+            position: fixed; inset: 0; background: rgba(7,13,26,0.9); z-index: 10100;
+            display: none; align-items: center; justify-content: center; padding: 20px;
+        }
+        .swm-confirm-overlay.open { display: flex; }
+        .swm-confirm-box {
+            background: #0d1b2e; border: 1px solid rgba(212,160,23,0.25);
+            border-radius: 20px; padding: 28px 24px; width: 100%; max-width: 340px;
+            text-align: center; animation: walletIn 0.3s ease;
+        }
+        .swm-c-emoji { font-size: 2.5em; margin-bottom: 10px; }
+        .swm-c-title { color: var(--white); font-family: 'Cinzel', serif; font-weight: 900; font-size: 0.95em; margin-bottom: 6px; }
+        .swm-c-desc { color: rgba(255,255,255,0.4); font-size: 0.78em; margin-bottom: 16px; line-height: 1.5; }
+        .swm-c-detail {
+            background: rgba(212,160,23,0.07); border: 1px solid rgba(212,160,23,0.18);
+            border-radius: 10px; padding: 12px 16px; margin-bottom: 18px;
+            display: flex; flex-direction: column; gap: 6px;
+        }
+        .swm-c-row { display: flex; justify-content: space-between; font-size: 0.78em; }
+        .swm-c-row .l { color: rgba(255,255,255,0.35); }
+        .swm-c-row .r { color: var(--accent); font-weight: 700; }
+        .swm-c-btns { display: flex; gap: 10px; }
+        .swm-c-cancel { flex: 1; padding: 10px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.6); border-radius: 10px; cursor: pointer; font-size: 0.82em; font-weight: 600; font-family: 'DM Sans'; }
+        .swm-c-ok { flex: 2; padding: 10px; background: var(--gold-gradient); color: var(--dark); border: none; border-radius: 10px; cursor: pointer; font-size: 0.82em; font-weight: 800; font-family: 'DM Sans'; }
+        .swm-c-ok.pi-ok { background: linear-gradient(135deg,#7c3aed,#a78bfa,#7c3aed); color: white; }
+        .swm-c-ok.rp-ok { background: linear-gradient(135deg,#dc2626,#fca5a5,#dc2626); color: white; }
+        .swm-stats-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin-bottom: 14px; }
+        .swm-stat { background: rgba(255,255,255,0.04); border-radius: 10px; padding: 10px 12px; border: 1px solid rgba(255,255,255,0.06); text-align: center; }
+        .swm-stat .n { color: var(--accent); font-family: 'Playfair Display', serif; font-size: 1.2em; font-weight: 900; }
+        .swm-stat .l { color: rgba(255,255,255,0.3); font-size: 0.62em; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 1px; }
 
         /* SGT Banner di Hero */
         .sgt-hero-banner {
@@ -4166,70 +4415,250 @@ window.addEventListener('scroll', () => {
     });
 </script>
 
-<!-- ======= SGT TOKEN FLOATING WIDGET ======= -->
+<!-- ======= SGT FLOATING BUTTON ======= -->
 <div class="sgt-floating" id="sgtFloating">
-    <div class="sgt-panel" id="sgtPanel">
-        <div class="sgt-panel-title"><span>SGT</span> Sagatama Token</div>
-        <div class="sgt-panel-sub">Token loyalitas digital Yayasan Sagatama</div>
-        <div class="sgt-balance">
-            <div class="amount" id="sgtBalance">0</div>
-            <div class="label">SGT Points Anda</div>
-        </div>
-        <div class="sgt-tasks">
-            <div class="sgt-task" id="task-visit" onclick="claimSGT('visit',10,this)">
-                <div class="sgt-task-icon" style="background:rgba(16,185,129,0.15);color:#5eead4;"><i class="fas fa-eye"></i></div>
-                <div class="sgt-task-text">
-                    <div class="t">Kunjungi Portal</div>
-                    <div class="s">Bonus harian untuk setiap kunjungan</div>
-                </div>
-                <div class="sgt-task-pts">+10 SGT</div>
-            </div>
-            <div class="sgt-task" id="task-share" onclick="claimSGT('share',25,this)">
-                <div class="sgt-task-icon" style="background:rgba(212,160,23,0.15);color:var(--accent);"><i class="fab fa-whatsapp"></i></div>
-                <div class="sgt-task-text">
-                    <div class="t">Share ke WhatsApp</div>
-                    <div class="s">Bagikan portal Sagatama</div>
-                </div>
-                <div class="sgt-task-pts">+25 SGT</div>
-            </div>
-            <div class="sgt-task" id="task-mart" onclick="claimSGT('mart',50,this)">
-                <div class="sgt-task-icon" style="background:rgba(13,148,136,0.15);color:#5eead4;"><i class="fas fa-store"></i></div>
-                <div class="sgt-task-text">
-                    <div class="t">Kunjungi Sagatama Mart</div>
-                    <div class="s">Buka toko dan lihat produk</div>
-                </div>
-                <div class="sgt-task-pts">+50 SGT</div>
-            </div>
-            <div class="sgt-task" id="task-psb" onclick="claimSGT('psb',100,this)">
-                <div class="sgt-task-icon" style="background:rgba(124,58,237,0.15);color:#c4b5fd;"><i class="fas fa-user-plus"></i></div>
-                <div class="sgt-task-text">
-                    <div class="t">Isi Form Pendaftaran</div>
-                    <div class="s">Daftar sebagai calon santri</div>
-                </div>
-                <div class="sgt-task-pts">+100 SGT</div>
-            </div>
-            <div class="sgt-task" id="task-donasi" onclick="claimSGT('donasi',200,this)">
-                <div class="sgt-task-icon" style="background:rgba(212,160,23,0.15);color:var(--accent);"><i class="fas fa-hand-holding-heart"></i></div>
-                <div class="sgt-task-text">
-                    <div class="t">Lakukan Donasi</div>
-                    <div class="s">Dukung pembangunan yayasan</div>
-                </div>
-                <div class="sgt-task-pts">+200 SGT</div>
-            </div>
-        </div>
-        <button class="sgt-cta" onclick="claimSGT('share',25,document.getElementById('task-share'))">
-            <i class="fab fa-whatsapp"></i> Share & Dapatkan 25 SGT
-        </button>
-        <div class="sgt-disclaimer">SGT = poin loyalitas digital, dapat ditukar diskon produk & merchandise Sagatama</div>
-        <div style="margin-top:10px;background:rgba(212,160,23,0.07);border-radius:8px;padding:8px 12px;display:flex;align-items:center;justify-content:space-between;">
-            <span style="color:rgba(255,255,255,0.35);font-size:0.68em;"><i class="fas fa-users" style="margin-right:4px;color:rgba(212,160,23,0.5);"></i>Total SGT komunitas:</span>
-            <span style="color:var(--accent);font-weight:800;font-size:0.75em;" class="sgt-community-total">—</span>
-        </div>
-    </div>
-    <button class="sgt-fab" onclick="toggleSGTPanel()" title="Klaim Token SGT">
+    <button class="sgt-fab" onclick="toggleSGTPanel()" title="Buka SGT Wallet">
         SGT
         <span class="sgt-badge-count" id="sgtNotif">5</span>
     </button>
+</div>
+
+<!-- ======= SGT WALLET MODAL ENHANCED ======= -->
+<div class="sgt-wallet-overlay" id="sgt-wallet-overlay" onclick="closeSGTWalletOutside(event)">
+<div class="sgt-wallet-modal" id="swm-modal">
+
+    <!-- HEADER -->
+    <div class="swm-header">
+        <div class="swm-header-top">
+            <div class="swm-brand">
+                <div class="swm-coin">SGT</div>
+                <div class="swm-brand-text">
+                    <div class="t">SGT Wallet</div>
+                    <div class="s">Sagatama Token · Ekosistem Digital</div>
+                </div>
+            </div>
+            <button class="swm-close" onclick="closeSGTWallet()"><i class="fas fa-times"></i></button>
+        </div>
+
+        <!-- Tampil hanya jika sudah login -->
+        <div id="swm-wallet" style="display:none;">
+            <div class="swm-balance-card">
+                <div class="swm-bal-label">Saldo Anda</div>
+                <div class="swm-bal-top">
+                    <div>
+                        <span class="swm-bal-amount" id="swm-bal">0</span>
+                        <span class="swm-bal-unit">SGT</span>
+                    </div>
+                    <div style="text-align:right;">
+                        <div style="color:rgba(255,255,255,0.3);font-size:0.65em;text-transform:uppercase;letter-spacing:1px;margin-bottom:2px;">Nilai setara</div>
+                        <div style="color:#a78bfa;font-weight:800;font-size:0.82em;" id="swm-pi-equiv">— π</div>
+                        <div style="color:#fca5a5;font-weight:800;font-size:0.78em;margin-top:1px;" id="swm-rp-equiv">— Rp</div>
+                    </div>
+                </div>
+                <div class="swm-konversi-row">
+                    <div class="swm-konv-badge pi" onclick="swtTab('tukar',document.querySelectorAll('.swm-tab')[1])">
+                        <div class="lbl">500 SGT =</div>
+                        <div class="val">1 π Pi</div>
+                    </div>
+                    <div class="swm-konv-badge rp" onclick="swtTab('tukar',document.querySelectorAll('.swm-tab')[1])">
+                        <div class="lbl">1 π Pi ≈</div>
+                        <div class="val" id="swm-pi-rp-rate">Rp …</div>
+                    </div>
+                    <div class="swm-konv-badge pi" style="cursor:default;">
+                        <div class="lbl">Status</div>
+                        <div class="val" style="color:#86efac;">Testnet</div>
+                    </div>
+                </div>
+            </div>
+            <div class="swm-user-row">
+                <div class="swm-avatar" id="swm-avatar">U</div>
+                <div>
+                    <div class="swm-uname" id="swm-uname">Pengguna</div>
+                    <div class="swm-ustats">Streak: <span id="swm-streak">0</span> hari · Rank: <span id="swm-rank">—</span></div>
+                </div>
+                <button class="swm-signout" onclick="swtSignOut()"><i class="fas fa-sign-out-alt"></i> Keluar</button>
+            </div>
+        </div>
+
+        <!-- TABS (hanya jika login) -->
+        <div class="swm-tabs" id="swm-tabs" style="display:none;">
+            <button class="swm-tab active" onclick="swtTab('misi',this)">
+                <i class="fas fa-tasks"></i> Misi
+            </button>
+            <button class="swm-tab" onclick="swtTab('tukar',this)">
+                <i class="fas fa-exchange-alt"></i> Tukar
+            </button>
+            <button class="swm-tab" onclick="swtTab('riwayat',this)">
+                <i class="fas fa-history"></i> Riwayat
+            </button>
+            <button class="swm-tab" onclick="swtTab('papan',this)">
+                <i class="fas fa-trophy"></i> Papan
+            </button>
+        </div>
+    </div>
+
+    <!-- BODY -->
+    <div class="swm-body" id="swm-body">
+
+        <!-- AUTH SCREEN -->
+        <div id="swm-auth">
+            <div id="swm-auth-title" class="swm-auth-title">Masuk ke SGT Wallet</div>
+            <div id="swm-auth-sub" class="swm-auth-sub">Login untuk simpan &amp; gunakan poin SGT Anda secara permanen. Kumpulkan SGT dan tukar ke Pi Network atau Rupiah!</div>
+            <button class="swm-google-btn" onclick="swtSignInGoogle()">
+                <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#4285F4" d="M44.5 20H24v8.5h11.8C34.7 33.9 30.1 37 24 37c-7.2 0-13-5.8-13-13s5.8-13 13-13c3.1 0 5.9 1.1 8.1 2.9l6.4-6.4C34.6 4.1 29.6 2 24 2 11.8 2 2 11.8 2 24s9.8 22 22 22c11 0 21-8 21-22 0-1.3-.2-2.7-.5-4z"/></svg>
+                Masuk dengan Google
+            </button>
+            <div class="swm-divider"><span>atau dengan email</span></div>
+            <div style="display:none;" id="swm-name" class="swm-field">
+                <label>Nama Lengkap</label>
+                <input type="text" id="swm-name-inp" placeholder="Nama Anda...">
+            </div>
+            <div class="swm-field">
+                <label>Email</label>
+                <input type="email" id="swm-email" placeholder="email@contoh.com">
+            </div>
+            <div class="swm-field">
+                <label>Password</label>
+                <input type="password" id="swm-pass" placeholder="Min. 6 karakter">
+            </div>
+            <div class="swm-err" id="swm-err"></div>
+            <button class="swm-auth-btn" id="swm-auth-btn" onclick="swtHandleAuth()">
+                <span id="swm-auth-btn-text">Masuk</span>
+            </button>
+            <div class="swm-toggle" id="swm-toggle">Belum punya akun? <a onclick="swtToggleMode()">Daftar</a></div>
+        </div>
+
+        <!-- WALLET CONTENT (hanya jika login) -->
+        <div id="swm-wallet-content" style="display:none;">
+            <div class="swm-stats-row">
+                <div class="swm-stat"><div class="n" id="swm-earned">0</div><div class="l">Earned</div></div>
+                <div class="swm-stat"><div class="n" id="swm-redeemed">0</div><div class="l">Tukar</div></div>
+                <div class="swm-stat"><div class="n" id="swm-pi-earned">0</div><div class="l">π Klaim</div></div>
+            </div>
+
+            <!-- TAB: MISI -->
+            <div id="swm-tab-misi">
+                <div id="swm-tasks"></div>
+            </div>
+
+            <!-- TAB: TUKAR -->
+            <div id="swm-tab-tukar" style="display:none;">
+                <div class="tukar-section-title"><i class="fas fa-coins" style="color:#a78bfa"></i> Tukar ke Pi Network</div>
+                <div class="swm-exchange-card pi-card">
+                    <div class="swm-exc-header">
+                        <div class="swm-exc-icon pi"><span style="font-size:1.2em;color:white;font-weight:900;">π</span></div>
+                        <div>
+                            <div class="swm-exc-title">SGT → Pi Network</div>
+                            <div class="swm-exc-sub">Tukar poin ke koin Pi · Belanja di Sagatama Mart</div>
+                        </div>
+                        <div class="swm-exc-badge">TESTNET</div>
+                    </div>
+                    <div class="swm-kurs-info">
+                        <span class="k">Kurs</span>
+                        <span class="v">500 SGT = 1 π Pi</span>
+                    </div>
+                    <div class="swm-input-row">
+                        <div class="swm-input-group">
+                            <div class="swm-input-label">Jumlah SGT</div>
+                            <input class="swm-inp pi-inp" type="number" id="pi-sgt-in" placeholder="500" min="500" step="500" oninput="hitungPi()" value="500">
+                            <span class="swm-inp-suffix">SGT</span>
+                        </div>
+                        <div class="swm-arrow"><i class="fas fa-arrow-right"></i></div>
+                        <div class="swm-input-group">
+                            <div class="swm-input-label">Dapat Pi</div>
+                            <input class="swm-inp pi-inp" type="number" id="pi-out" placeholder="1" readonly>
+                            <span class="swm-inp-suffix">π</span>
+                        </div>
+                    </div>
+                    <div class="swm-preview pi-card">
+                        <span class="kiri">Saldo setelah tukar</span>
+                        <span class="kanan" id="pi-sisa">— SGT</span>
+                    </div>
+                    <button class="swm-btn-tukar pi-btn" id="pi-tukar-btn" onclick="konfirmasiTukar('pi')">
+                        <i class="fas fa-exchange-alt"></i> Tukar ke Pi Network
+                    </button>
+                    <div class="swm-note">
+                        <i class="fas fa-info-circle"></i>
+                        <p>Pi masih di fase <strong style="color:rgba(212,160,23,0.7)">Testnet (10 π)</strong>. Setelah tukar, Pi dikirim ke dompet Pi Anda. Gunakan untuk belanja di <a href="https://sagatama-mart.vercel.app" target="_blank">Sagatama Mart</a>.</p>
+                    </div>
+                </div>
+
+                <div class="tukar-section-title"><i class="fas fa-money-bill-wave" style="color:#fca5a5"></i> Tukar ke Rupiah</div>
+                <div class="swm-exchange-card rp-card">
+                    <div class="swm-exc-header">
+                        <div class="swm-exc-icon rp"><i class="fas fa-rupiah-sign" style="color:white;font-size:0.9em;"></i></div>
+                        <div>
+                            <div class="swm-exc-title">SGT → Rupiah</div>
+                            <div class="swm-exc-sub">Cairkan ke saldo e-wallet atau transfer bank</div>
+                        </div>
+                        <div class="swm-exc-badge">SEGERA</div>
+                    </div>
+                    <div class="swm-kurs-info">
+                        <span class="k">Kurs saat ini</span>
+                        <span class="v" id="rp-kurs-display">1 π ≈ Rp …</span>
+                    </div>
+                    <div class="swm-input-row">
+                        <div class="swm-input-group">
+                            <div class="swm-input-label">Jumlah SGT</div>
+                            <input class="swm-inp rp-inp" type="number" id="rp-sgt-in" placeholder="1000" min="500" step="500" oninput="hitungRp()" value="1000">
+                            <span class="swm-inp-suffix">SGT</span>
+                        </div>
+                        <div class="swm-arrow"><i class="fas fa-arrow-right"></i></div>
+                        <div class="swm-input-group">
+                            <div class="swm-input-label">Dapat Rp</div>
+                            <input class="swm-inp rp-inp" type="text" id="rp-out" placeholder="Rp …" readonly>
+                        </div>
+                    </div>
+                    <div class="swm-preview rp-card">
+                        <span class="kiri">Saldo setelah tukar</span>
+                        <span class="kanan" id="rp-sisa">— SGT</span>
+                    </div>
+                    <button class="swm-btn-tukar rp-btn" id="rp-tukar-btn" onclick="konfirmasiTukar('rp')">
+                        <i class="fas fa-hand-holding-usd"></i> Ajukan Pencairan Rupiah
+                    </button>
+                    <div class="swm-note">
+                        <i class="fas fa-info-circle"></i>
+                        <p>Pencairan Rp melalui konfirmasi admin via WhatsApp. Nilai 1 π dihitung berdasarkan harga pasar Pi saat pencairan. Min. 500 SGT (= 1 π).</p>
+                    </div>
+                </div>
+
+                <div class="tukar-section-title"><i class="fas fa-gift" style="color:var(--accent)"></i> Hadiah &amp; Diskon</div>
+                <div class="swm-redeem-grid" id="swm-redeem"></div>
+            </div>
+
+            <!-- TAB: RIWAYAT -->
+            <div id="swm-tab-riwayat" style="display:none;">
+                <div id="swm-history"><div class="swm-empty">Belum ada transaksi</div></div>
+            </div>
+
+            <!-- TAB: LEADERBOARD -->
+            <div id="swm-tab-papan" style="display:none;">
+                <div id="swm-lb"><div class="swm-empty">Memuat data…</div></div>
+            </div>
+        </div>
+
+    </div><!-- /swm-body -->
+</div><!-- /modal -->
+</div><!-- /overlay -->
+
+<!-- CONFIRM MODAL -->
+<div class="swm-confirm-overlay" id="swm-confirm" onclick="if(event.target===this)swtCloseConfirm()">
+<div class="swm-confirm-box">
+    <div class="swm-c-emoji" id="swm-c-emoji">🪙</div>
+    <div class="swm-c-title" id="swm-c-title">Konfirmasi Penukaran</div>
+    <div class="swm-c-desc" id="swm-c-desc"></div>
+    <div class="swm-c-detail">
+        <div class="swm-c-row"><span class="l">Biaya SGT</span><span class="r" id="swm-c-cost">—</span></div>
+        <div class="swm-c-row" id="swm-c-row-dest" style="display:none;"><span class="l" id="swm-c-dest-label">Dapat</span><span class="r" id="swm-c-dest-val">—</span></div>
+        <div class="swm-c-row" style="border-top:1px solid rgba(255,255,255,0.06);margin-top:6px;padding-top:6px;">
+            <span class="l">Sisa SGT</span><span class="r" id="swm-c-after">—</span>
+        </div>
+    </div>
+    <div class="swm-c-btns">
+        <button class="swm-c-cancel" onclick="swtCloseConfirm()">Batal</button>
+        <button class="swm-c-ok" id="swm-c-ok" onclick="swtDoConfirm()">Ya, Tukar!</button>
+    </div>
+</div>
 </div>
 
 <!-- ======= SGT WALLET SYSTEM — Firebase Auth Powered ======= -->
