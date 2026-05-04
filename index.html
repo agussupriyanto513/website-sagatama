@@ -14,11 +14,10 @@
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%230f3460'/><text y='.9em' font-size='70' x='50%' text-anchor='middle' fill='%23d4a017' font-family='serif' font-weight='bold'>S</text></svg>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500;600;700&family=Amiri:wght@400;700&family=Cinzel:wght@700;900&display=swap" rel="stylesheet">
-    <!-- Firebase SDK (Auth + Firestore) -->
+    <!-- Firebase SDK (App + Auth + Firestore + Storage) -->
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-	<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
 
     <style>
@@ -1618,7 +1617,7 @@
       // ── Shorthand helpers ────────────────────────────────────
       window.db      = firebase.firestore();
       window.fbAuth  = firebase.auth();
-      window.fbStore = firebase.storage ? firebase.storage() : null;
+      window.fbStore = (typeof firebase.storage === 'function') ? firebase.storage() : null;
 
       // ── Firestore offline persistence ───────────────────────
       window.db.enablePersistence({ synchronizeTabs: true })
@@ -4236,8 +4235,8 @@ let _swtIsRegister = false;
 // ── Tunggu Firebase siap ──────────────────────────────────
 function _swtWhenReady(fn, n) {
     n = n||0;
-    if (window.db && firebase.auth) { fn(); return; }
-    if (n>30) return;
+    if (window.db && typeof firebase.auth === 'function') { fn(); return; }
+    if (n>50) { console.warn('[SGT Wallet] Firebase auth tidak tersedia setelah timeout'); return; }
     setTimeout(()=>_swtWhenReady(fn, n+1), 100);
 }
 
@@ -4307,10 +4306,28 @@ function _swtErrMsg(m) {
 async function swtSignInGoogle() {
     try {
         _swtErrMsg('');
-        const p = new firebase.auth.GoogleAuthProvider();
-        await firebase.auth().signInWithPopup(p);
+        if (typeof firebase.auth !== 'function') {
+            _swtErrMsg('Firebase Auth belum siap. Coba refresh halaman.');
+            return;
+        }
+        if (!firebase.auth.GoogleAuthProvider) {
+            _swtErrMsg('Google Auth tidak tersedia. Pastikan SDK auth sudah dimuat.');
+            return;
+        }
+        const provider = new firebase.auth.GoogleAuthProvider();
+        provider.addScope('email');
+        provider.addScope('profile');
+        await firebase.auth().signInWithPopup(provider);
         closeSGTWallet(); setTimeout(openSGTWallet, 300);
-    } catch(e) { _swtErrMsg(e.message); }
+    } catch(e) {
+        const msgs = {
+            'auth/popup-blocked': 'Popup diblokir browser. Izinkan popup untuk domain ini.',
+            'auth/popup-closed-by-user': 'Login dibatalkan.',
+            'auth/cancelled-popup-request': 'Hanya satu popup yang diizinkan.',
+            'auth/unauthorized-domain': 'Domain ini belum diizinkan di Firebase Console. Tambahkan di Authentication → Authorized domains.',
+        };
+        _swtErrMsg(msgs[e.code] || e.message);
+    }
 }
 
 async function swtHandleAuth() {
@@ -4318,19 +4335,30 @@ async function swtHandleAuth() {
     const pass = document.getElementById('swm-pass').value||'';
     const name = (document.getElementById('swm-name').value||'').trim();
     if (!email||!pass) { _swtErrMsg('Email dan password wajib diisi.'); return; }
+    if (typeof firebase.auth !== 'function') { _swtErrMsg('Firebase Auth belum siap. Coba refresh halaman.'); return; }
     const btn = document.getElementById('swm-auth-btn');
     btn.disabled = true;
     try {
         _swtErrMsg('');
         if (_swtIsRegister) {
-            if (!name) { _swtErrMsg('Nama wajib diisi.'); return; }
+            if (!name) { _swtErrMsg('Nama wajib diisi.'); btn.disabled = false; return; }
             const c = await firebase.auth().createUserWithEmailAndPassword(email, pass);
             await c.user.updateProfile({ displayName: name });
         } else {
             await firebase.auth().signInWithEmailAndPassword(email, pass);
         }
     } catch(e) {
-        const msgs = { 'auth/user-not-found':'Akun tidak ditemukan.', 'auth/wrong-password':'Password salah.', 'auth/email-already-in-use':'Email sudah terdaftar.', 'auth/weak-password':'Password min 6 karakter.', 'auth/invalid-email':'Format email salah.' };
+        const msgs = {
+            'auth/user-not-found':'Akun tidak ditemukan.',
+            'auth/wrong-password':'Password salah.',
+            'auth/invalid-credential':'Email atau password salah.',
+            'auth/email-already-in-use':'Email sudah terdaftar.',
+            'auth/weak-password':'Password min 6 karakter.',
+            'auth/invalid-email':'Format email salah.',
+            'auth/too-many-requests':'Terlalu banyak percobaan. Coba lagi nanti.',
+            'auth/network-request-failed':'Gagal terhubung. Periksa koneksi internet.',
+            'auth/unauthorized-domain':'Domain ini belum diizinkan di Firebase Console.',
+        };
         _swtErrMsg(msgs[e.code]||e.message);
     } finally { btn.disabled = false; }
 }
@@ -4631,11 +4659,16 @@ setInterval(fetchPiPrice, 300000);
 
 // ======= FIREBASE LIVE COUNTERS =======
 (function initFirebaseLive() {
-    // Tunggu Firebase siap (max 3 detik)
+    // Tunggu Firebase siap (max 5 detik)
     function whenReady(fn, tries) {
         tries = tries || 0;
-        if (window.db) { fn(window.db); return; }
-        if (tries > 30) { console.warn('[Firebase Live] db not ready'); return; }
+        if (window.db && typeof firebase !== 'undefined') { fn(window.db); return; }
+        if (tries > 50) {
+            console.warn('[Firebase Live] db tidak siap, tampilkan fallback');
+            // Tampilkan tanda strip jika Firebase tidak tersedia
+            document.querySelectorAll('.live-visitor-count').forEach(el => el.textContent = '—');
+            return;
+        }
         setTimeout(() => whenReady(fn, tries + 1), 100);
     }
 
@@ -4649,13 +4682,16 @@ setInterval(fetchPiPrice, 300000);
                 visitorRef.set(
                     { count: firebase.firestore.FieldValue.increment(1), lastSeen: firebase.firestore.FieldValue.serverTimestamp() },
                     { merge: true }
-                );
+                ).catch(e => console.warn('[Visitor increment]', e.message));
             }
             visitorRef.onSnapshot(snap => {
                 const count = snap.data()?.count || 0;
                 document.querySelectorAll('.live-visitor-count').forEach(el => {
                     el.textContent = count.toLocaleString('id-ID');
                 });
+            }, err => {
+                console.warn('[Visitor onSnapshot]', err.message);
+                document.querySelectorAll('.live-visitor-count').forEach(el => el.textContent = '—');
             });
 
             // --- Donasi Realtime ---
