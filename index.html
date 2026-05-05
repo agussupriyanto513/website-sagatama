@@ -1411,13 +1411,6 @@
             .tab-btn { padding: 8px 14px; font-size: 0.76em; }
         }
 
-            .pilar-3-grid { grid-template-columns: repeat(2, 1fr); }
-            .pilar-grid { grid-template-columns: repeat(2, 1fr); }
-            .footer-inner { grid-template-columns: 1fr 1fr; }
-            .footer-brand { grid-column: 1 / -1; }
-            .portal-stat-grid { grid-template-columns: repeat(2, 1fr); }
-            .akademik-grid { grid-template-columns: repeat(2, 1fr); }
-        }
         @media (max-width: 900px) {
             .grid-3, .grid-4 { grid-template-columns: repeat(2, 1fr); }
             .identity-card { flex-direction: column; text-align: center; padding: 40px 30px; }
@@ -1589,6 +1582,339 @@
         .swm-spinner { width: 20px; height: 20px; border: 2px solid rgba(212,160,23,0.2); border-top-color: #d4a017; border-radius: 50%; animation: spin 0.8s linear infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
         .swm-empty { text-align: center; padding: 24px; color: rgba(255,255,255,0.28); font-size: 0.78em; }
+
+        /* =====================================================
+           ✅ MOBILE RESPONSIVE FIX — Sagatama Portal
+           Diperbaiki: Layout, Font, Spacing, Komponen Mobile
+           ===================================================== */
+
+        /* ── Base mobile fixes ── */
+        @media (max-width: 480px) {
+            html { font-size: 15px; }
+            body { overflow-x: hidden; }
+            .container { padding: 0 16px !important; }
+        }
+
+        /* ── NAVBAR Mobile ── */
+        @media (max-width: 768px) {
+            nav { height: 64px; }
+            .nav-container { padding: 0 14px; gap: 8px; }
+            .logo-icon { width: 38px; height: 38px; font-size: 0.85em; }
+            .logo-text .name { font-size: 0.75em; }
+            .logo-text .tagline { display: none; }
+            /* Sembunyikan live visitor di navbar mobile agar tidak sesak */
+            .nav-container > div[title="Pengunjung aktif"] { display: none !important; }
+            /* Tombol SGT di nav: tampilkan hanya ikon */
+            .nav-sgt-btn .nav-sgt-bal { display: none; }
+            .nav-sgt-btn { padding: 6px 10px; }
+            .mobile-menu { top: 64px; }
+        }
+
+        /* ── MARQUEE BAR ── */
+        @media (max-width: 768px) {
+            .marquee-bar { font-size: 0.75em; }
+        }
+
+        /* ── HERO ── */
+        @media (max-width: 768px) {
+            .hero { padding: 110px 16px 40px; min-height: auto; }
+            .hero-content { padding: 0; max-width: 100%; }
+            .hero-eyebrow { font-size: 0.7em; padding: 6px 14px; }
+            .hero-title { font-size: clamp(1.8em, 7vw, 2.6em) !important; line-height: 1.2; }
+            .hero-subtitle { font-size: 0.88em; margin: 14px 0; }
+            .hero-cta { flex-direction: column; gap: 10px; align-items: stretch; }
+            .hero-cta a, .hero-cta button { width: 100%; text-align: center; justify-content: center; }
+            .btn-primary, .btn-outline { padding: 13px 18px; font-size: 0.88em; }
+            /* SGT hero banner & Mart link: kolom di mobile */
+            div[style*="display:flex;justify-content:center;flex-wrap:wrap"] {
+                flex-direction: column; align-items: stretch !important;
+            }
+            .sgt-hero-banner { justify-content: center; }
+            .hero-stats { flex-direction: row; flex-wrap: wrap; gap: 0; border-top: 1px solid rgba(255,255,255,0.1); margin-top: 30px; }
+            .stat-item { width: 50%; min-width: unset; border-right: 1px solid rgba(255,255,255,0.1); border-bottom: 1px solid rgba(255,255,255,0.08); padding: 16px 10px; }
+            .stat-item:nth-child(even) { border-right: none; }
+            .stat-num { font-size: 1.8em; }
+            .stat-label { font-size: 0.68em; }
+        }
+
+        /* ── SECTION GENERAL ── */
+        @media (max-width: 768px) {
+            .section { padding: 40px 0; }
+            .section-title { font-size: clamp(1.3em, 4.5vw, 1.8em) !important; }
+            .section-header-row { margin-bottom: 24px; }
+        }
+
+        /* ── 3 PILAR CARDS ── */
+        @media (max-width: 768px) {
+            .pilar-3-grid { grid-template-columns: 1fr !important; gap: 16px; }
+            .pilar-3-card { padding: 28px 20px; }
+        }
+
+        /* ── IDENTITY CARD 513 ── */
+        @media (max-width: 768px) {
+            .identity-card { padding: 30px 20px; gap: 24px; margin-top: -30px; }
+            .identity-num { font-size: 4em; }
+            .identity-text h2 { font-size: 1.2em; }
+            .identity-text p { font-size: 0.88em; }
+        }
+
+        /* ── PENGANTAR BOX ── */
+        @media (max-width: 768px) {
+            .pengantar-box { flex-direction: column; padding: 28px 20px; gap: 24px; text-align: center; }
+            .pengantar-img { width: 140px; height: 140px; margin: 0 auto; }
+            .pengantar-text h3 { font-size: 1.15em; }
+            .pengantar-text p { font-size: 0.88em; }
+        }
+
+        /* ── WASIAT WRAP ── */
+        @media (max-width: 768px) {
+            .wasiat-wrap { padding: 24px 18px; }
+            .wasiat-highlight p { font-size: 1em; }
+            .khutbah-list { grid-template-columns: 1fr; gap: 12px; }
+        }
+
+        /* ── GRID CARDS ── */
+        @media (max-width: 768px) {
+            .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; gap: 14px; }
+            .grid-auto { grid-template-columns: 1fr; gap: 14px; }
+            .card { padding: 24px 18px; }
+        }
+
+        /* ── PILAR 4 GRID (Visi Misi) ── */
+        @media (max-width: 768px) {
+            .pilar-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 12px; }
+            .pilar-card { padding: 20px 14px; }
+            .pilar-card i { font-size: 1.7em; margin-bottom: 10px; }
+            .pilar-card h3 { font-size: 0.88em; }
+            .pilar-card p { font-size: 0.76em; }
+        }
+        @media (max-width: 380px) {
+            .pilar-grid { grid-template-columns: 1fr !important; }
+        }
+
+        /* ── NEWS GRID ── */
+        @media (max-width: 768px) {
+            .news-grid { grid-template-columns: 1fr; gap: 16px; }
+            .news-img-wrap { height: 180px; }
+            .news-body { padding: 20px 16px; }
+        }
+
+        /* ── DONASI GRID ── */
+        @media (max-width: 768px) {
+            .donasi-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+            .donasi-card { padding: 18px 12px; }
+            .donasi-no { font-size: 1.1em; letter-spacing: 1px; }
+        }
+        @media (max-width: 380px) {
+            .donasi-grid { grid-template-columns: 1fr; }
+        }
+
+        /* ── TESTI GRID ── */
+        @media (max-width: 768px) {
+            .testi-grid { grid-template-columns: 1fr; gap: 14px; }
+            .testi-card { padding: 20px 18px; }
+        }
+
+        /* ── FORM PSB ── */
+        @media (max-width: 768px) {
+            .form-card { padding: 24px 18px; border-radius: 18px; }
+            .btn-submit { font-size: 0.9em; padding: 14px; }
+        }
+
+        /* ── CONTACT GRID ── */
+        @media (max-width: 768px) {
+            .contact-grid { grid-template-columns: 1fr; gap: 20px; }
+            .contact-info-card { padding: 24px 18px; }
+        }
+
+        /* ── GALERI GRID ── */
+        @media (max-width: 768px) {
+            .galeri-grid { grid-template-columns: 1fr !important; }
+            .galeri-item:first-child { grid-column: auto !important; grid-row: auto !important; }
+            .galeri-item:first-child img { min-height: 220px; }
+        }
+
+        /* ── ZAKAT CARD ── */
+        @media (max-width: 768px) {
+            .zakat-card { padding: 28px 18px; }
+            .zakat-form { grid-template-columns: 1fr; }
+            .zakat-result .amount { font-size: 1.8em; }
+        }
+
+        /* ── COUNTDOWN BAR ── */
+        @media (max-width: 768px) {
+            .countdown-bar { padding: 20px 18px; flex-direction: column; }
+            .countdown-timer { flex-wrap: wrap; gap: 10px; }
+            .countdown-unit { padding: 12px 16px; min-width: 60px; }
+            .countdown-unit .num { font-size: 1.6em; }
+        }
+
+        /* ── NEWSLETTER ── */
+        @media (max-width: 768px) {
+            .newsletter-strip { padding: 36px 0; }
+            .newsletter-inner { padding: 0 18px; }
+            .newsletter-inner h3 { font-size: 1.4em; }
+            .newsletter-form { flex-direction: column; gap: 10px; }
+            .newsletter-input, .btn-newsletter { width: 100%; }
+        }
+
+        /* ── CRYPTO BOX ── */
+        @media (max-width: 768px) {
+            .crypto-box { padding: 20px 14px; }
+            .crypto-live-ticker { gap: 10px; }
+            .crypto-item { min-width: 140px; padding: 14px 16px; }
+            .crypto-item .price { font-size: 1.2em; }
+            .pi-card { padding: 28px 18px; }
+        }
+
+        /* ── MARKET PAGE ── */
+        @media (max-width: 768px) {
+            .market-hero { padding: 100px 16px 50px; }
+            .market-grid { grid-template-columns: repeat(2, 1fr); gap: 14px; margin-top: 30px; }
+            .product-img { height: 150px; }
+            .product-info { padding: 16px; }
+            .product-title { font-size: 0.88em; }
+            .product-desc { font-size: 0.76em; }
+            .product-price { font-size: 1.1em; }
+            .btn-buy { font-size: 0.8em; padding: 11px; }
+        }
+        @media (max-width: 380px) {
+            .market-grid { grid-template-columns: 1fr; }
+        }
+
+        /* ── BEASISWA PAGE ── */
+        @media (max-width: 768px) {
+            .beasiswa-hero { padding: 100px 16px 50px; }
+            .beasiswa-card { padding: 24px 18px; }
+        }
+
+        /* ── FOOTER ── */
+        @media (max-width: 768px) {
+            .footer-inner { grid-template-columns: 1fr; gap: 24px; }
+            footer { padding: 40px 0 20px; }
+            .footer-bottom { flex-direction: column; text-align: center; gap: 12px; padding-top: 16px; }
+        }
+
+        /* ── SGT FLOATING BUTTON ── */
+        @media (max-width: 768px) {
+            .sgt-floating { bottom: 16px; right: 16px; }
+            .sgt-fab { width: 50px; height: 50px; font-size: 0.95em; }
+            .sgt-panel { width: calc(100vw - 32px); max-width: 320px; right: 0; }
+        }
+
+        /* ── BACK TO TOP ── */
+        @media (max-width: 768px) {
+            #back-to-top { bottom: 80px; right: 16px; width: 40px; height: 40px; font-size: 0.9em; }
+        }
+
+        /* ── SCROLL PROGRESS ── */
+        #scroll-progress { top: 0; }
+
+        /* ── PORTAL STAT GRID ── */
+        @media (max-width: 768px) {
+            .portal-stat-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 12px; }
+        }
+
+        /* ── ORG CHART ── */
+        @media (max-width: 768px) {
+            .org-branch { gap: 12px; }
+            .org-node { font-size: 0.78em; padding: 12px 18px; }
+        }
+
+        /* ── LEGAL GRID ── */
+        @media (max-width: 768px) {
+            .legal-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+            .legal-card { padding: 20px 14px; }
+        }
+
+        /* ── TABLE responsive ── */
+        @media (max-width: 768px) {
+            .table-wrap { border-radius: 12px; }
+            .table-responsive { -webkit-overflow-scrolling: touch; }
+            thead th { font-size: 0.72em; padding: 12px 14px; }
+            tbody td { font-size: 0.82em; padding: 10px 14px; }
+        }
+
+        /* ── SGT MART STRIP ── */
+        @media (max-width: 768px) {
+            .sgt-mart-strip { padding: 16px; flex-wrap: wrap; gap: 12px; }
+            .sgt-earn-badges { gap: 6px; }
+            .sgt-earn-badge { font-size: 0.68em; }
+        }
+
+        /* ── BEASISWA GRID ── */
+        @media (max-width: 768px) {
+            .akademik-grid { grid-template-columns: 1fr !important; gap: 14px; }
+        }
+
+        /* ── QUICK ACCESS MENU (sembunyikan di mobile karena mengganggu) ── */
+        @media (max-width: 768px) {
+            #quick-menu { display: none !important; }
+        }
+
+        /* ── PREVENT OVERFLOW dari elemen fixed ── */
+        @media (max-width: 768px) {
+            #toast { white-space: normal; width: calc(100vw - 32px); text-align: center; }
+        }
+
+        /* ── WALLET MODAL ── */
+        @media (max-width: 480px) {
+            .sgt-wallet-modal { border-radius: 18px; }
+            .swm-body { padding: 16px 16px 20px; }
+            .swm-header { padding: 16px 18px 14px; }
+        }
+
+        /* ── SECTION DARK padding ── */
+        @media (max-width: 768px) {
+            .section-dark { padding: 50px 0; }
+            .firebase-section { padding: 50px 0; }
+        }
+
+        /* ── MARKER BAR / PILAR 3 connected line ── */
+        @media (max-width: 768px) {
+            .firebase-connect-line,
+            .firebase-connect-line-2,
+            .firebase-center-badge { display: none !important; }
+        }
+
+        /* ── SEARCH bar jika ada ── */
+        @media (max-width: 768px) {
+            .search-trigger { font-size: 0.8em; padding: 7px 12px; }
+        }
+
+        /* ── TAB NAVIGATION ── */
+        @media (max-width: 480px) {
+            .tab-nav { overflow-x: auto; flex-wrap: nowrap; padding-bottom: 4px; }
+            .tab-btn { white-space: nowrap; padding: 8px 14px; font-size: 0.75em; }
+        }
+
+        /* ── MITRA WRAP ── */
+        @media (max-width: 768px) {
+            .mitra-wrap { padding: 20px 16px; gap: 12px; }
+            .mitra-item { padding: 12px 18px; font-size: 0.82em; }
+        }
+
+        /* ── TIMELINE ── */
+        @media (max-width: 480px) {
+            .timeline { padding-left: 28px; }
+            .timeline-dot { left: -23px; width: 16px; height: 16px; }
+            .timeline-title { font-size: 0.9em; }
+            .timeline-desc { font-size: 0.82em; }
+        }
+
+        /* ── HERO TITLE CLAMP global ── */
+        .hero-title { font-size: clamp(2em, 5.5vw, 4em); }
+
+        /* ── Section labels & headers ── */
+        @media (max-width: 480px) {
+            .section-label { font-size: 0.65em; }
+            .section-title { font-size: clamp(1.25em, 5vw, 1.8em) !important; }
+        }
+
+        /* ── Announcement bar ── */
+        @media (max-width: 768px) {
+            .announcement-bar { font-size: 0.72em; padding: 8px 40px 8px 16px; text-align: left; }
+        }
     </style>
     <script>
     // ============================================================
