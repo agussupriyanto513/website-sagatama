@@ -247,45 +247,115 @@
         .logo-text .tagline { color: var(--accent); font-size: 0.6em; letter-spacing: 2px; text-transform: uppercase; font-weight: 500; }
 
         /* HAMBURGER */
-        .hamburger { display: none; flex-direction: column; gap: 5px; background: none; border: none; padding: 8px; cursor: pointer; }
+        .hamburger { display: none; flex-direction: column; gap: 5px; background: none; border: none; padding: 8px; cursor: pointer; z-index: 1100; }
         .hamburger span { display: block; width: 24px; height: 2px; background: var(--white); border-radius: 2px; transition: 0.3s; }
         .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
         .hamburger.open span:nth-child(2) { opacity: 0; }
         .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
-        /* MOBILE MENU */
-        .mobile-menu {
+        /* ── DRAWER OVERLAY ── */
+        .drawer-overlay {
             display: none;
-            position: fixed;
-            top: 80px; left: 0; width: 100%;
-            background: rgba(7,13,26,0.98);
-            backdrop-filter: blur(20px);
-            z-index: 999;
-            padding: 20px;
-            border-bottom: 2px solid var(--accent);
-            max-height: calc(100vh - 80px);
-            overflow-y: auto;
+            position: fixed; inset: 0;
+            background: rgba(7,13,26,0.7);
+            backdrop-filter: blur(4px);
+            z-index: 1098;
+            transition: opacity 0.3s;
         }
-        .mobile-menu.open { display: block; }
-        .mobile-menu-item { border-bottom: 1px solid rgba(255,255,255,0.07); }
+        .drawer-overlay.open { display: block; }
+
+        /* ── MOBILE DRAWER (slide from right) ── */
+        .mobile-menu {
+            position: fixed;
+            top: 0; right: -320px;
+            width: 300px; height: 100%;
+            background: #070d1a;
+            z-index: 1099;
+            padding: 0;
+            border-left: 1px solid rgba(212,160,23,0.2);
+            overflow-y: auto;
+            transition: right 0.35s cubic-bezier(0.4,0,0.2,1);
+            box-shadow: -10px 0 40px rgba(0,0,0,0.5);
+        }
+        .mobile-menu.open { right: 0; }
+
+        /* Drawer header */
+        .drawer-header {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 18px 20px;
+            border-bottom: 1px solid rgba(212,160,23,0.2);
+            background: rgba(15,52,96,0.3);
+        }
+        .drawer-logo {
+            font-family: 'Cinzel', serif; font-weight: 900;
+            color: var(--accent); font-size: 0.9em; letter-spacing: 2px;
+        }
+        .drawer-close {
+            background: rgba(255,255,255,0.07); border: none; color: rgba(255,255,255,0.6);
+            width: 32px; height: 32px; border-radius: 8px; cursor: pointer;
+            font-size: 0.9em; display: flex; align-items: center; justify-content: center;
+            transition: 0.2s;
+        }
+        .drawer-close:hover { background: rgba(212,160,23,0.2); color: var(--accent); }
+
+        /* Drawer menu items */
+        .mobile-menu-item { border-bottom: 1px solid rgba(255,255,255,0.05); }
         .mobile-menu-toggle {
             width: 100%; background: none; border: none;
-            color: var(--white); padding: 14px 10px;
-            text-align: left; font-size: 0.9em; font-weight: 600;
+            color: var(--white); padding: 15px 20px;
+            text-align: left; font-size: 0.88em; font-weight: 600;
             font-family: 'DM Sans', sans-serif;
             display: flex; justify-content: space-between; align-items: center;
-            letter-spacing: 0.5px; text-transform: uppercase;
+            letter-spacing: 0.3px; transition: background 0.2s;
         }
-        .mobile-menu-toggle i { color: var(--accent); }
-        .mobile-submenu { display: none; padding: 5px 0 10px 15px; }
+        .mobile-menu-toggle:hover { background: rgba(212,160,23,0.06); }
+        .mobile-menu-toggle i.fa-chevron-down { color: var(--accent); font-size: 0.8em; transition: transform 0.3s; }
+        .mobile-menu-toggle.active i.fa-chevron-down { transform: rotate(180deg); }
+        .mobile-submenu { display: none; background: rgba(255,255,255,0.02); }
         .mobile-submenu.open { display: block; }
         .mobile-submenu a {
-            display: block; color: rgba(255,255,255,0.7); text-decoration: none;
-            padding: 9px 12px; font-size: 0.85em;
-            border-left: 2px solid rgba(212,160,23,0.3);
-            margin-bottom: 3px; border-radius: 0 6px 6px 0; transition: 0.2s;
+            display: flex; align-items: center; gap: 10px;
+            color: rgba(255,255,255,0.65); text-decoration: none;
+            padding: 11px 20px 11px 30px; font-size: 0.83em;
+            border-left: 2px solid transparent;
+            transition: 0.2s;
         }
         .mobile-submenu a:hover { color: var(--accent); border-left-color: var(--accent); background: rgba(212,160,23,0.05); }
+
+        /* ── BOTTOM NAVIGATION BAR (mobile) ── */
+        .bottom-nav {
+            display: none;
+            position: fixed; bottom: 0; left: 0; right: 0;
+            height: 64px;
+            background: rgba(7,13,26,0.97);
+            border-top: 1px solid rgba(212,160,23,0.2);
+            backdrop-filter: blur(20px);
+            z-index: 1097;
+            padding: 0 4px;
+            padding-bottom: env(safe-area-inset-bottom, 0px);
+        }
+        .bottom-nav-inner {
+            display: flex; height: 100%;
+            align-items: center; justify-content: space-around;
+        }
+        .bnav-item {
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            gap: 3px; flex: 1; height: 100%;
+            background: none; border: none; cursor: pointer;
+            color: rgba(255,255,255,0.4); font-family: 'DM Sans', sans-serif;
+            text-decoration: none; transition: color 0.2s;
+            padding: 8px 4px;
+        }
+        .bnav-item i { font-size: 1.1em; }
+        .bnav-item span { font-size: 0.62em; font-weight: 600; letter-spacing: 0.3px; white-space: nowrap; }
+        .bnav-item:hover, .bnav-item.active { color: var(--accent); }
+        .bnav-item.sgt-btn {
+            color: var(--accent);
+            background: rgba(212,160,23,0.1);
+            border-radius: 14px;
+            margin: 8px 2px;
+        }
+        .bnav-item.bnav-menu { color: var(--white); }
 
         /* DROPDOWN */
         .dropdown { position: relative; }
@@ -1432,7 +1502,10 @@
         }
         @media (max-width: 768px) {
             .nav-desktop { display: none; }
-            .hamburger { display: flex; }
+            .hamburger { display: none; }  /* bottom nav handles menu */
+            .bottom-nav { display: block; }
+            /* Push page content up from bottom nav */
+            body { padding-bottom: 64px; }
             .hero { padding-top: 130px; }
             .hero-stats { flex-wrap: wrap; }
             .stat-item { min-width: 45%; border-right: none; border-bottom: 1px solid rgba(255,255,255,0.08); }
@@ -1620,9 +1693,9 @@
             /* Sembunyikan live visitor di navbar mobile agar tidak sesak */
             .nav-container > div[title="Pengunjung aktif"] { display: none !important; }
             /* Tombol SGT di nav: tampilkan hanya ikon */
-            .nav-sgt-btn .nav-sgt-bal { display: none; }
-            .nav-sgt-btn { padding: 6px 10px; }
-            .mobile-menu { top: 64px; }
+            .nav-sgt-btn { display: none; }
+            /* Live visitor badge hidden on mobile (shown in bottom nav area) */
+            /* Navbar clean: only logo on mobile */
         }
 
         /* ── MARQUEE BAR ── */
@@ -2449,81 +2522,133 @@
     </div>
 </nav>
 
-<!-- Mobile Menu -->
+<!-- DRAWER OVERLAY -->
+<div class="drawer-overlay" id="drawerOverlay" onclick="closeMobileMenu()"></div>
+
+<!-- MOBILE DRAWER MENU (slide from right) -->
 <div class="mobile-menu" id="mobileMenu">
+    <div class="drawer-header">
+        <div class="drawer-logo">SAGATAMA</div>
+        <button class="drawer-close" onclick="closeMobileMenu()"><i class="fas fa-times"></i></button>
+    </div>
+
+    <!-- SGT Wallet quick access -->
+    <div style="padding:14px 20px;border-bottom:1px solid rgba(212,160,23,0.15);">
+        <button onclick="closeMobileMenu(); openSGTWallet();" style="width:100%;display:flex;align-items:center;gap:12px;background:rgba(212,160,23,0.1);border:1px solid rgba(212,160,23,0.25);border-radius:12px;padding:12px 16px;cursor:pointer;transition:0.2s;">
+            <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#d4a017,#f0c842);display:flex;align-items:center;justify-content:center;font-family:'Cinzel',serif;font-weight:900;color:#070d1a;font-size:0.78em;flex-shrink:0;">SGT</div>
+            <div style="text-align:left;">
+                <div style="color:var(--accent);font-weight:700;font-size:0.82em;">SGT Wallet</div>
+                <div style="color:rgba(255,255,255,0.4);font-size:0.72em;">Klaim & gunakan poin SGT</div>
+            </div>
+            <i class="fas fa-chevron-right" style="color:var(--accent);margin-left:auto;font-size:0.8em;"></i>
+        </button>
+    </div>
+
     <div class="mobile-menu-item">
-        <button class="mobile-menu-toggle" onclick="toggleMobileSub('sub-pilar')">
+        <button class="mobile-menu-toggle" onclick="toggleMobileSub('sub-pilar', this)">
             <span><i class="fas fa-layer-group" style="margin-right:10px; color: var(--accent);"></i> 3 Pilar Firebase</span>
             <i class="fas fa-chevron-down"></i>
         </button>
         <div class="mobile-submenu" id="sub-pilar">
-            <a onclick="pindahHalaman('home'); closeMobileMenu()">⬡ Portal Sagatama (Pilar 1) — Anda di sini</a>
-            <a href="https://hidayatulamin.vercel.app" target="_blank" onclick="closeMobileMenu()">⬡ Portal Hidayatulamin (Pilar 2) <i class="fas fa-external-link-alt" style="font-size:0.8em;opacity:0.6;"></i></a>
-            <a href="https://dashboard-sagatama.vercel.app" target="_blank" onclick="closeMobileMenu()">⬡ Yayasan Hidayatulamin Sagatama (Pilar 3) <i class="fas fa-external-link-alt" style="font-size:0.8em;opacity:0.6;"></i></a>
+            <a onclick="pindahHalaman('home'); closeMobileMenu();"><i class="fas fa-globe" style="color:var(--accent);width:16px;"></i> Portal Sagatama (Pilar 1)</a>
+            <a href="https://hidayatulamin.vercel.app" target="_blank" onclick="closeMobileMenu()"><i class="fas fa-graduation-cap" style="color:#5eead4;width:16px;"></i> Portal Hidayatulamin (Pilar 2)</a>
+            <a href="https://dashboard-sagatama.vercel.app" target="_blank" onclick="closeMobileMenu()"><i class="fas fa-university" style="color:#c4b5fd;width:16px;"></i> Yayasan (Pilar 3)</a>
         </div>
     </div>
     <div class="mobile-menu-item">
-        <button class="mobile-menu-toggle" onclick="toggleMobileSub('sub-yayasan')">
-            <span><i class="fas fa-university" style="margin-right:10px;"></i> Yayasan</span>
+        <button class="mobile-menu-toggle" onclick="toggleMobileSub('sub-yayasan', this)">
+            <span><i class="fas fa-university" style="margin-right:10px;color:rgba(255,255,255,0.6);"></i> Yayasan</span>
             <i class="fas fa-chevron-down"></i>
         </button>
         <div class="mobile-submenu" id="sub-yayasan">
-            <a href="#pengantar" onclick="pindahHalaman('home'); closeMobileMenu()">Kata Pengantar</a>
-            <a href="#visi-misi" onclick="pindahHalaman('home'); closeMobileMenu()">Visi, Misi & 4 Pilar</a>
-            <a href="#metode" onclick="pindahHalaman('home'); closeMobileMenu()">Metode Unggulan</a>
-            <a href="#struktur" onclick="pindahHalaman('home'); closeMobileMenu()">Struktur Organisasi</a>
-            <a href="#legalitas" onclick="pindahHalaman('home'); closeMobileMenu()">Legalitas & Dokumen</a>
+            <a href="#pengantar" onclick="pindahHalaman('home'); closeMobileMenu()"><i class="fas fa-quote-left" style="width:16px;opacity:0.6;"></i> Kata Pengantar</a>
+            <a href="#visi-misi" onclick="pindahHalaman('home'); closeMobileMenu()"><i class="fas fa-star" style="width:16px;opacity:0.6;"></i> Visi, Misi & 4 Pilar</a>
+            <a href="#metode" onclick="pindahHalaman('home'); closeMobileMenu()"><i class="fas fa-lightbulb" style="width:16px;opacity:0.6;"></i> Metode Unggulan</a>
+            <a href="#struktur" onclick="pindahHalaman('home'); closeMobileMenu()"><i class="fas fa-sitemap" style="width:16px;opacity:0.6;"></i> Struktur Organisasi</a>
+            <a href="#legalitas" onclick="pindahHalaman('home'); closeMobileMenu()"><i class="fas fa-file-shield" style="width:16px;opacity:0.6;"></i> Legalitas & Dokumen</a>
+            <a href="#galeri" onclick="pindahHalaman('home'); closeMobileMenu()"><i class="fas fa-images" style="width:16px;opacity:0.6;"></i> Galeri Foto</a>
         </div>
     </div>
     <div class="mobile-menu-item">
-        <button class="mobile-menu-toggle" onclick="toggleMobileSub('sub-santri')">
-            <span><i class="fas fa-users-viewfinder" style="margin-right:10px;"></i> Kesantrian</span>
+        <button class="mobile-menu-toggle" onclick="toggleMobileSub('sub-santri', this)">
+            <span><i class="fas fa-users-viewfinder" style="margin-right:10px;color:rgba(255,255,255,0.6);"></i> Kesantrian</span>
             <i class="fas fa-chevron-down"></i>
         </button>
         <div class="mobile-submenu" id="sub-santri">
-            <a href="#psb" onclick="pindahHalaman('home'); closeMobileMenu()">Pendaftaran (PSB)</a>
-            <a href="#prestasi" onclick="pindahHalaman('home'); closeMobileMenu()">Santri Berprestasi</a>
-            <a href="#wasiat" onclick="pindahHalaman('home'); closeMobileMenu()">Wasiat & Naskah Jumat</a>
-            <a href="#jadwal" onclick="pindahHalaman('home'); closeMobileMenu()">Jadwal & Rutinitas</a>
-            <a href="https://hidayatulamin.vercel.app" target="_blank" onclick="closeMobileMenu()">Portal Akademik Santri <i class="fas fa-external-link-alt" style="font-size:0.8em;opacity:0.6;"></i></a>
+            <a href="#psb" onclick="pindahHalaman('home'); closeMobileMenu()"><i class="fas fa-user-plus" style="width:16px;opacity:0.6;"></i> Pendaftaran (PSB)</a>
+            <a href="#prestasi" onclick="pindahHalaman('home'); closeMobileMenu()"><i class="fas fa-trophy" style="width:16px;opacity:0.6;"></i> Santri Berprestasi</a>
+            <a href="#wasiat" onclick="pindahHalaman('home'); closeMobileMenu()"><i class="fas fa-book-open" style="width:16px;opacity:0.6;"></i> Wasiat & Naskah Jumat</a>
+            <a href="#jadwal" onclick="pindahHalaman('home'); closeMobileMenu()"><i class="fas fa-calendar-days" style="width:16px;opacity:0.6;"></i> Jadwal & Rutinitas</a>
+            <a href="https://hidayatulamin.vercel.app" target="_blank" onclick="closeMobileMenu()"><i class="fas fa-graduation-cap" style="width:16px;opacity:0.6;"></i> Portal Akademik Santri</a>
         </div>
     </div>
     <div class="mobile-menu-item">
-        <button class="mobile-menu-toggle" onclick="toggleMobileSub('sub-warta')">
-            <span><i class="fas fa-newspaper" style="margin-right:10px;"></i> Warta & Donasi</span>
+        <button class="mobile-menu-toggle" onclick="toggleMobileSub('sub-warta', this)">
+            <span><i class="fas fa-newspaper" style="margin-right:10px;color:rgba(255,255,255,0.6);"></i> Warta & Donasi</span>
             <i class="fas fa-chevron-down"></i>
         </button>
         <div class="mobile-submenu" id="sub-warta">
-            <a href="#warta" onclick="pindahHalaman('home'); closeMobileMenu()">Warta Berita</a>
-            <a href="#progress" onclick="pindahHalaman('home'); closeMobileMenu()">Progress Pembangunan</a>
-            <a href="#keuangan" onclick="pindahHalaman('home'); closeMobileMenu()">Laporan Keuangan</a>
-            <a href="#donasi" onclick="pindahHalaman('home'); closeMobileMenu()">Donasi & Wakaf</a>
-            <a href="#mitra" onclick="pindahHalaman('home'); closeMobileMenu()">Mitra & Donatur</a>
+            <a href="#warta" onclick="pindahHalaman('home'); closeMobileMenu()"><i class="fas fa-rss" style="width:16px;opacity:0.6;"></i> Warta Berita</a>
+            <a href="#progress" onclick="pindahHalaman('home'); closeMobileMenu()"><i class="fas fa-building" style="width:16px;opacity:0.6;"></i> Progress Pembangunan</a>
+            <a href="#donasi" onclick="pindahHalaman('home'); closeMobileMenu()"><i class="fas fa-hand-holding-heart" style="width:16px;opacity:0.6;"></i> Donasi & Wakaf</a>
+            <a href="#mitra" onclick="pindahHalaman('home'); closeMobileMenu()"><i class="fas fa-handshake" style="width:16px;opacity:0.6;"></i> Mitra & Donatur</a>
+            <a href="#kontak" onclick="pindahHalaman('home'); closeMobileMenu()"><i class="fas fa-phone" style="width:16px;opacity:0.6;"></i> Kontak & Lokasi</a>
         </div>
     </div>
     <div class="mobile-menu-item">
-        <button class="mobile-menu-toggle" onclick="toggleMobileSub('sub-digital')">
-            <span><i class="fas fa-microchip" style="margin-right:10px;"></i> Digital</span>
+        <button class="mobile-menu-toggle" onclick="toggleMobileSub('sub-digital', this)">
+            <span><i class="fas fa-microchip" style="margin-right:10px;color:rgba(255,255,255,0.6);"></i> Digital</span>
             <i class="fas fa-chevron-down"></i>
         </button>
         <div class="mobile-submenu" id="sub-digital">
-            <a href="#crypto" onclick="pindahHalaman('home'); closeMobileMenu()">Market Crypto Live</a>
-            <a href="#pi-network" onclick="pindahHalaman('home'); closeMobileMenu()">Informasi Pi Network</a>
+            <a href="#crypto" onclick="pindahHalaman('home'); closeMobileMenu()"><i class="fas fa-chart-line" style="width:16px;opacity:0.6;"></i> Market Crypto Live</a>
+            <a href="#pi-network" onclick="pindahHalaman('home'); closeMobileMenu()"><i class="fas fa-circle-nodes" style="width:16px;opacity:0.6;"></i> Informasi Pi Network</a>
         </div>
     </div>
     <div class="mobile-menu-item">
-        <button class="mobile-menu-toggle" onclick="toggleMobileSub('sub-pi-bayar')" style="color:#c4b5fd;">
-            <span><i class="fas fa-circle-nodes" style="margin-right:10px;color:#a78bfa;"></i> Pembayaran Pi Network</span>
+        <button class="mobile-menu-toggle" onclick="toggleMobileSub('sub-pi-bayar', this)" style="color:#c4b5fd;">
+            <span><i class="fas fa-circle-nodes" style="margin-right:10px;color:#a78bfa;"></i> Bayar Pi Network</span>
             <i class="fas fa-chevron-down"></i>
         </button>
         <div class="mobile-submenu" id="sub-pi-bayar">
-            <a href="pi-payment.html" target="_blank" style="color:#c4b5fd;font-weight:700;border-left-color:#7c3aed!important;">🪙 Buka Halaman Pembayaran Pi</a>
-            <a href="pi-payment.html" target="_blank">Donasi & Wakaf dengan Pi</a>
-            <a href="pi-payment.html" target="_blank">Beli Produk Sagatama Mart</a>
-            <a href="pi-payment.html" target="_blank">Jasa Digital & AI</a>
+            <a href="pi-payment.html" target="_blank" style="color:#c4b5fd;font-weight:700;"><i class="fas fa-external-link-alt" style="width:16px;color:#a78bfa;"></i> Buka Halaman Pembayaran</a>
+            <a href="pi-payment.html" target="_blank"><i class="fas fa-hand-holding-heart" style="width:16px;color:#a78bfa;"></i> Donasi & Wakaf dengan Pi</a>
+            <a href="pi-payment.html" target="_blank"><i class="fas fa-store" style="width:16px;color:#a78bfa;"></i> Beli Produk Sagatama Mart</a>
         </div>
     </div>
+
+    <!-- Footer drawer -->
+    <div style="padding:20px;margin-top:8px;text-align:center;border-top:1px solid rgba(255,255,255,0.05);">
+        <div style="color:rgba(255,255,255,0.25);font-size:0.7em;">Portal Sagatama · Firebase Project</div>
+        <div style="color:rgba(212,160,23,0.4);font-size:0.65em;margin-top:4px;">Spiritual · Teknologi · Ekonomi · 513</div>
+    </div>
 </div>
+
+<!-- BOTTOM NAVIGATION BAR (mobile) -->
+<nav class="bottom-nav" id="bottomNav">
+    <div class="bottom-nav-inner">
+        <button class="bnav-item active" onclick="pindahHalaman('home')" title="Beranda">
+            <i class="fas fa-home"></i>
+            <span>Beranda</span>
+        </button>
+        <a class="bnav-item" href="#psb" onclick="pindahHalaman('home')" title="Daftar Santri">
+            <i class="fas fa-user-plus"></i>
+            <span>Daftar</span>
+        </a>
+        <a class="bnav-item" href="#donasi" onclick="pindahHalaman('home')" title="Donasi">
+            <i class="fas fa-hand-holding-heart"></i>
+            <span>Donasi</span>
+        </a>
+        <button class="bnav-item sgt-btn" onclick="openSGTWallet()" title="SGT Wallet">
+            <span style="font-family:'Cinzel',serif;font-weight:900;font-size:0.85em;">SGT</span>
+            <span>Wallet</span>
+        </button>
+        <button class="bnav-item bnav-menu" onclick="toggleMobileMenu()" title="Menu">
+            <i class="fas fa-bars"></i>
+            <span>Menu</span>
+        </button>
+    </div>
+</nav>
 
 <!-- MARQUEE BAR -->
 <div class="marquee-bar">
@@ -4338,23 +4463,34 @@ window.addEventListener('scroll', () => {
     document.getElementById('main-nav').classList.toggle('scrolled', window.scrollY > 50);
 });
 
-    // MOBILE MENU
+    // MOBILE DRAWER MENU
     function toggleMobileMenu() {
         const menu = document.getElementById('mobileMenu');
+        const overlay = document.getElementById('drawerOverlay');
         const btn = document.getElementById('hamburgerBtn');
-        menu.classList.toggle('open');
-        btn.classList.toggle('open');
+        const isOpen = menu.classList.contains('open');
+        if (isOpen) {
+            menu.classList.remove('open');
+            overlay.classList.remove('open');
+            btn.classList.remove('open');
+            document.body.style.overflow = '';
+        } else {
+            menu.classList.add('open');
+            overlay.classList.add('open');
+            btn.classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
     }
     function closeMobileMenu() {
         document.getElementById('mobileMenu').classList.remove('open');
+        document.getElementById('drawerOverlay').classList.remove('open');
         document.getElementById('hamburgerBtn').classList.remove('open');
+        document.body.style.overflow = '';
     }
-    function toggleMobileSub(id) {
+    function toggleMobileSub(id, btn) {
         const el = document.getElementById(id);
         el.classList.toggle('open');
-        // rotate chevron
-        const parent = el.previousElementSibling;
-        if (parent) parent.querySelector('i:last-child')?.classList.toggle('fa-rotate-180');
+        if (btn) btn.classList.toggle('active');
     }
 
     // ======= DROPDOWN MANAGER (fix hilang saat hover) =======
