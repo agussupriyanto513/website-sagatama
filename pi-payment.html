@@ -16,13 +16,6 @@
 
     <!-- Pi Network SDK -->
     <script src="https://sdk.minepi.com/pi-sdk.js"></script>
-    <script>
-        try {
-            Pi.init({ version: "2.0", sandbox: false });
-        } catch(e) {
-            console.warn('[Pi SDK]', e.message);
-        }
-    </script>
 
     <style>
         :root {
@@ -49,7 +42,6 @@
             overflow-x: hidden;
         }
 
-        /* ── BG MESH ── */
         body::before {
             content: '';
             position: fixed; inset: 0; z-index: 0; pointer-events: none;
@@ -59,7 +51,6 @@
                 radial-gradient(ellipse at 60% 40%, rgba(124,58,237,0.08) 0%, transparent 40%);
         }
 
-        /* ── NAVBAR ── */
         nav {
             position: sticky; top: 0; z-index: 100;
             background: rgba(7,13,26,0.95); backdrop-filter: blur(20px);
@@ -83,13 +74,11 @@
         }
         .nav-back:hover { background: rgba(255,255,255,0.1); color: white; }
 
-        /* ── LAYOUT ── */
         .page-wrap {
             position: relative; z-index: 1;
             max-width: 860px; margin: 0 auto; padding: 40px 20px 80px;
         }
 
-        /* ── HEADER ── */
         .page-header { text-align: center; margin-bottom: 40px; }
         .pi-badge {
             display: inline-flex; align-items: center; gap: 8px;
@@ -104,15 +93,17 @@
         .page-title .pi-text { color: var(--pi2); }
         .page-desc { color: rgba(255,255,255,0.5); font-size: 0.92em; line-height: 1.6; max-width: 500px; margin: 0 auto; }
 
-        /* ── STATUS BANNER: bukan Pi Browser ── */
+        /* ── BANNER: bukan Pi Browser ── */
         #not-pi-banner {
             background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.3);
             border-radius: 14px; padding: 16px 20px; margin-bottom: 28px;
-            display: none; align-items: center; gap: 14px;
+            display: none; align-items: flex-start; gap: 14px;
         }
-        #not-pi-banner i { color: #fbbf24; font-size: 1.4em; flex-shrink: 0; }
-        #not-pi-banner p { color: rgba(255,255,255,0.7); font-size: 0.82em; line-height: 1.5; }
+        #not-pi-banner i { color: #fbbf24; font-size: 1.4em; flex-shrink: 0; margin-top: 2px; }
+        #not-pi-banner p { color: rgba(255,255,255,0.7); font-size: 0.82em; line-height: 1.6; }
         #not-pi-banner strong { color: #fbbf24; }
+        #not-pi-banner ol { padding-left: 16px; margin-top: 6px; }
+        #not-pi-banner ol li { margin-bottom: 2px; }
 
         /* ── AUTH CARD ── */
         .auth-card {
@@ -144,7 +135,7 @@
         .btn-pi-login:hover { transform: translateY(-2px); box-shadow: 0 14px 40px rgba(124,58,237,0.55); }
         .btn-pi-login:disabled { opacity: 0.6; transform: none; cursor: not-allowed; }
 
-        /* ── USER INFO BAR ── */
+        /* ── USER BAR ── */
         #user-bar {
             background: rgba(124,58,237,0.1); border: 1px solid rgba(124,58,237,0.25);
             border-radius: 14px; padding: 14px 20px; margin-bottom: 28px;
@@ -162,8 +153,7 @@
         .btn-logout-sm {
             background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.2);
             color: rgba(239,68,68,0.7); padding: 6px 14px; border-radius: 8px;
-            font-size: 0.75em; cursor: pointer; font-family: 'DM Sans',sans-serif;
-            transition: 0.2s;
+            font-size: 0.75em; cursor: pointer; font-family: 'DM Sans',sans-serif; transition: 0.2s;
         }
         .btn-logout-sm:hover { background: rgba(239,68,68,0.2); }
 
@@ -193,9 +183,7 @@
             border-radius: 20px; padding: 28px; display: none;
         }
         .pay-form-card.show { display: block; }
-        .pay-form-title {
-            font-family: 'Playfair Display', serif; font-size: 1.3em; margin-bottom: 6px;
-        }
+        .pay-form-title { font-family: 'Playfair Display', serif; font-size: 1.3em; margin-bottom: 6px; }
         .pay-form-sub { color: rgba(255,255,255,0.4); font-size: 0.8em; margin-bottom: 24px; }
 
         .form-group { margin-bottom: 16px; }
@@ -209,7 +197,7 @@
         select.form-inp option { background: var(--dark2); }
         textarea.form-inp { resize: none; height: 80px; line-height: 1.5; }
 
-        /* ── SUMMARY BOX ── */
+        /* ── SUMMARY ── */
         .pay-summary {
             background: rgba(124,58,237,0.08); border: 1px solid rgba(124,58,237,0.2);
             border-radius: 14px; padding: 18px 20px; margin: 20px 0;
@@ -233,7 +221,7 @@
         .btn-pay:hover { transform: translateY(-2px); box-shadow: 0 14px 40px rgba(124,58,237,0.55); }
         .btn-pay:disabled { opacity: 0.6; transform: none; cursor: not-allowed; }
 
-        /* ── STATUS MODAL ── */
+        /* ── MODAL ── */
         .modal-overlay {
             position: fixed; inset: 0; background: rgba(0,0,0,0.75);
             backdrop-filter: blur(8px); z-index: 9999;
@@ -278,7 +266,6 @@
         }
         #toast.show { transform: translateX(-50%) translateY(0); }
 
-        /* ── SPINNER ── */
         .spin { animation: spin 1s linear infinite; display: inline-block; }
         @keyframes spin { to { transform: rotate(360deg); } }
 
@@ -291,7 +278,6 @@
 </head>
 <body>
 
-<!-- NAVBAR -->
 <nav>
     <a href="index.html" class="nav-logo">
         <div class="nav-logo-icon">π</div>
@@ -303,23 +289,30 @@
     <a href="index.html" class="nav-back"><i class="fas fa-arrow-left"></i> Portal Utama</a>
 </nav>
 
-<!-- MAIN -->
 <div class="page-wrap">
 
-    <!-- HEADER -->
     <div class="page-header">
         <div class="pi-badge"><div class="pi-badge-dot"></div> Pi Network · Mainnet</div>
         <h1 class="page-title">Bayar dengan <span class="pi-text">Pi Coin</span></h1>
         <p class="page-desc">Lakukan pembayaran donasi, produk, atau layanan Yayasan Hidayatul Amin Sagatama menggunakan Pi Network secara aman dan transparan.</p>
     </div>
 
-    <!-- PERINGATAN: Bukan Pi Browser -->
+    <!-- BANNER: Bukan Pi Browser -->
     <div id="not-pi-banner">
         <i class="fas fa-exclamation-triangle"></i>
-        <p><strong>Anda tidak menggunakan Pi Browser.</strong> Untuk melakukan pembayaran Pi, buka halaman ini melalui Pi Browser di perangkat Anda. Fitur informasi dan preview tetap tersedia.</p>
+        <div>
+            <p><strong>Halaman ini harus dibuka di Pi Browser.</strong></p>
+            <p style="margin-top:6px;">Cara membuka di Pi Browser:</p>
+            <ol>
+                <li>Buka aplikasi <strong>Pi Network</strong> di HP Anda</li>
+                <li>Tap ikon <strong>Pi Browser</strong> (globe/bola dunia)</li>
+                <li>Ketik URL: <strong>sagatama-mart.vercel.app/pi-payment.html</strong></li>
+            </ol>
+            <p style="margin-top:6px;color:rgba(255,255,255,0.4);">Preview halaman tetap bisa dilihat, tapi pembayaran tidak bisa dilakukan di luar Pi Browser.</p>
+        </div>
     </div>
 
-    <!-- AUTH CARD — tampil jika belum login Pi -->
+    <!-- AUTH CARD -->
     <div class="auth-card" id="auth-card">
         <div class="auth-pi-icon">π</div>
         <h3>Login dengan Pi Network</h3>
@@ -329,7 +322,7 @@
         </button>
     </div>
 
-    <!-- USER BAR — tampil setelah login -->
+    <!-- USER BAR -->
     <div id="user-bar">
         <div class="user-av" id="user-av">π</div>
         <div class="user-info">
@@ -490,7 +483,7 @@
             <p>Setiap Pi yang masuk digunakan sepenuhnya untuk kegiatan dan pembangunan yayasan.</p>
         </div>
     </div>
-</div><!-- end page-wrap -->
+</div>
 
 <!-- MODAL STATUS -->
 <div class="modal-overlay" id="modal-overlay">
@@ -503,51 +496,118 @@
     </div>
 </div>
 
-<!-- TOAST -->
 <div id="toast"></div>
 
 <script>
-// ──────────────────────────────────────────────────────────
-//  FIREBASE CONFIG — ganti dengan config Anda
-// ──────────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════
+//  KONFIGURASI — sesuaikan bagian ini
+// ══════════════════════════════════════════════════════════
+
+// Firebase config
 const firebaseConfig = {
     apiKey:            "AIzaSyDNWOochfAyHjBYUNyq2IAYhA9p7Ie834M",
-      authDomain:        "portal-sagatama.firebaseapp.com",
-      projectId:         "portal-sagatama",
-      storageBucket:     "portal-sagatama.firebasestorage.app",
-      messagingSenderId: "372845954028",
-      appId:             "1:372845954028:web:189f2a3127ea8189b9f6c9"
+    authDomain:        "portal-sagatama.firebaseapp.com",
+    projectId:         "portal-sagatama",
+    storageBucket:     "portal-sagatama.firebasestorage.app",
+    messagingSenderId: "372845954028",
+    appId:             "1:372845954028:web:189f2a3127ea8189b9f6c9"
 };
+
+// ✅ FIX: URL Cloud Functions — ganti dengan URL deploy Anda
+// Format: https://[region]-[project-id].cloudfunctions.net
+// Atau jika pakai Firebase Hosting rewrites: /api
+const FUNCTIONS_BASE = "";  // Vercel: pakai path relatif /api/payments
+
+// ══════════════════════════════════════════════════════════
+//  FIREBASE INIT
+// ══════════════════════════════════════════════════════════
 if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
 const db   = firebase.firestore();
 const auth = firebase.auth();
 
-// ──────────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════
 //  STATE
-// ──────────────────────────────────────────────────────────
-let _piUser   = null;   // hasil Pi.authenticate()
-let _fireUser = null;   // Firebase anonymous user
-let _type     = null;   // 'donasi' | 'produk' | 'layanan'
+// ══════════════════════════════════════════════════════════
+let _piUser   = null;
+let _fireUser = null;
+let _type     = null;
 
-// ──────────────────────────────────────────────────────────
-//  INIT — deteksi Pi Browser
-// ──────────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════
+//  INIT — deteksi Pi Browser dengan benar
+//  ✅ FIX: Pi SDK di-init DULU sebelum dicek,
+//  dan pakai window.__PI_SDK_READY flag untuk memastikan
+// ══════════════════════════════════════════════════════════
 (function init() {
-    const isPi = typeof window.Pi !== 'undefined';
-    if (!isPi) {
-        document.getElementById('not-pi-banner').style.display = 'flex';
-        // Tetap tampilkan form, tapi pay button di-disable dengan keterangan
-        document.getElementById('auth-card').classList.add('show');
-        document.getElementById('pi-login-btn').disabled = true;
-        document.getElementById('pi-login-btn').innerHTML = '<i class="fas fa-ban"></i> Buka di Pi Browser';
-    } else {
-        document.getElementById('auth-card').classList.add('show');
-    }
+    // Pi Browser meng-inject objek Pi ke window SEBELUM halaman load.
+    // Kalau window.Pi undefined setelah SDK script diload → bukan Pi Browser.
+    // Kita cek setelah DOM ready (bukan langsung saat script di-parse).
+    window.addEventListener('DOMContentLoaded', function() {
+        let isPiBrowser = false;
+
+        // Cara deteksi yang benar: coba Pi.init() dan lihat hasilnya
+        if (typeof window.Pi !== 'undefined') {
+            try {
+                Pi.init({ version: "2.0", sandbox: false });
+                isPiBrowser = true;
+            } catch(e) {
+                console.warn('[Pi SDK] Init failed:', e.message);
+                isPiBrowser = false;
+            }
+        }
+
+        if (!isPiBrowser) {
+            document.getElementById('not-pi-banner').style.display = 'flex';
+            document.getElementById('auth-card').classList.add('show');
+            document.getElementById('pi-login-btn').disabled = true;
+            document.getElementById('pi-login-btn').innerHTML = '<i class="fas fa-ban"></i> Buka di Pi Browser';
+        } else {
+            document.getElementById('auth-card').classList.add('show');
+        }
+    });
 })();
 
-// ──────────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════
+//  HELPER: Panggil Cloud Functions backend
+//  ✅ FIX: approve & complete HARUS dari server, bukan client
+// ══════════════════════════════════════════════════════════
+async function callBackend(endpoint, body) {
+    const res = await fetch('/api/payments/' + endpoint, {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify(body)
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Server error ' + res.status);
+    return data;
+}
+
+// ══════════════════════════════════════════════════════════
+//  INCOMPLETE PAYMENT HANDLER
+//  Wajib ada — dipanggil Pi SDK saat ada transaksi belum selesai
+// ══════════════════════════════════════════════════════════
+async function onIncompletePaymentFound(payment) {
+    console.warn('[Pi] Incomplete payment found:', payment?.identifier);
+    try {
+        // Catat ke Firestore
+        await db.collection('pi_incomplete_payments').doc(payment.identifier).set({
+            paymentId:  payment.identifier,
+            amount:     payment.amount,
+            memo:       payment.memo,
+            status:     'incomplete',
+            reportedAt: firebase.firestore.FieldValue.serverTimestamp()
+        }, { merge: true });
+
+        // ✅ FIX: Selesaikan via backend, bukan Pi.completePayment() dari client
+        await callBackend('incomplete', { paymentId: payment.identifier });
+        console.log('[Pi] Incomplete payment handled via backend');
+    } catch(e) {
+        console.warn('[Pi] Gagal handle incomplete payment:', e.message);
+    }
+}
+
+// ══════════════════════════════════════════════════════════
 //  PI AUTH
-// ──────────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════
 async function doLoginPi() {
     if (typeof window.Pi === 'undefined') {
         showToast('❌ Buka halaman ini di Pi Browser');
@@ -556,18 +616,23 @@ async function doLoginPi() {
     const btn = document.getElementById('pi-login-btn');
     btn.disabled = true;
     btn.innerHTML = '<i class="fas fa-spinner spin"></i> Menghubungkan...';
+
     try {
+        // Pi.authenticate — scopes yang diminta
         const auth_result = await Pi.authenticate(
             ['username', 'payments', 'wallet_address'],
             onIncompletePaymentFound
         );
         _piUser = auth_result.user;
 
-        // Sign in anonymously ke Firebase sebagai sesi carrier
-        const cred = await auth.signInAnonymously();
-        _fireUser = cred.user;
+        // Verifikasi user ke backend untuk dapat Firebase custom token
+        // (opsional tapi recommended untuk keamanan production)
+        // Uncomment baris ini kalau fungsi verifyPiUser sudah di-deploy:
+        // const verified = await callBackend('verifyPiUser', { accessToken: auth_result.accessToken });
 
-        // Update profile
+        // Sementara: sign in anonymously ke Firebase sebagai carrier sesi
+        const cred = await firebase.auth().signInAnonymously();
+        _fireUser = cred.user;
         await _fireUser.updateProfile({ displayName: '@' + _piUser.username });
 
         // Tampilkan user bar
@@ -589,7 +654,7 @@ async function doLoginPi() {
 }
 
 async function doLogout() {
-    await auth.signOut();
+    await firebase.auth().signOut();
     _piUser = null; _fireUser = null; _type = null;
     document.getElementById('user-bar').classList.remove('show');
     document.getElementById('auth-card').classList.add('show');
@@ -600,27 +665,19 @@ async function doLogout() {
     document.getElementById('pay-summary').style.display = 'none';
 }
 
-// ──────────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════
 //  TYPE SELECTION
-// ──────────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════
 function selectType(type, card) {
     if (!_piUser) { showToast('⚠️ Login Pi Network dulu'); return; }
     _type = type;
     document.querySelectorAll('.pay-type-card').forEach(c => c.classList.remove('active'));
     card.classList.add('active');
 
-    const titleMap = {
-        donasi:  'Donasi & Wakaf via Pi',
-        produk:  'Beli Produk via Pi',
-        layanan: 'Pesan Jasa Digital via Pi'
-    };
-    const subMap = {
-        donasi:  'Masukkan nominal dan pilih peruntukan donasi Anda',
-        produk:  'Pilih produk unggulan Yayasan Sagatama',
-        layanan: 'Konsultasikan kebutuhan digital Anda'
-    };
+    const titleMap = { donasi: 'Donasi & Wakaf via Pi', produk: 'Beli Produk via Pi', layanan: 'Pesan Jasa Digital via Pi' };
+    const subMap   = { donasi: 'Masukkan nominal dan pilih peruntukan donasi Anda', produk: 'Pilih produk unggulan Yayasan Sagatama', layanan: 'Konsultasikan kebutuhan digital Anda' };
     document.getElementById('form-title').textContent = titleMap[type];
-    document.getElementById('form-sub').textContent = subMap[type];
+    document.getElementById('form-sub').textContent   = subMap[type];
 
     ['donasi','produk','layanan'].forEach(t => {
         document.getElementById('fields-' + t).style.display = t === type ? 'block' : 'none';
@@ -632,15 +689,12 @@ function selectType(type, card) {
     updateSummary();
 }
 
-// ──────────────────────────────────────────────────────────
-//  PRODUCT / LAYANAN CHANGE
-// ──────────────────────────────────────────────────────────
-function onProdukChange() { updateSummary(); }
+function onProdukChange()  { updateSummary(); }
 function onLayananChange() { updateSummary(); }
 
-// ──────────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════
 //  SUMMARY UPDATE
-// ──────────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════
 function updateSummary() {
     if (!_type) return;
     const sum = document.getElementById('pay-summary');
@@ -649,71 +703,61 @@ function updateSummary() {
     if (_type === 'donasi') {
         const amt = parseFloat(document.getElementById('donasi-amount')?.value) || 0;
         const cat = document.getElementById('donasi-category')?.value || '—';
-        jenis = 'Donasi Yayasan';
-        detail = cat || '—';
-        total = amt;
+        jenis = 'Donasi Yayasan'; detail = cat || '—'; total = amt;
     } else if (_type === 'produk') {
         const sel = document.getElementById('produk-select')?.value || '';
         const qty = parseInt(document.getElementById('produk-qty')?.value) || 1;
-        if (sel) {
-            const [nama, harga] = sel.split('|');
-            jenis = 'Produk';
-            detail = nama + ' × ' + qty;
-            total = parseFloat(harga) * qty;
-        }
+        if (sel) { const [nama, harga] = sel.split('|'); jenis = 'Produk'; detail = nama + ' × ' + qty; total = parseFloat(harga) * qty; }
     } else if (_type === 'layanan') {
         const sel = document.getElementById('layanan-select')?.value || '';
-        if (sel) {
-            const [nama, harga] = sel.split('|');
-            jenis = 'Jasa Digital';
-            detail = nama;
-            total = parseFloat(harga);
-        }
+        if (sel) { const [nama, harga] = sel.split('|'); jenis = 'Jasa Digital'; detail = nama; total = parseFloat(harga); }
     }
 
     if (total > 0) {
-        document.getElementById('sum-jenis').textContent = jenis;
+        document.getElementById('sum-jenis').textContent  = jenis;
         document.getElementById('sum-detail').textContent = detail;
-        document.getElementById('sum-total').textContent = total.toFixed(2) + ' Pi';
+        document.getElementById('sum-total').textContent  = total.toFixed(2) + ' Pi';
         sum.style.display = 'block';
     } else {
         sum.style.display = 'none';
     }
 }
 
-// ──────────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════
 //  PAYMENT EXECUTION
-// ──────────────────────────────────────────────────────────
+//  ✅ FIX UTAMA: approve & complete dipanggil via backend
+//  (Cloud Functions index.js), bukan Pi.approvePayment() / Pi.completePayment()
+//  karena method itu TIDAK ADA di Pi SDK client-side.
+// ══════════════════════════════════════════════════════════
 async function doPayment() {
     if (!_piUser) { showToast('⚠️ Login Pi dulu'); return; }
     if (typeof window.Pi === 'undefined') { showToast('❌ Buka di Pi Browser'); return; }
 
-    // Validasi & kumpulkan data
     let amount = 0, memo = '', metadata = {};
 
     if (_type === 'donasi') {
         amount = parseFloat(document.getElementById('donasi-amount')?.value) || 0;
-        const cat  = document.getElementById('donasi-category')?.value;
-        const name = document.getElementById('donasi-name')?.value?.trim() || 'Anonim';
+        const cat   = document.getElementById('donasi-category')?.value;
+        const name  = document.getElementById('donasi-name')?.value?.trim() || 'Anonim';
         const pesan = document.getElementById('donasi-pesan')?.value?.trim() || '';
         if (!amount || amount < 0.01) { showToast('⚠️ Masukkan jumlah Pi minimal 0.01'); return; }
         if (!cat) { showToast('⚠️ Pilih peruntukan donasi'); return; }
-        memo = 'Donasi Sagatama: ' + cat;
+        memo     = 'Donasi Sagatama: ' + cat;
         metadata = { type: 'donasi', category: cat, donaturName: name, pesan, piUsername: _piUser.username };
 
     } else if (_type === 'produk') {
-        const sel  = document.getElementById('produk-select')?.value || '';
-        const qty  = parseInt(document.getElementById('produk-qty')?.value) || 1;
-        const name = document.getElementById('produk-name')?.value?.trim();
+        const sel   = document.getElementById('produk-select')?.value || '';
+        const qty   = parseInt(document.getElementById('produk-qty')?.value) || 1;
+        const name  = document.getElementById('produk-name')?.value?.trim();
         const alamat = document.getElementById('produk-alamat')?.value?.trim();
-        const wa   = document.getElementById('produk-wa')?.value?.trim();
-        if (!sel) { showToast('⚠️ Pilih produk'); return; }
-        if (!name) { showToast('⚠️ Masukkan nama pemesan'); return; }
+        const wa    = document.getElementById('produk-wa')?.value?.trim();
+        if (!sel)    { showToast('⚠️ Pilih produk'); return; }
+        if (!name)   { showToast('⚠️ Masukkan nama pemesan'); return; }
         if (!alamat) { showToast('⚠️ Masukkan alamat pengiriman'); return; }
-        if (!wa) { showToast('⚠️ Masukkan nomor WhatsApp'); return; }
+        if (!wa)     { showToast('⚠️ Masukkan nomor WhatsApp'); return; }
         const [nama, harga] = sel.split('|');
-        amount = parseFloat(harga) * qty;
-        memo = 'Sagatama Mart: ' + nama + ' x' + qty;
+        amount   = parseFloat(harga) * qty;
+        memo     = 'Sagatama Mart: ' + nama + ' x' + qty;
         metadata = { type: 'produk', produk: nama, qty, hargaSatuan: harga, pemesanName: name, alamat, wa, piUsername: _piUser.username };
 
     } else if (_type === 'layanan') {
@@ -721,12 +765,12 @@ async function doPayment() {
         const name  = document.getElementById('layanan-name')?.value?.trim();
         const brief = document.getElementById('layanan-brief')?.value?.trim();
         const wa    = document.getElementById('layanan-wa')?.value?.trim();
-        if (!sel) { showToast('⚠️ Pilih jenis layanan'); return; }
+        if (!sel)  { showToast('⚠️ Pilih jenis layanan'); return; }
         if (!name) { showToast('⚠️ Masukkan nama/organisasi'); return; }
-        if (!wa) { showToast('⚠️ Masukkan nomor WhatsApp'); return; }
+        if (!wa)   { showToast('⚠️ Masukkan nomor WhatsApp'); return; }
         const [nama, harga] = sel.split('|');
-        amount = parseFloat(harga);
-        memo = 'Sagatama Digital: ' + nama;
+        amount   = parseFloat(harga);
+        memo     = 'Sagatama Digital: ' + nama;
         metadata = { type: 'layanan', layanan: nama, clientName: name, brief, wa, piUsername: _piUser.username };
 
     } else { showToast('⚠️ Pilih jenis pembayaran'); return; }
@@ -736,73 +780,75 @@ async function doPayment() {
     btn.innerHTML = '<i class="fas fa-spinner spin"></i> Memproses di Pi Browser...';
 
     try {
-        // Buat payment via Pi SDK
-        const paymentData = {
-            amount: amount,
-            memo: memo,
-            metadata: metadata
-        };
+        const payment = await Pi.createPayment(
+            { amount, memo, metadata },
+            {
+                // ✅ FIX: onReadyForServerApproval → panggil Cloud Function approvePayment
+                onReadyForServerApproval: async function(paymentId) {
+                    console.log('[Pi] Ready for server approval:', paymentId);
+                    try {
+                        // Simpan dulu ke Firestore dengan status pending
+                        await db.collection('pi_payments').doc(paymentId).set({
+                            paymentId, amount, memo, metadata,
+                            piUsername: _piUser.username,
+                            piUid:      _piUser.uid || _piUser.username,
+                            status:     'pending_approval',
+                            createdAt:  firebase.firestore.FieldValue.serverTimestamp()
+                        });
+                        // Panggil backend untuk approve (WAJIB dari server!)
+                        await callBackend('approve', { paymentId, metadata });
+                        console.log('[Pi] Payment approved by server');
+                    } catch(e) {
+                        console.error('[Pi] Gagal approve via backend:', e.message);
+                        showToast('⚠️ Approval gagal, coba lagi');
+                    }
+                },
 
-        const payment = await Pi.createPayment(paymentData, {
-            // Callback saat pembayaran dibuat (sebelum user konfirmasi)
-            onReadyForServerApproval: async function(paymentId) {
-                console.log('[Pi Payment] Ready for server approval:', paymentId);
-                // Simpan ke Firestore dengan status 'pending_approval'
-                try {
-                    await db.collection('pi_payments').doc(paymentId).set({
-                        paymentId,
-                        amount,
-                        memo,
-                        metadata,
-                        piUsername: _piUser.username,
-                        piUid: _piUser.uid || _piUser.username,
-                        status: 'pending_approval',
-                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                    });
-                    // Di production, panggil server Anda untuk approve payment
-                    // Untuk sementara, langsung approve dari client (untuk testing)
-                    // PENTING: di production sungguhan, approval harus dari server backend!
-                    await Pi.approvePayment(paymentId);
-                } catch(e) { console.error('[Pi] Gagal approve:', e); }
-            },
+                // ✅ FIX: onReadyForServerCompletion → panggil Cloud Function completePayment
+                onReadyForServerCompletion: async function(paymentId, txid) {
+                    console.log('[Pi] Ready for server completion:', paymentId, txid);
+                    try {
+                        // Update status pending_completion
+                        await db.collection('pi_payments').doc(paymentId).set({
+                            txid,
+                            status:  'pending_completion',
+                            txAt:    firebase.firestore.FieldValue.serverTimestamp()
+                        }, { merge: true });
 
-            // Callback saat pembayaran selesai (user sudah konfirmasi di Pi Browser)
-            onReadyForServerCompletion: async function(paymentId, txid) {
-                console.log('[Pi Payment] Ready for completion:', paymentId, txid);
-                // Update status di Firestore
-                try {
-                    await db.collection('pi_payments').doc(paymentId).update({
-                        txid: txid,
-                        status: 'pending_completion',
-                        txAt: firebase.firestore.FieldValue.serverTimestamp()
-                    });
-                    // Di production, panggil server untuk complete payment
-                    await Pi.completePayment(paymentId, txid);
-                    // Update jadi 'completed'
-                    await db.collection('pi_payments').doc(paymentId).update({
-                        status: 'completed',
-                        completedAt: firebase.firestore.FieldValue.serverTimestamp()
-                    });
-                } catch(e) { console.error('[Pi] Gagal complete:', e); }
-            },
+                        // Panggil backend untuk complete (WAJIB dari server!)
+                        await callBackend('complete', { paymentId, txid });
+                        console.log('[Pi] Payment completed by server');
 
-            onCancel: function(paymentId) {
-                console.log('[Pi Payment] Cancelled:', paymentId);
-                db.collection('pi_payments').doc(paymentId).update({ status: 'cancelled' }).catch(()=>{});
-                showToast('❌ Pembayaran dibatalkan');
-                btn.disabled = false;
-                btn.innerHTML = '<i class="fas fa-circle-nodes"></i> Bayar dengan Pi Network';
-            },
+                        // Update status lokal ke completed
+                        await db.collection('pi_payments').doc(paymentId).set({
+                            status:      'completed',
+                            completedAt: firebase.firestore.FieldValue.serverTimestamp()
+                        }, { merge: true });
+                    } catch(e) {
+                        console.error('[Pi] Gagal complete via backend:', e.message);
+                        // Jangan tampilkan error ke user — payment di Pi SDK tetap jalan
+                        // backend akan retry lewat handleIncompletePayment nanti
+                    }
+                },
 
-            onError: function(error, payment) {
-                console.error('[Pi Payment] Error:', error);
-                showToast('❌ Error: ' + (error.message || 'Coba lagi'));
-                btn.disabled = false;
-                btn.innerHTML = '<i class="fas fa-circle-nodes"></i> Bayar dengan Pi Network';
+                onCancel: function(paymentId) {
+                    console.log('[Pi] Cancelled:', paymentId);
+                    db.collection('pi_payments').doc(paymentId).set({ status: 'cancelled' }, { merge: true }).catch(()=>{});
+                    showToast('❌ Pembayaran dibatalkan');
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fas fa-circle-nodes"></i> Bayar dengan Pi Network';
+                },
+
+                onError: function(error, payment) {
+                    console.error('[Pi] Error:', error);
+                    showToast('❌ Error: ' + (error.message || 'Coba lagi'));
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fas fa-circle-nodes"></i> Bayar dengan Pi Network';
+                }
             }
-        });
+        );
 
-        // Berhasil — tampilkan modal sukses
+        // Berhasil
         const pid = payment?.identifier || '—';
         showModal('✅', 'Pembayaran Berhasil!',
             'Jazakallahu Khairan! Pembayaran ' + amount.toFixed(2) + ' Pi untuk "' + memo + '" telah diproses. Admin akan menghubungi Anda via WhatsApp dalam 1×24 jam.',
@@ -811,7 +857,7 @@ async function doPayment() {
 
     } catch(e) {
         console.error('[Pi Payment] Fatal:', e);
-        if (e.message && e.message.includes('cancel')) {
+        if (e.message && e.message.toLowerCase().includes('cancel')) {
             showToast('❌ Pembayaran dibatalkan oleh pengguna');
         } else {
             showToast('❌ Pembayaran gagal: ' + (e.message || 'Coba lagi'));
@@ -822,36 +868,14 @@ async function doPayment() {
     }
 }
 
-// ──────────────────────────────────────────────────────────
-//  INCOMPLETE PAYMENT HANDLER (wajib ada di Pi SDK)
-// ──────────────────────────────────────────────────────────
-async function onIncompletePaymentFound(payment) {
-    console.warn('[Pi] Incomplete payment found:', payment?.identifier);
-    try {
-        await db.collection('pi_incomplete_payments').doc(payment.identifier).set({
-            paymentId: payment.identifier,
-            amount: payment.amount,
-            memo: payment.memo,
-            status: 'incomplete',
-            reportedAt: firebase.firestore.FieldValue.serverTimestamp()
-        }, { merge: true });
-        // Coba selesaikan
-        if (payment.status?.developer_completed === false && payment.transaction?.txid) {
-            await Pi.completePayment(payment.identifier, payment.transaction.txid);
-        }
-    } catch(e) {
-        console.warn('[Pi] Gagal handle incomplete payment:', e);
-    }
-}
-
-// ──────────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════
 //  MODAL & TOAST
-// ──────────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════
 function showModal(icon, title, desc, id) {
-    document.getElementById('modal-icon').textContent = icon;
+    document.getElementById('modal-icon').textContent  = icon;
     document.getElementById('modal-title').textContent = title;
-    document.getElementById('modal-desc').textContent = desc;
-    document.getElementById('modal-id').textContent = id || '';
+    document.getElementById('modal-desc').textContent  = desc;
+    document.getElementById('modal-id').textContent    = id || '';
     document.getElementById('modal-overlay').classList.add('open');
 }
 function closeModal() {
