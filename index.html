@@ -18,6 +18,16 @@
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+    <!-- Pi Network SDK -->
+    <script src="https://sdk.minepi.com/pi-sdk.js"></script>
+    <script>
+        // Inisialisasi Pi SDK — sandbox: true untuk dev/testing, ubah ke false di production mainnet
+        try {
+            Pi.init({ version: "2.0", sandbox: false });
+        } catch(e) {
+            console.warn('[Pi SDK] Tidak berjalan di Pi Browser:', e.message);
+        }
+    </script>
 
     <style>
         :root {
@@ -1479,6 +1489,8 @@
         .swm-auth-coin { width: 64px; height: 64px; border-radius: 50%; background: linear-gradient(135deg,#d4a017,#f0c842); margin: 0 auto 16px; display: flex; align-items: center; justify-content: center; font-family: 'Cinzel',serif; font-weight: 900; font-size: 1.2em; color: #070d1a; box-shadow: 0 8px 32px rgba(212,160,23,0.5); animation: sgt-pulse 2.5s ease-in-out infinite; }
         .swm-auth h3 { font-family: 'Playfair Display',serif; font-size: 1.4em; font-weight: 900; color: #fff; margin-bottom: 6px; }
         .swm-auth p { color: rgba(255,255,255,0.4); font-size: 0.8em; margin-bottom: 20px; }
+        .swm-btn-pi { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid rgba(124,58,237,0.5); background: linear-gradient(135deg,rgba(124,58,237,0.2),rgba(167,139,250,0.1)); color: #c4b5fd; font-family: 'DM Sans',sans-serif; font-weight: 700; font-size: 0.88em; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 10px; }
+        .swm-btn-pi:hover { background: linear-gradient(135deg,rgba(124,58,237,0.35),rgba(167,139,250,0.2)); box-shadow: 0 6px 20px rgba(124,58,237,0.35); transform: translateY(-1px); }
         .swm-btn-google { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.07); color: #fff; font-family: 'DM Sans',sans-serif; font-weight: 600; font-size: 0.85em; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 12px; }
         .swm-btn-google:hover { background: rgba(255,255,255,0.12); }
         .swm-divider { display: flex; align-items: center; gap: 10px; margin: 4px 0 12px; }
@@ -2120,6 +2132,11 @@
                 <h3 id="swm-auth-title">Masuk ke SGT Wallet</h3>
                 <p id="swm-auth-sub">Login untuk simpan & gunakan poin SGT Anda secara permanen</p>
                 <div class="swm-err" id="swm-err"></div>
+                <!-- Pi Network Login — tampil hanya jika di Pi Browser -->
+                <button class="swm-btn-pi" id="swm-pi-login-btn" onclick="swtSignInPi()" style="display:none;">
+                    <svg width="20" height="20" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="50" fill="#7c3aed"/><text y="68" x="50" text-anchor="middle" font-size="60" font-family="serif" font-weight="bold" fill="white">π</text></svg>
+                    Masuk dengan Pi Network
+                </button>
                 <button class="swm-btn-google" onclick="swtSignInGoogle()">
                     <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M17.64 9.205c0-.639-.057-1.252-.164-1.841H9v3.481h4.844a4.14 4.14 0 01-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.615z" fill="#4285F4"/><path d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 009 18z" fill="#34A853"/><path d="M3.964 10.71A5.41 5.41 0 013.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 000 9c0 1.452.348 2.827.957 4.042l3.007-2.332z" fill="#FBBC05"/><path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 00.957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z" fill="#EA4335"/></svg>
                     Masuk dengan Google
@@ -4981,6 +4998,81 @@ function _swtAnimNum(el, target) {
 
 // ── Backward compat: old panel still works ────────────────
 function toggleSGTPanel() { openSGTWallet(); }
+
+// ── PI BROWSER DETECTION & PI LOGIN ──────────────────────────
+(function detectPiBrowser() {
+    // Pi Browser menyuntikkan window.Pi
+    const isPiBrowser = typeof window.Pi !== 'undefined';
+    const btn = document.getElementById('swm-pi-login-btn');
+    if (btn && isPiBrowser) {
+        btn.style.display = 'flex';
+    }
+})();
+
+async function swtSignInPi() {
+    if (typeof window.Pi === 'undefined') {
+        alert('Fitur ini hanya tersedia di Pi Browser. Silakan buka portal ini melalui Pi Browser.');
+        return;
+    }
+    const btn = document.getElementById('swm-pi-login-btn');
+    if (btn) { btn.disabled = true; btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Menghubungkan Pi...`; }
+    try {
+        _swtErrMsg('');
+        // Autentikasi dengan Pi SDK — minta akses username
+        const authResult = await Pi.authenticate(['username', 'payments', 'wallet_address'], onIncompletePaymentFound);
+        const piUser = authResult.user;
+        const piUsername = piUser.username;
+        const piUid = piUser.uid || piUsername; // uid dari Pi
+        const piWallet = authResult.user.wallet_address || '';
+
+        // Simpan sesi Pi ke Firebase sebagai custom token atau anonymous + data Pi
+        // Karena Pi SDK tidak menghasilkan Firebase token, kita simpan data Pi ke Firestore
+        // dan gunakan anonymous auth sebagai carrier session
+        let firebaseUser = firebase.auth().currentUser;
+        if (!firebaseUser) {
+            const anonCred = await firebase.auth().signInAnonymously();
+            firebaseUser = anonCred.user;
+        }
+
+        // Update profile dengan username Pi
+        await firebaseUser.updateProfile({ displayName: '🟣 ' + piUsername });
+
+        // Simpan info Pi ke Firestore dokumen user
+        await window.db.collection('sgt_users').doc(firebaseUser.uid).set({
+            piUsername: piUsername,
+            piUid: piUid,
+            piWalletAddress: piWallet,
+            loginMethod: 'pi_network',
+            lastPiLogin: firebase.firestore.FieldValue.serverTimestamp()
+        }, { merge: true });
+
+        // Tutup dan buka ulang wallet agar render ulang
+        closeSGTWallet();
+        setTimeout(openSGTWallet, 300);
+        showToast('🟣 Login Pi Network berhasil! Selamat datang, @' + piUsername);
+
+    } catch(e) {
+        console.error('[Pi Login]', e);
+        _swtErrMsg('Login Pi gagal: ' + (e.message || 'Coba lagi.'));
+    } finally {
+        if (btn) { btn.disabled = false; btn.innerHTML = `<svg width="20" height="20" viewBox="0 0 100 100" fill="none"><circle cx="50" cy="50" r="50" fill="#7c3aed"/><text y="68" x="50" text-anchor="middle" font-size="60" font-family="serif" font-weight="bold" fill="white">π</text></svg> Masuk dengan Pi Network`; }
+    }
+}
+
+// Tangani pembayaran Pi yang belum selesai (wajib ada untuk Pi SDK)
+async function onIncompletePaymentFound(payment) {
+    console.warn('[Pi Payment] Incomplete payment found:', payment.identifier);
+    // Laporkan ke backend/Firestore untuk diproses admin
+    try {
+        await window.db.collection('pi_incomplete_payments').doc(payment.identifier).set({
+            paymentId: payment.identifier,
+            amount: payment.amount,
+            memo: payment.memo,
+            status: 'incomplete',
+            reportedAt: firebase.firestore.FieldValue.serverTimestamp()
+        }, { merge: true });
+    } catch(e) { console.warn('[Pi] Gagal simpan incomplete payment:', e); }
+}
 
 // ── Preview & Request: SGT → Pi ────────────────────────────
 function swtUpdatePiPreview() {
