@@ -225,18 +225,21 @@
         .logo-icon {
             width: 46px;
             height: 46px;
-            border-radius: 10px;
+            border-radius: 50%;
             border: 2px solid var(--accent);
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            background: white;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-family: 'Cinzel', serif;
-            font-weight: 900;
-            color: var(--accent);
-            font-size: 1em;
-            letter-spacing: -1px;
+            overflow: hidden;
             flex-shrink: 0;
+            box-shadow: 0 0 10px rgba(212,160,23,0.35);
+        }
+        .logo-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
         }
 
         .logo-text { display: flex; flex-direction: column; }
@@ -2309,37 +2312,12 @@
 <nav id="main-nav">
     <div class="nav-container">
         <a href="#" class="logo-nav" onclick="pindahHalaman('home'); return false;">
-            <div class="logo-icon" style="background:none;padding:0;width:44px;height:44px;overflow:hidden;border-radius:50%;">
-                <svg width="44" height="44" viewBox="0 0 680 680" xmlns="http://www.w3.org/2000/svg" style="display:block;">
-                    <circle cx="340" cy="340" r="320" fill="#1a5c35"/>
-                    <circle cx="340" cy="340" r="294" fill="#c8972a"/>
-                    <circle cx="340" cy="340" r="282" fill="#1a5c35"/>
-                    <circle cx="340" cy="340" r="264" fill="#d4eaf0"/>
-                    <path id="tA" d="M 80,340 A 260,260 0 1,1 600,340" fill="none"/>
-                    <text font-family="Georgia,serif" font-size="22" font-weight="700" fill="#c8972a" letter-spacing="3"><textPath href="#tA" startOffset="8%">YAYASAN PENDIDIKAN HIDAYATUL AMIN</textPath></text>
-                    <path id="bA" d="M 120,400 A 230,230 0 0,0 560,400" fill="none"/>
-                    <text font-family="Georgia,serif" font-size="20" font-weight="700" fill="#c8972a"><textPath href="#bA" startOffset="22%">· SAGATAMA ·</textPath></text>
-                    <circle cx="340" cy="168" r="38" fill="#c8972a"/>
-                    <circle cx="356" cy="158" r="30" fill="#d4eaf0"/>
-                    <polygon points="340,142 344,155 358,155 347,163 351,176 340,168 329,176 333,163 322,155 336,155" fill="#c8972a"/>
-                    <path d="M 248,285 C 210,268 178,252 160,230 C 185,248 205,268 230,285 Z" fill="#1a5c35"/>
-                    <path d="M 248,300 C 202,285 165,268 148,244 C 175,265 208,282 240,298 Z" fill="#1a5c35"/>
-                    <path d="M 248,316 C 198,308 158,294 138,270 C 168,290 208,305 246,315 Z" fill="#1a5c35"/>
-                    <path d="M 432,285 C 470,268 502,252 520,230 C 495,248 475,268 450,285 Z" fill="#1a5c35"/>
-                    <path d="M 432,300 C 478,285 515,268 532,244 C 505,265 472,282 440,298 Z" fill="#1a5c35"/>
-                    <path d="M 432,316 C 482,308 522,294 542,270 C 512,290 472,305 434,315 Z" fill="#1a5c35"/>
-                    <path d="M 240,330 C 240,320 248,318 260,322 L 336,340 L 336,430 L 240,408 Z" fill="#ffffff" stroke="#1a5c35" stroke-width="1.5"/>
-                    <path d="M 440,330 C 440,320 432,318 420,322 L 344,340 L 344,430 L 440,408 Z" fill="#ffffff" stroke="#1a5c35" stroke-width="1.5"/>
-                    <path d="M 340,330 L 340,432" stroke="#1a5c35" stroke-width="2.5"/>
-                    <path d="M 235,408 C 235,418 246,425 260,427 L 340,435 L 420,427 C 434,425 445,418 445,408 L 440,406 L 344,426 L 240,406 Z" fill="#1a5c35"/>
-                    <text x="340" y="470" text-anchor="middle" font-family="Georgia,serif" font-weight="900" font-size="36" fill="#1a5c35">HIDAYATUL</text>
-                    <text x="340" y="512" text-anchor="middle" font-family="Georgia,serif" font-weight="900" font-size="36" fill="#1a5c35">AMIN</text>
-                    <text x="340" y="594" text-anchor="middle" font-family="Georgia,serif" font-size="20" font-weight="900" fill="#ffffff" letter-spacing="2">513</text>
-                </svg>
+            <div class="logo-icon">
+                <img src="logo_hidayatulamin.png" alt="Logo Hidayatul Amin Sagatama 513">
             </div>
             <div class="logo-text">
-                <span class="name">Portal Sagatama</span>
-                <span class="tagline">Spiritual · Teknologi · Ekonomi</span>
+                <span class="name">Hidayatul Amin Sagatama</span>
+                <span class="tagline">Spiritual · Teknologi · Ekonomi · 513</span>
             </div>
         </a>
 
@@ -2428,6 +2406,28 @@
                     <div class="dropdown-header">Informasi Digital</div>
                     <a href="#crypto" onclick="pindahHalaman('home')"><i class="fas fa-chart-line"></i> Market Crypto Live</a>
                     <a href="#pi-network" onclick="pindahHalaman('home')"><i class="fas fa-circle-nodes"></i> Informasi Pi Network</a>
+                </div>
+            </div>
+
+            <!-- MENU PEMBAYARAN PI -->
+            <div class="dropdown">
+                <button class="dropbtn" style="background:linear-gradient(135deg,rgba(124,58,237,0.3),rgba(124,58,237,0.15));border-color:#7c3aed;color:#c4b5fd;">
+                    <i class="fas fa-circle-nodes"></i> Pembayaran Pi <span style="background:#7c3aed;color:white;font-size:0.6em;padding:2px 6px;border-radius:10px;margin-left:2px;font-weight:800;letter-spacing:0.5px;">π</span>
+                </button>
+                <div class="dropdown-content" style="min-width:300px;">
+                    <div class="dropdown-header" style="color:#c4b5fd;">🪙 Bayar dengan Pi Network</div>
+                    <a href="pi-payment.html" target="_blank" style="background:linear-gradient(135deg,rgba(124,58,237,0.2),rgba(124,58,237,0.1));border-bottom:2px solid rgba(124,58,237,0.3)!important;">
+                        <i class="fas fa-external-link-alt" style="color:#a78bfa;"></i>
+                        <div>
+                            <div style="color:white;font-weight:700;font-size:0.88em;">Buka Halaman Pembayaran Pi</div>
+                            <div style="color:rgba(255,255,255,0.45);font-size:0.72em;margin-top:2px;">Donasi, Produk & Layanan via Pi Network</div>
+                        </div>
+                    </a>
+                    <div class="dropdown-header" style="margin-top:4px;color:#c4b5fd;">Jenis Pembayaran</div>
+                    <a href="pi-payment.html#donasi" target="_blank"><i class="fas fa-hand-holding-heart" style="color:#a78bfa;"></i> Donasi & Wakaf dengan Pi</a>
+                    <a href="pi-payment.html#produk" target="_blank"><i class="fas fa-store" style="color:#a78bfa;"></i> Beli Produk Sagatama Mart</a>
+                    <a href="pi-payment.html#layanan" target="_blank"><i class="fas fa-robot" style="color:#a78bfa;"></i> Jasa Digital & AI</a>
+                    <a href="pi-payment.html" target="_blank" style="justify-content:center;text-align:center;color:#7c3aed;font-weight:700;font-size:0.82em;border-top:1px solid rgba(124,58,237,0.2);"><i class="fas fa-circle-nodes"></i> &nbsp;Buka di Pi Browser</a>
                 </div>
             </div>
 
@@ -2531,6 +2531,19 @@
         <div class="mobile-submenu" id="sub-digital">
             <a href="#crypto" onclick="pindahHalaman('home'); closeMobileMenu()">Market Crypto Live</a>
             <a href="#pi-network" onclick="pindahHalaman('home'); closeMobileMenu()">Informasi Pi Network</a>
+        </div>
+    </div>
+    <!-- MOBILE MENU PEMBAYARAN PI -->
+    <div class="mobile-menu-item">
+        <button class="mobile-menu-toggle" onclick="toggleMobileSub('sub-pi-bayar')" style="color:#c4b5fd;">
+            <span><i class="fas fa-circle-nodes" style="margin-right:10px;color:#a78bfa;"></i> Pembayaran Pi <span style="background:#7c3aed;color:white;font-size:0.6em;padding:1px 7px;border-radius:8px;margin-left:6px;font-weight:800;">π</span></span>
+            <i class="fas fa-chevron-down"></i>
+        </button>
+        <div class="mobile-submenu" id="sub-pi-bayar">
+            <a href="pi-payment.html" target="_blank" style="color:#c4b5fd;font-weight:700;border-left-color:#7c3aed!important;">🪙 Buka Halaman Pembayaran Pi</a>
+            <a href="pi-payment.html" target="_blank">Donasi & Wakaf dengan Pi</a>
+            <a href="pi-payment.html" target="_blank">Beli Produk Sagatama Mart</a>
+            <a href="pi-payment.html" target="_blank">Jasa Digital & AI</a>
         </div>
     </div>
     <div class="mobile-menu-item">
