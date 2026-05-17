@@ -533,23 +533,7 @@ let _type     = null;   // 'donasi' | 'produk' | 'layanan'
 const fireAuth = firebase.auth();
 
 // ──────────────────────────────────────────────────────────
-//  HELPER: Wrap Pi.authenticate (callback) ke Promise
-// ──────────────────────────────────────────────────────────
-function piAuthenticateAsync(scopes, onIncomplete) {
-    return new Promise(function(resolve, reject) {
-        try {
-            Pi.authenticate(scopes, onIncomplete)
-                .then(function(result) { resolve(result); })
-                .catch(function(err) { reject(err); });
-        } catch(e) {
-            // Beberapa versi SDK tidak return Promise — fallback ke langsung reject
-            reject(e);
-        }
-    });
-}
-
-// ──────────────────────────────────────────────────────────
-//  INIT — deteksi Pi Browser
+//  INIT — deteksi Pi Browser & cek sesi tersimpan
 // ──────────────────────────────────────────────────────────
 (function init() {
     const isPi = typeof window.Pi !== 'undefined';
@@ -558,21 +542,23 @@ function piAuthenticateAsync(scopes, onIncomplete) {
         document.getElementById('auth-card').classList.add('show');
         document.getElementById('pi-login-btn').disabled = true;
         document.getElementById('pi-login-btn').innerHTML = '<i class="fas fa-ban"></i> Buka di Pi Browser';
-    } else {
-        document.getElementById('auth-card').classList.add('show');
-        // Cek apakah ada sesi Pi yang sudah tersimpan
-        const savedUser = sessionStorage.getItem('_pi_user');
-        if (savedUser) {
-            try {
-                _piUser = JSON.parse(savedUser);
-                _showUserBar();
-            } catch(e) { sessionStorage.removeItem('_pi_user'); }
-        }
+        return;
     }
+    // Cek sesi Pi tersimpan
+    try {
+        const saved = sessionStorage.getItem('_pi_user');
+        if (saved) {
+            _piUser = JSON.parse(saved);
+            _showUserBar();
+            return;
+        }
+    } catch(e) { sessionStorage.removeItem('_pi_user'); }
+
+    document.getElementById('auth-card').classList.add('show');
 })();
 
 // ──────────────────────────────────────────────────────────
-//  TAMPILKAN USER BAR setelah login
+//  TAMPILKAN USER BAR setelah login berhasil
 // ──────────────────────────────────────────────────────────
 function _showUserBar() {
     document.getElementById('auth-card').classList.remove('show');
@@ -580,84 +566,85 @@ function _showUserBar() {
     const uname = _piUser.username || _piUser.uid || 'PiUser';
     document.getElementById('user-av').textContent = uname[0].toUpperCase();
     document.getElementById('user-name').textContent = '@' + uname;
-    if (_piUser.wallet_address) {
-        document.getElementById('user-sub').textContent = 'Wallet: ' + _piUser.wallet_address.slice(0, 14) + '...';
-    } else {
-        document.getElementById('user-sub').textContent = 'Pi Network · Terautentikasi ✓';
-    }
+    document.getElementById('user-sub').textContent =
+        _piUser.wallet_address
+            ? 'Wallet: ' + _piUser.wallet_address.slice(0, 16) + '...'
+            : 'Pi Network · Terautentikasi ✓';
 }
 
 // ──────────────────────────────────────────────────────────
-//  PI AUTH — Login dengan Pi Network
+//  PI AUTH — satu-satunya cara yang benar panggil Pi.authenticate
+//  Pi SDK v2 mengembalikan Promise — JANGAN di-detect dulu
+//  Cukup .then()/.catch() langsung, beri timeout 30 detik
 // ──────────────────────────────────────────────────────────
-async function doLoginPi() {
+function doLoginPi() {
     if (typeof window.Pi === 'undefined') {
         showToast('❌ Buka halaman ini di Pi Browser');
         return;
     }
+
     const btn = document.getElementById('pi-login-btn');
     btn.disabled = true;
-    btn.innerHTML = '<i class="fas fa-spinner spin"></i> Menghubungkan Pi...';
+    btn.innerHTML = '<i class="fas fa-spinner spin"></i> Menghubungkan...';
 
-    try {
-        // ── LANGKAH 1: Autentikasi Pi (handle both callback & Promise style SDK) ──
-        let auth_result;
-        const isPiPromise = typeof Pi.authenticate({}, ()=>{})?.then === 'function';
-
-        if (isPiPromise) {
-            // SDK versi baru — return Promise
-            auth_result = await Pi.authenticate(
-                ['username', 'payments', 'wallet_address'],
-                onIncompletePaymentFound
-            );
-        } else {
-            // SDK versi lama / callback style — wrap ke Promise manual
-            auth_result = await new Promise(function(resolve, reject) {
-                try {
-                    Pi.authenticate(
-                        ['username', 'payments', 'wallet_address'],
-                        onIncompletePaymentFound,
-                        function(result) { resolve(result); },       // onSuccess
-                        function(error)  { reject(new Error(error || 'Auth failed')); }  // onError
-                    );
-                } catch(e) { reject(e); }
-            });
+    // Timeout 30 detik — kalau Pi tidak respond, reset tombol
+    let settled = false;
+    const timeoutId = setTimeout(function() {
+        if (!settled) {
+            settled = true;
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-circle-nodes"></i> Hubungkan Pi Account';
+            showToast('⏱️ Timeout — pastikan sudah login di Pi App lalu coba lagi');
         }
+    }, 30000);
 
-        if (!auth_result || !auth_result.user) {
-            throw new Error('Autentikasi Pi tidak menghasilkan data user. Pastikan Anda login di Pi Browser.');
-        }
+    // Panggil Pi.authenticate — Pi SDK v2 return Promise
+    // onIncompletePaymentFound WAJIB ada sebagai parameter kedua
+    Pi.authenticate(['username', 'payments', 'wallet_address'], onIncompletePaymentFound)
+        .then(function(result) {
+            if (settled) return;
+            settled = true;
+            clearTimeout(timeoutId);
 
-        _piUser = auth_result.user;
-        // Simpan ke session agar tidak perlu login ulang saat refresh
-        sessionStorage.setItem('_pi_user', JSON.stringify(_piUser));
+            if (!result || !result.user) {
+                showToast('❌ Gagal: data user Pi tidak diterima');
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-circle-nodes"></i> Hubungkan Pi Account';
+                return;
+            }
 
-        // ── LANGKAH 2: Sign in anonymous ke Firebase (opsional, untuk menyimpan data) ──
-        try {
-            const cred = await fireAuth.signInAnonymously();
-            _fireUser = cred.user;
-            await _fireUser.updateProfile({ displayName: '@' + (_piUser.username || 'piuser') });
-        } catch(fireErr) {
-            // Firebase error tidak menghalangi login Pi — lanjutkan saja
-            console.warn('[Firebase anon login]', fireErr.message);
-        }
+            _piUser = result.user;
+            // Simpan sesi agar tidak perlu login ulang
+            try { sessionStorage.setItem('_pi_user', JSON.stringify(_piUser)); } catch(e) {}
 
-        // ── LANGKAH 3: Tampilkan user bar ──
-        _showUserBar();
-        showToast('✅ Terhubung sebagai @' + (_piUser.username || 'PiUser'));
+            // Firebase anonymous login — opsional, tidak menghalangi jika gagal
+            fireAuth.signInAnonymously()
+                .then(function(cred) {
+                    _fireUser = cred.user;
+                    return cred.user.updateProfile({ displayName: '@' + (_piUser.username || 'piuser') });
+                })
+                .catch(function(e) { console.warn('[Firebase]', e.message); })
+                .finally(function() {
+                    _showUserBar();
+                    showToast('✅ Terhubung sebagai @' + (_piUser.username || 'PiUser'));
+                });
+        })
+        .catch(function(err) {
+            if (settled) return;
+            settled = true;
+            clearTimeout(timeoutId);
 
-    } catch(e) {
-        console.error('[Pi Auth Error]', e);
-        let msg = e.message || 'Koneksi gagal';
-        if (msg.includes('cancel') || msg.includes('dismiss')) {
-            msg = 'Login dibatalkan. Coba lagi.';
-        } else if (msg.includes('network') || msg.includes('fetch')) {
-            msg = 'Periksa koneksi internet Anda.';
-        }
-        showToast('❌ ' + msg);
-        btn.disabled = false;
-        btn.innerHTML = '<i class="fas fa-circle-nodes"></i> Hubungkan Pi Account';
-    }
+            console.error('[Pi Auth Error]', err);
+            let msg = (err && err.message) ? err.message : String(err);
+            if (!msg || msg === 'undefined') msg = 'Koneksi gagal. Coba lagi.';
+            else if (msg.toLowerCase().includes('cancel')) msg = 'Login dibatalkan.';
+            else if (msg.toLowerCase().includes('network')) msg = 'Periksa koneksi internet.';
+            else if (msg.toLowerCase().includes('not logged')) msg = 'Login ke Pi App dulu sebelum menghubungkan.';
+
+            showToast('❌ ' + msg);
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-circle-nodes"></i> Hubungkan Pi Account';
+        });
 }
 
 async function doLogout() {
