@@ -223,8 +223,8 @@
         }
 
         .logo-icon {
-            width: 46px;
-            height: 46px;
+            width: 48px;
+            height: 48px;
             border-radius: 50%;
             border: 2px solid var(--accent);
             background: white;
@@ -233,7 +233,7 @@
             justify-content: center;
             overflow: hidden;
             flex-shrink: 0;
-            box-shadow: 0 0 10px rgba(212,160,23,0.35);
+            box-shadow: 0 0 12px rgba(212,160,23,0.4);
         }
         .logo-icon img {
             width: 100%;
@@ -247,7 +247,7 @@
         .logo-text .tagline { color: var(--accent); font-size: 0.6em; letter-spacing: 2px; text-transform: uppercase; font-weight: 500; }
 
         /* HAMBURGER */
-        .hamburger { display: none; flex-direction: column; gap: 5px; background: none; border: none; padding: 8px; cursor: pointer; margin-left: auto; }
+        .hamburger { display: none; flex-direction: column; gap: 5px; background: none; border: none; padding: 8px; cursor: pointer; }
         .hamburger span { display: block; width: 24px; height: 2px; background: var(--white); border-radius: 2px; transition: 0.3s; }
         .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
         .hamburger.open span:nth-child(2) { opacity: 0; }
@@ -1617,33 +1617,12 @@
             .logo-icon { width: 38px; height: 38px; font-size: 0.85em; }
             .logo-text .name { font-size: 0.75em; }
             .logo-text .tagline { display: none; }
+            /* Sembunyikan live visitor di navbar mobile agar tidak sesak */
             .nav-container > div[title="Pengunjung aktif"] { display: none !important; }
+            /* Tombol SGT di nav: tampilkan hanya ikon */
             .nav-sgt-btn .nav-sgt-bal { display: none; }
             .nav-sgt-btn { padding: 6px 10px; }
             .mobile-menu { top: 64px; }
-        }
-
-        /* ── NAVBAR Laptop/Desktop responsif ── */
-        /* Sembunyikan nav desktop, tampilkan hamburger di ≤1024px */
-        @media (max-width: 1024px) {
-            .nav-desktop { display: none !important; }
-            .hamburger { display: flex !important; }
-            .nav-sgt-btn { display: flex !important; }
-            .nav-container > div[title="Pengunjung aktif"] { display: none !important; }
-        }
-        /* Tampilkan nav desktop di layar lebar */
-        @media (min-width: 1025px) {
-            .nav-desktop { display: flex !important; }
-            .hamburger { display: none !important; }
-            /* Kompres tombol dropdown sedikit agar semua muat */
-            .dropbtn { font-size: 0.65em; padding: 6px 8px; gap: 4px; }
-            .dropbtn i { font-size: 0.85em; }
-            /* Sembunyikan label SGT bal di layar tanggung, tampilkan di lebar penuh */
-            .nav-sgt-btn { font-size: 0.68em; padding: 6px 10px; gap: 5px; }
-        }
-        @media (min-width: 1280px) {
-            .dropbtn { font-size: 0.7em; padding: 7px 10px; }
-            .nav-sgt-btn { font-size: 0.74em; padding: 7px 14px; }
         }
 
         /* ── MARQUEE BAR ── */
@@ -2334,7 +2313,7 @@
     <div class="nav-container">
         <a href="#" class="logo-nav" onclick="pindahHalaman('home'); return false;">
             <div class="logo-icon">
-                <img src="logo_hidayatulamin.png" alt="Logo Hidayatul Amin Sagatama 513">
+                <img src="logo_yayasan_sagatama.png" alt="Logo Yayasan Hidayatulamin Sagatama 513">
             </div>
             <div class="logo-text">
                 <span class="name">Hidayatulamin Sagatama</span>
@@ -2449,25 +2428,6 @@
                 </div>
             </div>
 
-            <div class="dropdown">
-                <button class="dropbtn mart"><i class="fas fa-store"></i> Sagatama Mart <span style="background:#10b981;color:white;font-size:0.6em;padding:2px 6px;border-radius:10px;margin-left:2px;font-weight:800;letter-spacing:0.5px;">LIVE</span></button>
-                <div class="dropdown-content" style="min-width:320px;">
-                    <div class="dropdown-header">🛒 Toko Online Resmi</div>
-                    <a href="https://sagatama-mart.vercel.app" target="_blank" style="background:linear-gradient(135deg,rgba(13,148,136,0.2),rgba(16,185,129,0.1));border-bottom:2px solid rgba(16,185,129,0.3)!important;">
-                        <i class="fas fa-external-link-alt" style="color:#5eead4;"></i>
-                        <div>
-                            <div style="color:white;font-weight:700;font-size:0.88em;">Buka sagatama-mart.vercel.app</div>
-                            <div style="color:rgba(255,255,255,0.45);font-size:0.72em;margin-top:2px;">Toko lengkap — semua produk & checkout</div>
-                        </div>
-                    </a>
-                    <div class="dropdown-header" style="margin-top:4px;">Produk Unggulan</div>
-                    <a href="https://sagatama-mart.vercel.app" target="_blank"><i class="fas fa-jar" style="color:var(--accent);"></i> Madu Hidayatul Amin</a>
-                    <a href="https://sagatama-mart.vercel.app" target="_blank"><i class="fas fa-leaf" style="color:#5eead4;"></i> Herbal Surau &amp; Organik</a>
-                    <a href="https://sagatama-mart.vercel.app" target="_blank"><i class="fas fa-robot" style="color:#c4b5fd;"></i> Jasa Digital &amp; AI</a>
-                    <a href="https://sagatama-mart.vercel.app" target="_blank"><i class="fas fa-circle-nodes" style="color:#a78bfa;"></i> Bayar via Pi Network ✓</a>
-                    <a onclick="pindahHalaman('market', 'katalog-top')" style="border-top:1px solid rgba(255,255,255,0.07);justify-content:center;text-align:center;color:rgba(255,255,255,0.4);font-size:0.75em;"><i class="fas fa-eye"></i> &nbsp;Preview produk di halaman ini</a>
-                </div>
-            </div>
         </div>
 
         <!-- SGT WALLET BUTTON -->
@@ -2561,19 +2521,6 @@
             <a href="pi-payment.html" target="_blank">Donasi & Wakaf dengan Pi</a>
             <a href="pi-payment.html" target="_blank">Beli Produk Sagatama Mart</a>
             <a href="pi-payment.html" target="_blank">Jasa Digital & AI</a>
-        </div>
-    </div>
-    <div class="mobile-menu-item">
-        <button class="mobile-menu-toggle" onclick="toggleMobileSub('sub-mart')">
-            <span><i class="fas fa-store" style="margin-right:10px;color:#10b981;"></i> Sagatama Mart <span style="background:#10b981;color:white;font-size:0.6em;padding:1px 6px;border-radius:8px;margin-left:4px;">LIVE</span></span>
-            <i class="fas fa-chevron-down"></i>
-        </button>
-        <div class="mobile-submenu" id="sub-mart">
-            <a href="https://sagatama-mart.vercel.app" target="_blank" style="color:#5eead4;font-weight:700;border-left-color:#10b981!important;">🛒 Buka Toko Online (sagatama-mart.vercel.app)</a>
-            <a href="https://sagatama-mart.vercel.app" target="_blank">Madu Hidayatul Amin</a>
-            <a href="https://sagatama-mart.vercel.app" target="_blank">Herbal &amp; Produk Organik</a>
-            <a href="https://sagatama-mart.vercel.app" target="_blank">Jasa Digital AI</a>
-            <a onclick="pindahHalaman('market', 'katalog-top'); closeMobileMenu()" style="color:rgba(255,255,255,0.4);font-size:0.82em;">↳ Preview produk di portal ini</a>
         </div>
     </div>
 </div>
