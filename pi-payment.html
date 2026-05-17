@@ -17,10 +17,17 @@
     <!-- Pi Network SDK -->
     <script src="https://sdk.minepi.com/pi-sdk.js"></script>
     <script>
-        try {
-            Pi.init({ version: "2.0", sandbox: false });
-        } catch(e) {
-            console.warn('[Pi SDK]', e.message);
+        window._piSdkLoaded = (typeof Pi !== 'undefined');
+        window._piInitOk    = false;
+        window._piInitErr   = null;
+        if (window._piSdkLoaded) {
+            try {
+                Pi.init({ version: "2.0", sandbox: false });
+                window._piInitOk = true;
+            } catch(e) {
+                window._piInitErr = e.message;
+                console.warn('[Pi SDK init]', e.message);
+            }
         }
     </script>
 
@@ -319,6 +326,13 @@
         <p><strong>Anda tidak menggunakan Pi Browser.</strong> Untuk melakukan pembayaran Pi, buka halaman ini melalui Pi Browser di perangkat Anda. Fitur informasi dan preview tetap tersedia.</p>
     </div>
 
+
+    <!-- DEBUG PANEL — tampil di layar HP, hapus setelah beres -->
+    <div id="debug-panel" style="display:none;background:#0a1220;border:1px solid rgba(124,58,237,0.4);border-radius:14px;padding:16px 18px;margin-bottom:20px;font-family:monospace;">
+        <div style="color:#a78bfa;font-size:0.78em;font-weight:700;margin-bottom:10px;">🔧 DEBUG PI SDK</div>
+        <div id="dbg-content" style="font-size:0.72em;line-height:1.9;color:rgba(255,255,255,0.7);"></div>
+        <button onclick="document.getElementById('debug-panel').style.display='none'" style="margin-top:12px;background:rgba(255,255,255,0.07);border:none;color:rgba(255,255,255,0.5);padding:6px 14px;border-radius:6px;font-size:0.72em;cursor:pointer;">Tutup Debug</button>
+    </div>
     <!-- AUTH CARD — tampil jika belum login Pi -->
     <div class="auth-card" id="auth-card">
         <div class="auth-pi-icon">π</div>
@@ -512,139 +526,181 @@
 // ──────────────────────────────────────────────────────────
 const firebaseConfig = {
     apiKey:            "AIzaSyDNWOochfAyHjBYUNyq2IAYhA9p7Ie834M",
-      authDomain:        "portal-sagatama.firebaseapp.com",
-      projectId:         "portal-sagatama",
-      storageBucket:     "portal-sagatama.firebasestorage.app",
-      messagingSenderId: "372845954028",
-      appId:             "1:372845954028:web:189f2a3127ea8189b9f6c9"
+    authDomain:        "portal-sagatama.firebaseapp.com",
+    projectId:         "portal-sagatama",
+    storageBucket:     "portal-sagatama.firebasestorage.app",
+    messagingSenderId: "372845954028",
+    appId:             "1:372845954028:web:189f2a3127ea8189b9f6c9"
 };
 if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-const db   = firebase.firestore();
-// fireAuth sudah dideklarasikan di bawah STATE section
-
-// ──────────────────────────────────────────────────────────
-//  STATE
-// ──────────────────────────────────────────────────────────
-let _piUser   = null;   // hasil Pi.authenticate()
-let _fireUser = null;   // Firebase anonymous user
-let _type     = null;   // 'donasi' | 'produk' | 'layanan'
-
-// Rename firebase auth agar tidak bentrok dengan variabel 'auth' di Pi SDK
+const db      = firebase.firestore();
 const fireAuth = firebase.auth();
 
-// ──────────────────────────────────────────────────────────
-//  INIT — deteksi Pi Browser & cek sesi tersimpan
-// ──────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────
+//  STATE
+// ─────────────────────────────────────────────────────────
+let _piUser   = null;
+let _fireUser = null;
+let _type     = null;
+
+// ─────────────────────────────────────────────────────────
+//  DEBUG HELPER — tampil di layar HP
+// ─────────────────────────────────────────────────────────
+function dbg(msg, color) {
+    var panel = document.getElementById('debug-panel');
+    var box   = document.getElementById('dbg-content');
+    if (!panel || !box) return;
+    panel.style.display = 'block';
+    var line = document.createElement('div');
+    line.style.color = color || 'rgba(255,255,255,0.75)';
+    line.textContent = new Date().toLocaleTimeString('id') + '  ' + msg;
+    box.appendChild(line);
+    box.scrollTop = box.scrollHeight;
+}
+
+// ─────────────────────────────────────────────────────────
+//  INIT — cek Pi Browser & status SDK
+// ─────────────────────────────────────────────────────────
 (function init() {
-    const isPi = typeof window.Pi !== 'undefined';
-    if (!isPi) {
+    var sdkLoaded = window._piSdkLoaded;
+    var initOk    = window._piInitOk;
+    var initErr   = window._piInitErr;
+
+    dbg('Pi SDK loaded : ' + sdkLoaded);
+    dbg('Pi.init ok    : ' + initOk + (initErr ? ' | err: ' + initErr : ''));
+    dbg('window.Pi     : ' + (typeof window.Pi));
+    dbg('User-Agent    : ' + navigator.userAgent.substring(0, 80));
+
+    if (!sdkLoaded || typeof window.Pi === 'undefined') {
         document.getElementById('not-pi-banner').style.display = 'flex';
         document.getElementById('auth-card').classList.add('show');
         document.getElementById('pi-login-btn').disabled = true;
         document.getElementById('pi-login-btn').innerHTML = '<i class="fas fa-ban"></i> Buka di Pi Browser';
+        dbg('⛔ Bukan Pi Browser — tombol dinonaktifkan', '#fca5a5');
         return;
     }
-    // Cek sesi Pi tersimpan
+
+    // Cek sesi tersimpan
     try {
-        const saved = sessionStorage.getItem('_pi_user');
+        var saved = sessionStorage.getItem('_pi_user');
         if (saved) {
             _piUser = JSON.parse(saved);
             _showUserBar();
+            dbg('✅ Sesi tersimpan ditemukan: @' + (_piUser.username || '?'), '#6ee7b7');
             return;
         }
     } catch(e) { sessionStorage.removeItem('_pi_user'); }
 
     document.getElementById('auth-card').classList.add('show');
+    dbg('✅ Pi Browser terdeteksi — siap login', '#6ee7b7');
 })();
 
-// ──────────────────────────────────────────────────────────
-//  TAMPILKAN USER BAR setelah login berhasil
-// ──────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────
+//  TAMPILKAN USER BAR
+// ─────────────────────────────────────────────────────────
 function _showUserBar() {
     document.getElementById('auth-card').classList.remove('show');
     document.getElementById('user-bar').classList.add('show');
-    const uname = _piUser.username || _piUser.uid || 'PiUser';
-    document.getElementById('user-av').textContent = uname[0].toUpperCase();
+    var uname = _piUser.username || _piUser.uid || 'PiUser';
+    document.getElementById('user-av').textContent   = uname[0].toUpperCase();
     document.getElementById('user-name').textContent = '@' + uname;
-    document.getElementById('user-sub').textContent =
+    document.getElementById('user-sub').textContent  =
         _piUser.wallet_address
             ? 'Wallet: ' + _piUser.wallet_address.slice(0, 16) + '...'
             : 'Pi Network · Terautentikasi ✓';
 }
 
-// ──────────────────────────────────────────────────────────
-//  PI AUTH — satu-satunya cara yang benar panggil Pi.authenticate
-//  Pi SDK v2 mengembalikan Promise — JANGAN di-detect dulu
-//  Cukup .then()/.catch() langsung, beri timeout 30 detik
-// ──────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────
+//  PI AUTH — panggil Pi.authenticate dengan benar
+//  Pi SDK v2.0 return Promise — cukup .then()/.catch()
+//  JANGAN await langsung di async function jika ada masalah
+// ─────────────────────────────────────────────────────────
 function doLoginPi() {
     if (typeof window.Pi === 'undefined') {
         showToast('❌ Buka halaman ini di Pi Browser');
         return;
     }
 
-    const btn = document.getElementById('pi-login-btn');
+    var btn = document.getElementById('pi-login-btn');
     btn.disabled = true;
     btn.innerHTML = '<i class="fas fa-spinner spin"></i> Menghubungkan...';
 
-    // Timeout 30 detik — kalau Pi tidak respond, reset tombol
-    let settled = false;
-    const timeoutId = setTimeout(function() {
-        if (!settled) {
-            settled = true;
-            btn.disabled = false;
-            btn.innerHTML = '<i class="fas fa-circle-nodes"></i> Hubungkan Pi Account';
-            showToast('⏱️ Timeout — pastikan sudah login di Pi App lalu coba lagi');
-        }
+    dbg('🔄 Memanggil Pi.authenticate...', '#c4b5fd');
+
+    // Timeout 30 detik
+    var settled = false;
+    var tid = setTimeout(function() {
+        if (settled) return;
+        settled = true;
+        dbg('⏱️ TIMEOUT 30 detik — Pi tidak merespons', '#fca5a5');
+        showToast('⏱️ Timeout — pastikan sudah login di Pi App, lalu coba lagi');
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-circle-nodes"></i> Hubungkan Pi Account';
     }, 30000);
 
-    // Panggil Pi.authenticate — Pi SDK v2 return Promise
-    // onIncompletePaymentFound WAJIB ada sebagai parameter kedua
-    Pi.authenticate(['username', 'payments', 'wallet_address'], onIncompletePaymentFound)
-        .then(function(result) {
-            if (settled) return;
-            settled = true;
-            clearTimeout(timeoutId);
+    function onSuccess(result) {
+        if (settled) return;
+        settled = true;
+        clearTimeout(tid);
+        dbg('✅ Pi.authenticate resolve — data: ' + JSON.stringify(Object.keys(result || {})), '#6ee7b7');
 
-            if (!result || !result.user) {
-                showToast('❌ Gagal: data user Pi tidak diterima');
-                btn.disabled = false;
-                btn.innerHTML = '<i class="fas fa-circle-nodes"></i> Hubungkan Pi Account';
-                return;
-            }
-
-            _piUser = result.user;
-            // Simpan sesi agar tidak perlu login ulang
-            try { sessionStorage.setItem('_pi_user', JSON.stringify(_piUser)); } catch(e) {}
-
-            // Firebase anonymous login — opsional, tidak menghalangi jika gagal
-            fireAuth.signInAnonymously()
-                .then(function(cred) {
-                    _fireUser = cred.user;
-                    return cred.user.updateProfile({ displayName: '@' + (_piUser.username || 'piuser') });
-                })
-                .catch(function(e) { console.warn('[Firebase]', e.message); })
-                .finally(function() {
-                    _showUserBar();
-                    showToast('✅ Terhubung sebagai @' + (_piUser.username || 'PiUser'));
-                });
-        })
-        .catch(function(err) {
-            if (settled) return;
-            settled = true;
-            clearTimeout(timeoutId);
-
-            console.error('[Pi Auth Error]', err);
-            let msg = (err && err.message) ? err.message : String(err);
-            if (!msg || msg === 'undefined') msg = 'Koneksi gagal. Coba lagi.';
-            else if (msg.toLowerCase().includes('cancel')) msg = 'Login dibatalkan.';
-            else if (msg.toLowerCase().includes('network')) msg = 'Periksa koneksi internet.';
-            else if (msg.toLowerCase().includes('not logged')) msg = 'Login ke Pi App dulu sebelum menghubungkan.';
-
-            showToast('❌ ' + msg);
+        if (!result || !result.user) {
+            dbg('⛔ result.user kosong!', '#fca5a5');
+            showToast('❌ Gagal: data user tidak diterima dari Pi');
             btn.disabled = false;
             btn.innerHTML = '<i class="fas fa-circle-nodes"></i> Hubungkan Pi Account';
-        });
+            return;
+        }
+
+        _piUser = result.user;
+        dbg('👤 Username: @' + (_piUser.username || '?'), '#6ee7b7');
+        dbg('💰 Wallet  : ' + (_piUser.wallet_address || 'tidak ada'), '#6ee7b7');
+
+        try { sessionStorage.setItem('_pi_user', JSON.stringify(_piUser)); } catch(e) {}
+
+        // Firebase anonymous login — tidak menghalangi kalau gagal
+        fireAuth.signInAnonymously()
+            .then(function(cred) {
+                _fireUser = cred.user;
+                dbg('🔥 Firebase anon login OK', '#6ee7b7');
+                return cred.user.updateProfile({ displayName: '@' + (_piUser.username || 'piuser') });
+            })
+            .catch(function(e) {
+                dbg('⚠️ Firebase login gagal (tidak masalah): ' + e.message, '#fbbf24');
+            })
+            .finally(function() {
+                _showUserBar();
+                showToast('✅ Terhubung sebagai @' + (_piUser.username || 'PiUser'));
+            });
+    }
+
+    function onError(err) {
+        if (settled) return;
+        settled = true;
+        clearTimeout(tid);
+        var msg = (err && err.message) ? err.message : String(err);
+        dbg('❌ Pi.authenticate error: ' + msg, '#fca5a5');
+        if (!msg || msg === 'undefined' || msg === 'null') msg = 'Koneksi gagal. Coba lagi.';
+        else if (msg.toLowerCase().includes('cancel')) msg = 'Login dibatalkan oleh pengguna.';
+        else if (msg.toLowerCase().includes('not logged') || msg.toLowerCase().includes('not authenticated')) msg = 'Silakan login ke akun Pi Anda dulu di aplikasi Pi.';
+        showToast('❌ ' + msg);
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-circle-nodes"></i> Hubungkan Pi Account';
+    }
+
+    try {
+        var p = Pi.authenticate(['username', 'payments', 'wallet_address'], onIncompletePaymentFound);
+        dbg('Pi.authenticate dipanggil — tipe return: ' + typeof p, '#c4b5fd');
+        if (p && typeof p.then === 'function') {
+            p.then(onSuccess).catch(onError);
+        } else {
+            dbg('⚠️ Pi.authenticate tidak return Promise — mungkin callback style lama', '#fbbf24');
+            // Kalau tidak return Promise, tunggu onIncompletePaymentFound resolve dulu
+            // Tapi ini jarang terjadi di SDK v2 — kalau timeout berarti SDK bermasalah
+        }
+    } catch(e) {
+        onError(e);
+    }
 }
 
 async function doLogout() {
@@ -656,9 +712,9 @@ async function doLogout() {
     document.getElementById('pi-login-btn').disabled = false;
     document.getElementById('pi-login-btn').innerHTML = '<i class="fas fa-circle-nodes"></i> Hubungkan Pi Account';
     document.getElementById('pay-form-card').classList.remove('show');
-    document.querySelectorAll('.pay-type-card').forEach(c => c.classList.remove('active'));
+    document.querySelectorAll('.pay-type-card').forEach(function(c) { c.classList.remove('active'); });
     document.getElementById('pay-summary').style.display = 'none';
-    showToast('👋 Berhasil keluar dari Pi Account');
+    dbg('👋 Logout — sesi dihapus', '#fbbf24');
 }
 
 // ──────────────────────────────────────────────────────────
@@ -805,49 +861,32 @@ async function doPayment() {
         };
 
         const payment = await Pi.createPayment(paymentData, {
-            // Callback saat siap untuk approval server
-            onReadyForServerApproval: async function(paymentId) {
-                console.log('[Pi Payment] onReadyForServerApproval:', paymentId);
-                try {
-                    await db.collection('pi_payments').doc(paymentId).set({
-                        paymentId,
-                        amount,
-                        memo,
-                        metadata,
-                        piUsername: _piUser.username || _piUser.uid,
-                        piUid: _piUser.uid || _piUser.username,
-                        status: 'pending_approval',
-                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                    });
-                    // CATATAN: Di produksi, kirim paymentId ke backend server Anda
-                    // untuk di-approve via Pi Server API (/v2/payments/{id}/approve)
-                    // Untuk demo/testing tanpa backend, kita log saja
-                    console.log('[Pi Payment] Saved to Firestore. Menunggu approval dari Pi Network...');
-                } catch(e) {
-                    console.error('[Pi Firestore] Gagal simpan:', e);
-                }
+            onReadyForServerApproval: function(paymentId) {
+                dbg('💳 onReadyForServerApproval: ' + paymentId, '#c4b5fd');
+                db.collection('pi_payments').doc(paymentId).set({
+                    paymentId: paymentId,
+                    amount:    amount,
+                    memo:      memo,
+                    metadata:  metadata,
+                    piUsername: _piUser ? (_piUser.username || _piUser.uid) : 'unknown',
+                    status:    'pending_approval',
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                }).catch(function(e) { dbg('Firestore set error: ' + e.message, '#fca5a5'); });
+                // NOTE: Approval harus dilakukan via backend server
+                // POST https://api.minepi.com/v2/payments/{id}/approve (dengan server API key)
+                dbg('⚠️ Butuh backend server untuk approve payment ini', '#fbbf24');
             },
 
-            // Callback saat pembayaran selesai dikonfirmasi user
-            onReadyForServerCompletion: async function(paymentId, txid) {
-                console.log('[Pi Payment] onReadyForServerCompletion:', paymentId, txid);
-                try {
-                    await db.collection('pi_payments').doc(paymentId).set({
-                        txid: txid,
-                        status: 'pending_completion',
-                        txAt: firebase.firestore.FieldValue.serverTimestamp()
-                    }, { merge: true });
-                    // CATATAN: Di produksi, kirim paymentId + txid ke backend server Anda
-                    // untuk di-complete via Pi Server API (/v2/payments/{id}/complete)
-                    // Untuk demo, langsung tandai completed
-                    await db.collection('pi_payments').doc(paymentId).set({
-                        status: 'completed',
-                        completedAt: firebase.firestore.FieldValue.serverTimestamp()
-                    }, { merge: true });
-                    console.log('[Pi Payment] Completed! TxID:', txid);
-                } catch(e) {
-                    console.error('[Pi Firestore] Gagal update:', e);
-                }
+            onReadyForServerCompletion: function(paymentId, txid) {
+                dbg('✅ onReadyForServerCompletion: ' + paymentId + ' | txid: ' + txid, '#6ee7b7');
+                db.collection('pi_payments').doc(paymentId).set({
+                    txid:      txid,
+                    status:    'pending_completion',
+                    txAt:      firebase.firestore.FieldValue.serverTimestamp()
+                }, { merge: true }).catch(function(e) { dbg('Firestore update error: ' + e.message, '#fca5a5'); });
+                // NOTE: Completion harus dilakukan via backend server
+                // POST https://api.minepi.com/v2/payments/{id}/complete (dengan server API key)
+                dbg('⚠️ Butuh backend server untuk complete payment ini', '#fbbf24');
             },
 
             onCancel: function(paymentId) {
@@ -889,23 +928,19 @@ async function doPayment() {
 // ──────────────────────────────────────────────────────────
 //  INCOMPLETE PAYMENT HANDLER (wajib ada di Pi SDK)
 // ──────────────────────────────────────────────────────────
-async function onIncompletePaymentFound(payment) {
-    console.warn('[Pi] Incomplete payment found:', payment?.identifier);
-    try {
-        await db.collection('pi_incomplete_payments').doc(payment.identifier).set({
-            paymentId: payment.identifier,
-            amount: payment.amount,
-            memo: payment.memo,
-            status: 'incomplete',
-            txid: payment.transaction?.txid || null,
-            reportedAt: firebase.firestore.FieldValue.serverTimestamp()
-        }, { merge: true });
-        // Untuk menyelesaikan pembayaran incomplete, harus melalui backend server
-        // via Pi Server API: POST /v2/payments/{id}/complete
-        console.log('[Pi] Incomplete payment disimpan ke Firestore. Perlu diselesaikan via server backend.');
-    } catch(e) {
-        console.warn('[Pi] Gagal handle incomplete payment:', e);
-    }
+function onIncompletePaymentFound(payment) {
+    dbg('⚠️ Incomplete payment: ' + (payment && payment.identifier ? payment.identifier : 'unknown'), '#fbbf24');
+    if (!payment || !payment.identifier) return;
+    db.collection('pi_incomplete_payments').doc(payment.identifier).set({
+        paymentId:  payment.identifier,
+        amount:     payment.amount || 0,
+        memo:       payment.memo   || '',
+        txid:       (payment.transaction && payment.transaction.txid) || null,
+        status:     'incomplete',
+        reportedAt: firebase.firestore.FieldValue.serverTimestamp()
+    }, { merge: true }).catch(function(e) {
+        dbg('Firestore incomplete save error: ' + e.message, '#fca5a5');
+    });
 }
 
 // ──────────────────────────────────────────────────────────
