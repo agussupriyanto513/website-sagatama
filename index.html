@@ -247,7 +247,7 @@
         .logo-text .tagline { color: var(--accent); font-size: 0.6em; letter-spacing: 2px; text-transform: uppercase; font-weight: 500; }
 
         /* HAMBURGER */
-        .hamburger { display: none; flex-direction: column; gap: 5px; background: none; border: none; padding: 8px; cursor: pointer; }
+        .hamburger { display: none; flex-direction: column; gap: 5px; background: none; border: none; padding: 8px; cursor: pointer; margin-left: auto; }
         .hamburger span { display: block; width: 24px; height: 2px; background: var(--white); border-radius: 2px; transition: 0.3s; }
         .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
         .hamburger.open span:nth-child(2) { opacity: 0; }
@@ -1617,12 +1617,33 @@
             .logo-icon { width: 38px; height: 38px; font-size: 0.85em; }
             .logo-text .name { font-size: 0.75em; }
             .logo-text .tagline { display: none; }
-            /* Sembunyikan live visitor di navbar mobile agar tidak sesak */
             .nav-container > div[title="Pengunjung aktif"] { display: none !important; }
-            /* Tombol SGT di nav: tampilkan hanya ikon */
             .nav-sgt-btn .nav-sgt-bal { display: none; }
             .nav-sgt-btn { padding: 6px 10px; }
             .mobile-menu { top: 64px; }
+        }
+
+        /* ── NAVBAR Laptop/Desktop responsif ── */
+        /* Sembunyikan nav desktop, tampilkan hamburger di ≤1024px */
+        @media (max-width: 1024px) {
+            .nav-desktop { display: none !important; }
+            .hamburger { display: flex !important; }
+            .nav-sgt-btn { display: flex !important; }
+            .nav-container > div[title="Pengunjung aktif"] { display: none !important; }
+        }
+        /* Tampilkan nav desktop di layar lebar */
+        @media (min-width: 1025px) {
+            .nav-desktop { display: flex !important; }
+            .hamburger { display: none !important; }
+            /* Kompres tombol dropdown sedikit agar semua muat */
+            .dropbtn { font-size: 0.65em; padding: 6px 8px; gap: 4px; }
+            .dropbtn i { font-size: 0.85em; }
+            /* Sembunyikan label SGT bal di layar tanggung, tampilkan di lebar penuh */
+            .nav-sgt-btn { font-size: 0.68em; padding: 6px 10px; gap: 5px; }
+        }
+        @media (min-width: 1280px) {
+            .dropbtn { font-size: 0.7em; padding: 7px 10px; }
+            .nav-sgt-btn { font-size: 0.74em; padding: 7px 14px; }
         }
 
         /* ── MARQUEE BAR ── */
@@ -2316,7 +2337,7 @@
                 <img src="logo_hidayatulamin.png" alt="Logo Hidayatul Amin Sagatama 513">
             </div>
             <div class="logo-text">
-                <span class="name">Hidayatul Amin Sagatama</span>
+                <span class="name">Hidayatulamin Sagatama</span>
                 <span class="tagline">Spiritual · Teknologi · Ekonomi · 513</span>
             </div>
         </a>
@@ -2409,25 +2430,22 @@
                 </div>
             </div>
 
-            <!-- MENU PEMBAYARAN PI -->
             <div class="dropdown">
                 <button class="dropbtn" style="background:linear-gradient(135deg,rgba(124,58,237,0.3),rgba(124,58,237,0.15));border-color:#7c3aed;color:#c4b5fd;">
-                    <i class="fas fa-circle-nodes"></i> Pembayaran Pi <span style="background:#7c3aed;color:white;font-size:0.6em;padding:2px 6px;border-radius:10px;margin-left:2px;font-weight:800;letter-spacing:0.5px;">π</span>
+                    <i class="fas fa-circle-nodes"></i> Bayar Pi
                 </button>
-                <div class="dropdown-content" style="min-width:300px;">
-                    <div class="dropdown-header" style="color:#c4b5fd;">🪙 Bayar dengan Pi Network</div>
+                <div class="dropdown-content" style="min-width:290px;">
+                    <div class="dropdown-header" style="color:#c4b5fd;">🪙 Pembayaran Pi Network</div>
                     <a href="pi-payment.html" target="_blank" style="background:linear-gradient(135deg,rgba(124,58,237,0.2),rgba(124,58,237,0.1));border-bottom:2px solid rgba(124,58,237,0.3)!important;">
                         <i class="fas fa-external-link-alt" style="color:#a78bfa;"></i>
                         <div>
-                            <div style="color:white;font-weight:700;font-size:0.88em;">Buka Halaman Pembayaran Pi</div>
-                            <div style="color:rgba(255,255,255,0.45);font-size:0.72em;margin-top:2px;">Donasi, Produk & Layanan via Pi Network</div>
+                            <div style="color:white;font-weight:700;font-size:0.88em;">Buka Halaman Pembayaran</div>
+                            <div style="color:rgba(255,255,255,0.45);font-size:0.72em;margin-top:2px;">Donasi, Produk & Layanan via Pi</div>
                         </div>
                     </a>
-                    <div class="dropdown-header" style="margin-top:4px;color:#c4b5fd;">Jenis Pembayaran</div>
-                    <a href="pi-payment.html#donasi" target="_blank"><i class="fas fa-hand-holding-heart" style="color:#a78bfa;"></i> Donasi & Wakaf dengan Pi</a>
-                    <a href="pi-payment.html#produk" target="_blank"><i class="fas fa-store" style="color:#a78bfa;"></i> Beli Produk Sagatama Mart</a>
-                    <a href="pi-payment.html#layanan" target="_blank"><i class="fas fa-robot" style="color:#a78bfa;"></i> Jasa Digital & AI</a>
-                    <a href="pi-payment.html" target="_blank" style="justify-content:center;text-align:center;color:#7c3aed;font-weight:700;font-size:0.82em;border-top:1px solid rgba(124,58,237,0.2);"><i class="fas fa-circle-nodes"></i> &nbsp;Buka di Pi Browser</a>
+                    <a href="pi-payment.html" target="_blank"><i class="fas fa-hand-holding-heart" style="color:#a78bfa;"></i> Donasi & Wakaf dengan Pi</a>
+                    <a href="pi-payment.html" target="_blank"><i class="fas fa-store" style="color:#a78bfa;"></i> Beli Produk Sagatama Mart</a>
+                    <a href="pi-payment.html" target="_blank"><i class="fas fa-robot" style="color:#a78bfa;"></i> Jasa Digital & AI</a>
                 </div>
             </div>
 
@@ -2533,10 +2551,9 @@
             <a href="#pi-network" onclick="pindahHalaman('home'); closeMobileMenu()">Informasi Pi Network</a>
         </div>
     </div>
-    <!-- MOBILE MENU PEMBAYARAN PI -->
     <div class="mobile-menu-item">
         <button class="mobile-menu-toggle" onclick="toggleMobileSub('sub-pi-bayar')" style="color:#c4b5fd;">
-            <span><i class="fas fa-circle-nodes" style="margin-right:10px;color:#a78bfa;"></i> Pembayaran Pi <span style="background:#7c3aed;color:white;font-size:0.6em;padding:1px 7px;border-radius:8px;margin-left:6px;font-weight:800;">π</span></span>
+            <span><i class="fas fa-circle-nodes" style="margin-right:10px;color:#a78bfa;"></i> Pembayaran Pi Network</span>
             <i class="fas fa-chevron-down"></i>
         </button>
         <div class="mobile-submenu" id="sub-pi-bayar">
